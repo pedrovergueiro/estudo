@@ -1,0 +1,1926 @@
+<title>Simulado de Bolso</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+/* ---------- tokens: claro (padrao) ---------- */
+:root{
+  --bg:#eaeef0; --surface:#ffffff; --surface-2:#f3f6f7; --sunk:#e2e8ea;
+  --ink:#0d1619; --ink-2:#42555d; --muted:#697c85; --line:#ccd7db; --line-2:#dde5e8;
+  --accent:#0b7c70; --accent-soft:#dff1ee; --accent-ink:#065048; --sobre-accent:#ffffff;
+  --ok:#15803d; --ok-soft:#dff3e4; --erro:#bd2f2a; --erro-soft:#fbe4e2;
+  --rever:#a35c06; --rever-soft:#fbeedb;
+  --info:#22608f; --info-soft:#e2eef9; --ia:#a52d6e; --ia-soft:#fae3ef;
+  --sombra:0 1px 0 rgba(13,22,25,.05), 0 1px 3px rgba(13,22,25,.06);
+  --r:5px;
+}
+:root[data-sub="sim-pe"]{ --accent:#4a41c4; --accent-soft:#e6e4fa; --accent-ink:#2f2891; }
+
+/* ---------- tokens: escuro por preferencia do sistema ---------- */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a0f12; --surface:#141d21; --surface-2:#19242a; --sunk:#101a1e;
+    --ink:#e3ecef; --ink-2:#b1c3ca; --muted:#7e939c; --line:#25343b; --line-2:#1e2b31;
+    --accent:#3fd3bd; --accent-soft:#0e2f2c; --accent-ink:#8bf0e0; --sobre-accent:#07130f;
+    --ok:#54c47c; --ok-soft:#10291b; --erro:#f0736b; --erro-soft:#2c1513;
+    --rever:#e0a44a; --rever-soft:#2b1f0e;
+    --info:#74b0e4; --info-soft:#112232; --ia:#f18ac0; --ia-soft:#33132a;
+    --sombra:0 1px 0 rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.28);
+  }
+  :root:not([data-theme="light"])[data-sub="sim-pe"]{ --accent:#a8a2fb; --accent-soft:#1c1a44; --accent-ink:#c6c2ff; --sobre-accent:#0d0b26; }
+}
+/* ---------- tokens: escuro por escolha explicita ---------- */
+:root[data-theme="dark"]{
+  --bg:#0a0f12; --surface:#141d21; --surface-2:#19242a; --sunk:#101a1e;
+  --ink:#e3ecef; --ink-2:#b1c3ca; --muted:#7e939c; --line:#25343b; --line-2:#1e2b31;
+  --accent:#3fd3bd; --accent-soft:#0e2f2c; --accent-ink:#8bf0e0; --sobre-accent:#07130f;
+  --ok:#54c47c; --ok-soft:#10291b; --erro:#f0736b; --erro-soft:#2c1513;
+  --rever:#e0a44a; --rever-soft:#2b1f0e;
+  --info:#74b0e4; --info-soft:#112232; --ia:#f18ac0; --ia-soft:#33132a;
+  --sombra:0 1px 0 rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.28);
+}
+:root[data-theme="dark"][data-sub="sim-pe"]{ --accent:#a8a2fb; --accent-soft:#1c1a44; --accent-ink:#c6c2ff; --sobre-accent:#0d0b26; }
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.6; -webkit-text-size-adjust:100%;
+}
+h1,h2,h3{font-family:Archivo,"IBM Plex Sans",system-ui,sans-serif; text-wrap:balance; margin:0; letter-spacing:-.015em}
+.mono,code{font-family:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace}
+.wrap{max-width:660px; margin:0 auto; padding:0 14px}
+
+/* ---------- topo ---------- */
+.topo{position:sticky; top:0; z-index:20; background:var(--surface); border-bottom:1px solid var(--line)}
+.topo-id{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:2px 10px; padding:12px 0 10px}
+.topo-id h1{font-size:19px; font-weight:700}
+.topo-id .data{font-size:11px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+.tabs{display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line-2)}
+.tab{
+  appearance:none; border:0; background:transparent; cursor:pointer; text-align:left;
+  padding:9px 12px 8px; border-bottom:2px solid transparent; color:var(--muted); min-width:0;
+  font-family:Archivo,sans-serif; font-size:14px; font-weight:600; line-height:1.25;
+}
+.tab .cod{display:block; font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:400; letter-spacing:.04em; opacity:.85}
+.tab[aria-selected="true"]{color:var(--accent-ink); border-bottom-color:var(--accent); background:var(--accent-soft)}
+.tab:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+
+/* ---------- placar ---------- */
+.placar{padding:12px 0 14px}
+.placar-titulo{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:9px}
+.placar-titulo strong{font-family:Archivo,sans-serif; font-size:15px}
+.zerar{appearance:none; border:0; background:none; padding:2px 0; color:var(--muted); font-size:12px; text-decoration:underline; text-underline-offset:3px; cursor:pointer; font-family:inherit}
+.barra{display:flex; height:9px; border-radius:99px; overflow:hidden; background:var(--sunk); gap:1.5px}
+.barra span{display:block; transition:width .35s ease}
+.barra .b-ok{background:var(--ok)} .barra .b-erro{background:var(--erro)} .barra .b-rever{background:var(--rever)}
+.placar-linha{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; margin-top:8px; font-size:12.5px; color:var(--muted)}
+.placar-linha b{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:600; font-variant-numeric:tabular-nums}
+.pt-ok b{color:var(--ok)} .pt-erro b{color:var(--erro)} .pt-rever b{color:var(--rever)}
+
+/* ---------- ficha de escopo ---------- */
+.escopo{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sombra); padding:13px 14px}
+.escopo dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:6px 12px; font-size:13px}
+.escopo dt{color:var(--muted); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding-top:3px; font-weight:600}
+.escopo dd{margin:0; color:var(--ink-2)}
+.escopo .lista-ex{font-family:"IBM Plex Mono",monospace; font-size:11.5px; line-height:1.75; word-break:break-word}
+
+/* ---------- cabecalho de bloco ---------- */
+.bloco-h{display:flex; align-items:center; gap:10px; margin:26px 0 12px}
+.bloco-h h2{font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-ink); white-space:nowrap}
+.bloco-h::after{content:""; flex:1; height:1px; background:var(--line)}
+
+/* ---------- a cola (teoria) ---------- */
+.cola{display:flex; flex-direction:column; gap:8px}
+details.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sombra); overflow:hidden}
+details.card>summary{
+  cursor:pointer; list-style:none; padding:12px 14px; display:flex; align-items:center; gap:10px;
+  font-family:Archivo,sans-serif; font-weight:600; font-size:15px;
+}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"+"; margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:17px; color:var(--muted); line-height:1}
+details.card[open]>summary::after{content:"\2013"}
+details.card[open]>summary{border-bottom:1px solid var(--line-2); color:var(--accent-ink)}
+details.card>summary:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.corpo{padding:14px; font-size:14.5px; color:var(--ink-2)}
+.corpo>*+*{margin-top:11px}
+.corpo p{margin:0}
+.corpo strong{color:var(--ink); font-weight:600}
+.f{
+  font-family:"IBM Plex Mono",monospace; font-size:13.5px; background:var(--surface-2);
+  border:1px solid var(--line-2); border-radius:4px; padding:9px 11px; color:var(--ink);
+  overflow-x:auto; white-space:pre; line-height:1.7;
+}
+.passos{list-style:none; margin:0; padding:0; counter-reset:p; display:flex; flex-direction:column; gap:8px}
+.passos li{counter-increment:p; position:relative; padding-left:32px}
+.passos li::before{
+  content:counter(p); position:absolute; left:0; top:2px;
+  font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600;
+  width:22px; height:22px; display:grid; place-items:center; border-radius:99px;
+  background:var(--accent-soft); color:var(--accent-ink);
+}
+.aviso{border-left:3px solid var(--rever); background:var(--rever-soft); padding:10px 12px; border-radius:0 4px 4px 0; font-size:13.5px}
+.aviso b{color:var(--ink)}
+.duasc{display:grid; gap:8px}
+@media(min-width:520px){ .duasc{grid-template-columns:1fr 1fr} }
+.mini{border:1px solid var(--line-2); border-radius:4px; padding:10px 11px; background:var(--surface-2); font-size:13.5px}
+.mini>*+*{margin-top:8px}
+.mini .rot{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; display:block; margin-bottom:4px}
+.dic{width:100%; border-collapse:collapse; font-size:13.5px}
+.dic td{border-top:1px solid var(--line-2); padding:7px 0; vertical-align:top}
+.dic tr:first-child td{border-top:0}
+.dic td:first-child{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--accent-ink); padding-right:12px; font-weight:500}
+
+/* ---------- filtros ---------- */
+.filtros{display:flex; gap:6px; overflow-x:auto; padding:2px 0 10px; scrollbar-width:none}
+.filtros::-webkit-scrollbar{display:none}
+.chip{
+  appearance:none; cursor:pointer; white-space:nowrap; font-family:inherit; font-size:12.5px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+  padding:6px 11px; border-radius:99px; flex:none;
+}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--sobre-accent); font-weight:600}
+.chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* ---------- questao ---------- */
+.deck{display:flex; flex-direction:column; gap:12px}
+.q{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sombra); overflow:hidden}
+.q[data-st="acerto"]{border-color:var(--ok)}
+.q[data-st="erro"]{border-color:var(--erro)}
+.q[data-st="rever"]{border-color:var(--rever)}
+.q-topo{
+  display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--surface-2);
+  border-bottom:1px solid var(--line-2); font-family:"IBM Plex Mono",monospace; font-size:11px;
+}
+.q-n{color:var(--muted); font-variant-numeric:tabular-nums}
+.q-fonte{color:var(--ink-2); font-weight:500}
+.flag{font-size:9.5px; letter-spacing:.09em; font-weight:600; padding:2px 6px; border-radius:3px; background:var(--accent-soft); color:var(--accent-ink); text-transform:uppercase}
+.dot{margin-left:auto; width:9px; height:9px; border-radius:99px; background:var(--sunk); flex:none}
+.q[data-st="acerto"] .dot{background:var(--ok)}
+.q[data-st="erro"] .dot{background:var(--erro)}
+.q[data-st="rever"] .dot{background:var(--rever)}
+.q-corpo{padding:14px}
+.q-assunto{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:6px}
+.q-prompt{margin:0; font-size:15.5px; color:var(--ink); line-height:1.62}
+
+/* tabela de dupla entrada */
+.tab-box{margin-top:12px; overflow-x:auto; border:1px solid var(--line-2); border-radius:4px; padding-bottom:1px}
+.tab-cap{font-size:11px; color:var(--muted); padding:7px 10px 2px; letter-spacing:.03em}
+table.dados{width:100%; border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums}
+table.dados th,table.dados td{padding:7px 10px; text-align:right; border-top:1px solid var(--line-2); white-space:nowrap}
+table.dados th{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.02em}
+table.dados th:first-child,table.dados td:first-child{text-align:left; color:var(--ink-2)}
+table.dados tbody td{font-family:"IBM Plex Mono",monospace; color:var(--ink)}
+
+/* respostas */
+.alts{display:flex; flex-direction:column; gap:6px; margin-top:13px}
+.alt{
+  appearance:none; cursor:pointer; text-align:left; font-family:inherit; font-size:14.5px; line-height:1.5;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  border-radius:4px; padding:10px 12px; display:flex; gap:10px; align-items:flex-start;
+}
+.alt .letra{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); padding-top:2px; flex:none; font-weight:600}
+.alt:hover:not(:disabled){border-color:var(--accent)}
+.alt:disabled{cursor:default; opacity:.72}
+.alt.certa{border-color:var(--ok); background:var(--ok-soft); opacity:1}
+.alt.certa .letra{color:var(--ok)}
+.alt.errada{border-color:var(--erro); background:var(--erro-soft); opacity:1}
+.alt.errada .letra{color:var(--erro)}
+.alt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+.numlinha{display:flex; gap:7px; margin-top:13px; flex-wrap:wrap}
+.numlinha input{
+  flex:1 1 130px; min-width:0; font-family:"IBM Plex Mono",monospace; font-size:16px;
+  padding:10px 12px; border:1px solid var(--line); border-radius:4px;
+  background:var(--surface-2); color:var(--ink);
+}
+.numlinha input:focus{outline:2px solid var(--accent); outline-offset:-1px; border-color:var(--accent)}
+.numlinha input:disabled{opacity:.75}
+.formato{font-size:11.5px; color:var(--muted); margin-top:6px; font-family:"IBM Plex Mono",monospace}
+.btn{
+  appearance:none; cursor:pointer; font-family:Archivo,sans-serif; font-weight:600; font-size:14px;
+  border:1px solid var(--accent); background:var(--accent); color:var(--sobre-accent);
+  border-radius:4px; padding:10px 16px; flex:none;
+}
+.btn.ghost{background:transparent; color:var(--ink-2); border-color:var(--line)}
+.btn:disabled{opacity:.4; cursor:default}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.acoes{display:flex; gap:8px; margin-top:11px; flex-wrap:wrap}
+
+/* veredito + gabarito */
+.veredito{margin-top:13px; font-family:Archivo,sans-serif; font-weight:600; font-size:14px}
+.veredito.v-ok{color:var(--ok)} .veredito.v-erro{color:var(--erro)} .veredito.v-rever{color:var(--rever)}
+.veredito .val{font-family:"IBM Plex Mono",monospace; font-weight:600}
+.gab{display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease}
+.gab[data-aberto="1"]{grid-template-rows:1fr; margin-top:12px}
+.gab>div{overflow:hidden}
+.gab-in{border-top:1px dashed var(--line); padding-top:12px}
+.gab-rot{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink); font-weight:600; margin-bottom:5px}
+.gab-txt{font-size:14.5px; color:var(--ink-2); line-height:1.72; margin:0}
+@media(prefers-reduced-motion:reduce){ .gab{transition:none} .barra span{transition:none} }
+
+/* ---------- alternador de modo ---------- */
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:3px; background:var(--sunk); padding:3px; border-radius:8px; margin:14px 0 2px}
+.seg button{
+  appearance:none; border:0; cursor:pointer; font-family:Archivo,sans-serif; font-weight:600;
+  font-size:13.5px; padding:9px 4px; border-radius:6px; background:transparent; color:var(--muted);
+}
+.seg button[aria-selected="true"]{background:var(--surface); color:var(--accent-ink); box-shadow:var(--sombra)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.seg .n{font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:500; opacity:.75; display:block}
+
+/* ---------- aulas ---------- */
+.aulas{display:flex; flex-direction:column; gap:8px}
+details.aula>summary{gap:9px; align-items:flex-start; line-height:1.35}
+.aula-n{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; flex:none; margin-top:1px;
+  width:22px; height:22px; display:grid; place-items:center; border-radius:99px;
+  background:var(--accent-soft); color:var(--accent-ink);
+}
+.marca{
+  margin-left:auto; flex:none; width:16px; height:16px; border-radius:99px; margin-top:3px;
+  border:1.5px solid var(--line); position:relative;
+}
+details.aula[data-lida="1"] .marca{background:var(--ok); border-color:var(--ok)}
+details.aula[data-lida="1"] .marca::after{
+  content:""; position:absolute; left:4.5px; top:1.5px; width:4px; height:8px;
+  border:solid var(--surface); border-width:0 2px 2px 0; transform:rotate(42deg);
+}
+details.aula>summary::after{margin-left:9px; margin-top:1px}
+.aula-sub{display:block; font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:400; color:var(--muted); letter-spacing:.03em; margin-top:2px}
+
+.aula-corpo{padding:14px; font-size:15px; color:var(--ink-2)}
+.aula-corpo h3{
+  font-size:15.5px; font-weight:700; color:var(--ink); margin:22px 0 9px;
+  padding-bottom:5px; border-bottom:1px solid var(--line-2);
+}
+.aula-corpo>h3:first-child{margin-top:0}
+.aula-corpo p{margin:10px 0; line-height:1.68}
+.aula-corpo strong{color:var(--ink); font-weight:600}
+.aula-corpo ul{margin:10px 0; padding-left:19px; line-height:1.65}
+.aula-corpo li{margin:5px 0}
+.aula-corpo .f{margin:12px 0}
+
+/* callouts da aula */
+.cal{border-left:3px solid; border-radius:0 5px 5px 0; padding:11px 13px; margin:14px 0; font-size:14px; line-height:1.6}
+.cal .rot{display:block; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; margin-bottom:5px}
+.cal b,.cal strong{color:var(--ink)}
+.cal-info{border-color:var(--info); background:var(--info-soft)}
+.cal-info .rot{color:var(--info)}
+.cal-atencao{border-color:var(--rever); background:var(--rever-soft)}
+.cal-atencao .rot{color:var(--rever)}
+.cal-prova{border-color:var(--accent); background:var(--accent-soft)}
+.cal-prova .rot{color:var(--accent-ink)}
+.cal-ia{border-color:var(--ia); background:var(--ia-soft)}
+.cal-ia .rot{color:var(--ia)}
+
+/* exemplo resolvido */
+.ex{border:1px solid var(--line); border-radius:5px; overflow:hidden; margin:14px 0}
+.ex-h{
+  background:var(--surface-2); padding:8px 12px; border-bottom:1px solid var(--line-2);
+  font-size:10px; letter-spacing:.09em; text-transform:uppercase; font-weight:700; color:var(--muted);
+}
+.ex-b{padding:12px; font-size:14px}
+.ex-b>*:first-child{margin-top:0}
+.ex-b>*:last-child{margin-bottom:0}
+.ex-b .f{border:0; background:var(--surface-2); margin:9px 0}
+.res{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:600; color:var(--ok); display:block; margin-top:6px}
+
+/* tabelinha de aproximacao */
+.t2{width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; font-family:"IBM Plex Mono",monospace}
+.t2 th{font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:600; padding:6px 9px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap}
+.t2 td{padding:5px 9px; text-align:right; border-bottom:1px solid var(--line-2); white-space:nowrap; color:var(--ink)}
+.t2 th:first-child,.t2 td:first-child{text-align:left; color:var(--ink-2)}
+.t2 tr:last-child td{border-bottom:0}
+.t2 .destaca td{color:var(--ok); font-weight:600}
+
+/* checkpoint e navegacao */
+.chk{border:1px dashed var(--ok); background:var(--ok-soft); border-radius:5px; padding:12px 13px; margin:18px 0 0; font-size:14px; line-height:1.6}
+.chk .rot{display:block; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--ok); margin-bottom:5px}
+.aula-fim{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--line-2)}
+
+.prog-aulas{display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--muted); margin:12px 0 4px}
+.prog-aulas .trilho{flex:1; height:6px; border-radius:99px; background:var(--sunk); overflow:hidden}
+.prog-aulas .cheio{display:block; height:100%; background:var(--ok); width:0; transition:width .35s ease}
+.prog-aulas b{font-family:"IBM Plex Mono",monospace; color:var(--ink-2); font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){ .prog-aulas .cheio{transition:none} }
+
+.vazio{text-align:center; color:var(--muted); font-size:14px; padding:34px 10px; border:1px dashed var(--line); border-radius:var(--r)}
+.rodape{margin:34px 0 46px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--muted); line-height:1.7}
+.esconde{display:none !important}
+</style>
+
+<header class="topo">
+  <div class="wrap">
+    <div class="topo-id">
+      <h1>Simulado de Bolso</h1>
+      <span class="data">2 provas &middot; 39 questões</span>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="sim-cal" aria-selected="true">Cálculo A<span class="cod">MAT00APA &middot; Stewart 2.1–2.4</span></button>
+      <button class="tab" role="tab" data-tab="sim-pe" aria-selected="false">Probabilidade<span class="cod">MATPA2705 &middot; Montgomery 2</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="seg" id="seg" role="tablist">
+    <button type="button" role="tab" data-ir="aulas" aria-selected="true">Aulas<span class="n" id="seg-aulas">—</span></button>
+    <button type="button" role="tab" data-ir="cola" aria-selected="false">Cola<span class="n">resumo</span></button>
+    <button type="button" role="tab" data-ir="questoes" aria-selected="false">Questões<span class="n" id="seg-quest">—</span></button>
+  </div>
+
+  <!-- =================== AULAS =================== -->
+  <div data-vista="aulas" id="painel-aulas">
+    <div class="prog-aulas">
+      <b id="ap-txt">0 de 0</b> aulas estudadas
+      <span class="trilho"><span class="cheio" id="ap-barra"></span></span>
+    </div>
+    <div class="aulas" data-sub="sim-cal"><details class="card aula" data-aula="cal-1">
+  <summary><span class="aula-n">1</span><span>Por que alguém precisou inventar limite<span class="aula-sub">Stewart 2.1 · tangente e velocidade</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>Duas perguntas que ninguém sabia responder</h3>
+    <p>O capítulo de limites não começa com limites. Começa com dois problemas que travaram a matemática por séculos — e que no fim se revelaram <strong>a mesma pergunta</strong>.</p>
+
+    <div class="duasc">
+      <div class="mini"><span class="rot">Problema da tangente</span>Qual é a inclinação de uma curva <strong>em um único ponto</strong>? Inclinação sempre precisou de dois pontos. Como calcular com um só?</div>
+      <div class="mini"><span class="rot">Problema da velocidade</span>Qual é a velocidade <strong>em um único instante</strong>? Velocidade sempre foi distância dividida por tempo. Num instante, o tempo decorrido é zero.</div>
+    </div>
+
+    <p>Repare que os dois esbarram no mesmo muro: a conta que você sabe fazer exige <strong>um intervalo</strong>, e a pergunta é sobre <strong>um ponto</strong>. Zerar o intervalo quebra a divisão — dá divisão por zero. É exatamente daí que o limite nasce.</p>
+
+    <h3>A saída: encolher aos poucos, sem nunca chegar</h3>
+    <p>Em vez de zerar o intervalo de uma vez, encolha ele devagar e veja <em>para onde o resultado está caminhando</em>.</p>
+    <p>Pegue dois pontos da curva e trace a reta que passa pelos dois — essa é a <strong>secante</strong>. Agora vá aproximando o segundo ponto do primeiro. A secante vai girando, e a posição de que ela se aproxima é a <strong>tangente</strong>.</p>
+
+    <div class="f">inclinação da secante:
+
+m(PQ) = [ f(x) − f(a) ] / ( x − a )</div>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · a parábola y = x² no ponto P(1, 1)</div>
+      <div class="ex-b">
+        <p>Tomando um segundo ponto Q(x, x²), a inclinação da secante é:</p>
+        <div class="f">m(PQ) = (x² − 1)/(x − 1)
+      = (x − 1)(x + 1)/(x − 1)
+      = x + 1        (para x ≠ 1)</div>
+        <p>Agora a tabela que os exercícios da 2.1 pedem — aproximando <strong>pelos dois lados</strong>:</p>
+        <div class="tab-box">
+          <table class="t2">
+            <thead><tr><th>x (esquerda)</th><th>m(PQ)</th><th>x (direita)</th><th>m(PQ)</th></tr></thead>
+            <tbody>
+              <tr><td>0,5</td><td>1,5</td><td>2</td><td>3</td></tr>
+              <tr><td>0,9</td><td>1,9</td><td>1,5</td><td>2,5</td></tr>
+              <tr><td>0,99</td><td>1,99</td><td>1,1</td><td>2,1</td></tr>
+              <tr><td>0,999</td><td>1,999</td><td>1,01</td><td>2,01</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Os dois lados apertam no mesmo número:</p>
+        <span class="res">inclinação da tangente = 2 → y − 1 = 2(x − 1) → y = 2x − 1</span>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">Cai na lista</span>Os exercícios ímpares de 2.1 são quase todos deste formato: dão uma curva e um ponto, pedem a tabela de inclinações de secante e depois a <strong>estimativa</strong> da tangente. Preencha <b>os dois lados</b> — um lado só não é evidência suficiente, e é o tipo de coisa que custa ponto.</div>
+
+    <h3>O mesmo problema, de roupa trocada: velocidade</h3>
+    <p>Uma bola cai e a distância percorrida em t segundos é <span class="mono">s(t) = 4,9t²</span>. Qual é a velocidade <strong>exatamente</strong> em t = 5?</p>
+    <p>Você só sabe calcular velocidade <em>média</em>, e média precisa de um intervalo. Então calcule a média em intervalos cada vez menores, todos começando em 5:</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · velocidade média virando instantânea</div>
+      <div class="ex-b">
+        <div class="f">v(média) = [ s(5 + h) − s(5) ] / h
+         = [ 4,9(5 + h)² − 4,9(25) ] / h
+         = 4,9(25 + 10h + h² − 25) / h
+         = 4,9(10h + h²) / h
+         = 4,9(10 + h)</div>
+        <div class="tab-box">
+          <table class="t2">
+            <thead><tr><th>intervalo</th><th>h</th><th>v média (m/s)</th></tr></thead>
+            <tbody>
+              <tr><td>[5, 6]</td><td>1</td><td>53,9</td></tr>
+              <tr><td>[5; 5,1]</td><td>0,1</td><td>49,49</td></tr>
+              <tr><td>[5; 5,01]</td><td>0,01</td><td>49,049</td></tr>
+              <tr><td>[5; 5,001]</td><td>0,001</td><td>49,0049</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <span class="res">velocidade instantânea em t = 5 → 49 m/s</span>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">Cuidado</span>Não caia na tentação de fazer h = 0 direto na primeira linha. Ali, <span class="mono">4,9(10h + h²)/h</span> com h = 0 dá <span class="mono">0/0</span> — a mesma indeterminação do capítulo inteiro. O cancelamento do h só é legítimo <b>porque h ≠ 0</b> durante todo o processo: você se <em>aproxima</em> do instante, nunca chega nele. É exatamente o papel do <span class="mono">0 &lt; |x − a|</span> que reaparece na definição formal, na aula 5.</div>
+
+    <h3>A revelação: é a mesma conta</h3>
+    <div class="duasc">
+      <div class="mini"><span class="rot">Tangente</span><span class="mono">[ f(x) − f(a) ] / (x − a)</span><br>variação em y sobre variação em x</div>
+      <div class="mini"><span class="rot">Velocidade</span><span class="mono">[ s(t) − s(a) ] / (t − a)</span><br>variação em s sobre variação em t</div>
+    </div>
+    <p>É a <strong>mesma fórmula</strong> com as letras trocadas: uma variação dividida pela variação que a causou, seguida de um encolhimento até zero. Esse objeto tem nome — <strong>taxa de variação instantânea</strong> — e daqui a alguns capítulos ele ganha o nome definitivo: <strong>derivada</strong>.</p>
+    <p>Trocando <span class="mono">x = a + h</span>, a mesma fórmula vira a forma que você mais vai ver nos exercícios:</p>
+    <div class="f">m = lim(x→a) [ f(x) − f(a) ] / (x − a)
+
+           ou, o que é a mesma coisa:
+
+m = lim(h→0) [ f(a + h) − f(a) ] / h</div>
+
+    <div class="cal cal-info"><span class="rot">Por que a 2.1 existe</span>Ela não ensina técnica nenhuma. Ela mostra <em>por que</em> alguém precisou inventar limite. Todo o resto do capítulo é a construção da ferramenta que resolve estes dois problemas com rigor — então se esta aula fizer sentido, o capítulo inteiro fica mais fácil.</div>
+
+    <div class="cal cal-ia"><span class="rot">Onde isso aparece no seu curso</span>Essa razão é o <strong>gradiente</strong>. Treinar um modelo é perguntar "se eu mexer um tiquinho neste parâmetro, quanto a perda varia?" — variação da saída sobre variação da entrada, com a entrada tendendo a zero. Gradiente descendente é o problema da tangente rodando milhões de vezes por segundo.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Montar a inclinação de uma secante entre dois pontos, encolher o intervalo pelos dois lados e estimar a tangente; passar de velocidade média para instantânea pela mesma conta; enxergar o 0/0 escondido no meio do caminho; e entender que tangente e velocidade são o mesmo problema.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="cal-2">
+  <summary><span class="aula-n">2</span><span>O que é um limite, de verdade<span class="aula-sub">Stewart 2.2 · limite de uma função</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>Limite pergunta o destino, não a chegada</h3>
+    <p>A notação <span class="mono">lim(x→2) f(x) = L</span> se lê assim: <strong>quando x chega perto de 2, f(x) chega perto de L</strong>.</p>
+    <p>A palavra que decide tudo é <strong>perto</strong>. O limite não olha o que acontece <em>em</em> x = 2. Ele olha o que acontece na vizinhança, chegando pelos dois lados. A função pode até não existir no ponto — o limite continua fazendo sentido.</p>
+
+    <div class="f">lim f(x)  ≠  f(2)
+
+são perguntas diferentes —
+às vezes coincidem, às vezes não</div>
+
+    <div class="cal cal-info"><span class="rot">Analogia</span>Você está dirigindo em direção a uma cidade. O limite é <strong>para onde a estrada aponta</strong>. Se a cidade estiver interditada, a estrada continua apontando para lá — o destino existe mesmo que a chegada não aconteça.</div>
+
+    <h3>Passo 1 — quando é fácil, só substituir</h3>
+    <p>Na maior parte dos casos a função é bem-comportada no ponto, e o limite é simplesmente o valor da função ali:</p>
+    <div class="f">lim(x→1) (x + 2)     = 1 + 2 = 3
+lim(x→1) (2x + 1)    = 2(1) + 1 = 3
+lim(x→2) (x² + 1)    = 4 + 1 = 5
+lim(x→1) √x          = √1 = 1
+lim(x→2) (x²+x)/(x+3) = (4 + 2)/5 = 6/5
+lim(x→10) 5          = 5   ← constante vale 5 em todo lugar</div>
+    <p>Isso funciona porque polinômios, raízes e frações com denominador não nulo são <strong>funções contínuas</strong> nesses pontos — e continuidade é exatamente a propriedade de o limite bater com o valor da função.</p>
+
+    <div class="cal cal-atencao"><span class="rot">Mas atenção</span>Substituir é o <b>primeiro</b> passo, sempre. Mas é só o primeiro. Se a substituição der um número normal, acabou. Se der <span class="mono">0/0</span>, o resultado <em>não</em> é "não existe" — é o aviso de que você precisa simplificar antes.</div>
+
+    <h3>Passo 2 — quando dá 0/0: o buraco no gráfico</h3>
+    <p>Em <span class="mono">lim(x→2) (x² − 4)/(x − 2)</span>, substituir dá 0/0. A função realmente não existe em x = 2. Mas veja o que acontece em volta dela:</p>
+
+    <div class="tab-box">
+      <table class="t2">
+        <thead><tr><th>x</th><th>f(x)</th><th>x</th><th>f(x)</th></tr></thead>
+        <tbody>
+          <tr><td>1,9</td><td>3,9</td><td>2,1</td><td>4,1</td></tr>
+          <tr><td>1,99</td><td>3,99</td><td>2,01</td><td>4,01</td></tr>
+          <tr><td>1,999</td><td>3,999</td><td>2,001</td><td>4,001</td></tr>
+          <tr class="destaca"><td>→ 2</td><td>→ 4</td><td>→ 2</td><td>→ 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Os números apertam num valor só, vindo dos dois lados. Esse valor é o limite. Graficamente, a função é a reta y = x + 2 com um <strong>buraco</strong> em (2, 4) — e o limite "preenche" o buraco.</p>
+
+    <div class="cal cal-prova"><span class="rot">Frase para guardar</span><b>0/0 não é resposta, é sintoma.</b> É o sinal de que numerador e denominador têm um fator comum, e que ele vai cancelar. Se você escrever "o limite não existe" ao ver 0/0, perde a questão inteira. Como simplificar é o assunto da aula 4.</div>
+
+    <h3>Passo 3 — os dois lados precisam concordar</h3>
+    <p>Chegar "pela esquerda" (valores menores que o ponto) e "pela direita" (maiores) são duas perguntas separadas:</p>
+    <div class="f">lim(x→a⁻) f(x)   ← pela esquerda, x menor que a
+lim(x→a⁺) f(x)   ← pela direita,  x maior que a</div>
+
+    <div class="cal cal-prova"><span class="rot">A regra</span><span class="mono">o limite existe ⟺ os dois laterais existem E são iguais</span></div>
+
+    <p>Para funções "normais" isso é automático e nem se comenta. Mas em <strong>função definida por partes</strong> os dois lados usam fórmulas diferentes — e é aí que eles podem discordar:</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · função por partes</div>
+      <div class="ex-b">
+        <div class="f">lim(x→1⁻) f(x) = lim 2    = 2   ← ramo do miolo
+lim(x→1⁺) f(x) = lim 1/x² = 1   ← ramo de fora
+
+2 ≠ 1  →  lim(x→1) f(x) NÃO EXISTE</div>
+        <p>Note o cuidado: para calcular o limite lateral, você usa a fórmula que vale <strong>daquele lado</strong>. Pela esquerda de 1 estamos no miolo (|x| &lt; 1), onde f vale 2. Pela direita já estamos fora (|x| ≥ 1), onde f vale 1/x².</p>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">Não confunda</span>Se lim(x→3⁻) f = 5, lim(x→3⁺) f = 2 e f(3) = 5, então lim(x→3) f(x) <b>não existe</b> — mesmo com f(3) definido. Não se tira média dos dois lados, e não existe "prioridade da esquerda". E vale o contrário também: uma função pode ter limite num ponto onde nem está definida.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Ler limite como "para onde a função aponta"; resolver por substituição direta quando dá certo; reconhecer 0/0 como sintoma de fator cancelável, não como resposta; e decidir a existência do limite pelos dois laterais. Esse último ponto é a ferramenta que resolve toda questão de continuidade.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="cal-3">
+  <summary><span class="aula-n">3</span><span>As propriedades dos limites<span class="aula-sub">Stewart 2.3 · e o Teorema do Confronto</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>O painel de controle</h3>
+    <p>Cinco regras que quebram um limite complicado em limites simples. Todas valem sob <em>uma única condição</em> — e é o detalhe que mais gente perde de vista:</p>
+
+    <div class="cal cal-atencao"><span class="rot">Hipótese obrigatória</span>Os limites <span class="mono">lim(x→a) f(x)</span> e <span class="mono">lim(x→a) g(x)</span> precisam <b>existir</b>. Sem isso, nenhuma das cinco regras abaixo pode ser usada.</div>
+
+    <div class="f">lim [f + g] = lim f + lim g
+lim [f − g] = lim f − lim g
+lim [c · f] = c · lim f
+lim [f · g] = lim f · lim g
+lim [f / g] = lim f / lim g   ← só se lim g ≠ 0</div>
+
+    <p>Repare que quatro delas dizem a mesma coisa: <em>a operação passa para dentro do limite</em>. Só o quociente cobra pedágio.</p>
+
+    <h3>O que fazer quando o denominador zera</h3>
+    <p>Quando <span class="mono">lim g(x) = 0</span>, a regra do quociente simplesmente <strong>não se aplica</strong>. Isso não significa que o limite não existe — significa que essa ferramenta acabou e você precisa de outra. Separe em dois casos:</p>
+    <ul>
+      <li><strong>lim f = 0 também → forma 0/0.</strong> Indeterminado. Fatore ou racionalize primeiro e tente de novo (aula 4).</li>
+      <li><strong>lim f ≠ 0 → forma número/0.</strong> Não é indeterminado: a função explode para ±∞ e você tem uma assíntota vertical. Analise o sinal pela esquerda e pela direita.</li>
+    </ul>
+
+    <h3>As duas consequências que você já usa sem perceber</h3>
+    <p>Aplicando as regras repetidamente a <span class="mono">lim(x→a) x = a</span> e <span class="mono">lim(x→a) c = c</span>, saem os dois resultados que justificam a substituição direta:</p>
+    <div class="f">Polinômio:  lim(x→a) p(x) = p(a)          — sempre
+Racional:   lim(x→a) p(x)/q(x) = p(a)/q(a) — se q(a) ≠ 0</div>
+
+    <div class="cal cal-prova"><span class="rot">Cai na lista</span>Os exercícios da 2.3 pedem o <em>porquê</em>, não só o resultado. A justificativa correta em uma linha é: <b>"pelas propriedades operatórias, o limite de uma função polinomial em x = a é p(a)"</b>. No caso racional, acrescente: <b>"e o denominador não se anula em a"</b>. Substituir direto sem essa frase é o erro que mais custa ponto numa lista entregue.</div>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · do jeito que a prova pede</div>
+      <div class="ex-b">
+        <div class="f">lim(x→2) (3x² − 5x + 1)
+
+= 3·lim x² − 5·lim x + lim 1   ← soma, diferença, constante
+= 3·(2)² − 5·(2) + 1
+= 12 − 10 + 1</div>
+        <span class="res">= 3</span>
+      </div>
+    </div>
+
+    <h3>A pegadinha: a regra não vale ao contrário</h3>
+    <p>Se <span class="mono">lim (f + g)</span> existe, <strong>não</strong> se conclui que lim f e lim g existem. Contraexemplo com uma função que você já viu:</p>
+    <div class="f">f(x) = |x|/x   e   g(x) = −|x|/x,  com x → 0
+
+lim f não existe (−1 pela esquerda, +1 pela direita)
+lim g não existe (mesmo motivo, sinais trocados)
+
+mas f(x) + g(x) = 0 para todo x ≠ 0
+logo lim (f + g) = 0  — existe!</div>
+
+    <div class="cal cal-atencao"><span class="rot">Mão única</span>As propriedades <b>montam</b> o limite da combinação a partir das partes, nunca <b>desmontam</b>. Ver a soma dar certo não autoriza afirmar nada sobre cada parcela.</div>
+
+    <h3>Teorema do Confronto (ou do Sanduíche)</h3>
+    <p>Existe um caso em que o painel de controle falha e ainda assim dá para achar o limite: quando uma das partes <strong>oscila para sempre</strong> e não tem limite nenhum. A saída é prender a função entre duas outras.</p>
+
+    <div class="cal cal-info"><span class="rot">Enunciado</span>Se <span class="mono">f(x) ≤ g(x) ≤ h(x)</span> para todo x <b>perto de a</b> (não precisa valer em a nem no gráfico inteiro), e <span class="mono">lim f(x) = lim h(x) = L</span>, então <span class="mono">lim g(x) = L</span>.</div>
+
+    <p>A intuição do nome: as duas funções de fora são as fatias do pão e vão se fechando até a mesma altura L. O recheio no meio não tem para onde fugir. Repare no que o teorema <em>não</em> pede — ele nunca exige que g tenha limite. Isso é justamente o que ele te dá de presente no final.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · lim(x→0) x²·sen(1/x)</div>
+      <div class="ex-b">
+        <p>Primeiro, por que o painel de controle <em>não</em> resolve: quando x → 0, o valor 1/x explode e sen(1/x) oscila infinitas vezes entre −1 e 1. Esse limite não existe, então a regra do produto está <strong>proibida</strong> aqui.</p>
+        <div class="f">1. seno é sempre limitado:  −1 ≤ sen(1/x) ≤ 1
+
+2. multiplica tudo por x²:  −x² ≤ x²·sen(1/x) ≤ x²
+
+3. as pontas:  lim(x→0) (−x²) = 0  e  lim(x→0) x² = 0
+
+4. pelo confronto:</div>
+        <span class="res">lim(x→0) x²·sen(1/x) = 0</span>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">A sutileza mais cobrada</span>O passo 2 esconde uma armadilha. Multiplicar uma desigualdade por um número <b>negativo inverte o sinal</b> — e aqui isso não aconteceu porque <span class="mono">x² ≥ 0</span> sempre. É por isso que o pão do sanduíche é ±x², e não ±x³: com x³ o sinal muda quando x é negativo, as duas funções trocam de lugar e a desigualdade quebra.</div>
+
+    <div class="cal cal-ia"><span class="rot">Onde isso aparece no seu curso</span>O confronto é a forma padrão de provar que um treino converge. Se o erro do modelo na etapa n está preso entre duas curvas conhecidas que ambas tendem a zero, o erro tende a zero — sem precisar de fórmula fechada para o erro, que quase nunca se tem. Limitar por cima e por baixo é mais barato que calcular exatamente.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>As cinco propriedades e a hipótese que todas exigem; que a regra do quociente cai quando o denominador tende a zero, e o que fazer nos dois casos; justificar substituição direta citando polinômio ou racional; não usar as regras ao contrário; e resolver por confronto os limites em que uma parte oscila.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="cal-4">
+  <summary><span class="aula-n">4</span><span>A oficina do 0/0<span class="aula-sub">fatorar, racionalizar e MMC · é o que mais cai</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <div class="cal cal-prova"><span class="rot">Leia isto primeiro</span>Esta é <b>a aula da prova</b>. Treze das dezessete questões do simulado de Cálculo caem aqui. Se o tempo for curto, é esta aula que você estuda.</div>
+
+    <h3>O roteiro, que é sempre o mesmo</h3>
+    <ol class="passos">
+      <li><strong>Substitua o valor.</strong> Deu um número normal? Acabou — esse é o limite, e a justificativa é que a função é contínua ali.</li>
+      <li><strong>Deu 0/0?</strong> Indeterminado. Simplifique, cancele o fator comum e substitua de novo <em>na expressão já simplificada</em>.</li>
+      <li><strong>Deu número/0, com numerador ≠ 0?</strong> Aí o limite vai mesmo para ±∞, e você tem uma assíntota vertical. Não tente cancelar nada.</li>
+    </ol>
+
+    <div class="cal cal-atencao"><span class="rot">A distinção mais importante da matéria</span><b>0/0</b> é <em>indeterminado</em>: pode dar qualquer coisa, precisa simplificar para descobrir. <b>5/0</b> <em>não</em> é indeterminado: explode para ±∞. Confundir os dois faz você racionalizar sem necessidade, ou parar cedo demais.</div>
+
+    <p>Três limites que dão 0/0 no mesmo ponto x = 2 e terminam completamente diferentes — a prova de que 0/0 sozinho não decide nada:</p>
+    <div class="f">(x² − 4)/(x − 2)       → 4
+(x² − 4x + 4)/(x − 2) → 0
+(x³ − 8)/(x − 2)      → 12</div>
+
+    <p>E o contraexemplo que a lista adora: <span class="mono">lim(x→3) (x² − 9)/(x + 3)</span> dá 0/6 = 0. Aqui <strong>não há indeterminação nenhuma</strong> — o denominador não zerou. Não fatore, não cancele: só substitua. O par (x²−9)/(x−3) e (x²−9)/(x+3) está na lista justamente para testar se você percebe a diferença.</p>
+
+    <h3>Ferramenta 1 — fatorar (quando é polinômio)</h3>
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido</div>
+      <div class="ex-b">
+        <div class="f">lim(x→3) (x² − 9)/(x − 3)
+
+substituindo: (9 − 9)/(3 − 3) = 0/0
+fatorando:    (x − 3)(x + 3)/(x − 3)
+cancelando:   x + 3</div>
+        <span class="res">= 3 + 3 = 6</span>
+      </div>
+    </div>
+
+    <p>Para fatorar você precisa destas quatro de cor. Não tem jeito, são as únicas que caem:</p>
+    <div class="f">a² − b² = (a + b)(a − b)
+a³ − b³ = (a − b)(a² + ab + b²)
+a³ + b³ = (a + b)(a² − ab + b²)
+a² ± 2ab + b² = (a ± b)²</div>
+
+    <div class="cal cal-atencao"><span class="rot">O único ponto que confunde</span>Nas fórmulas dos cubos, <b>o sinal do meio do segundo parêntese é sempre o contrário do primeiro</b>. Em a³ + b³ = (a + b)(a² <b>−</b> ab + b²), o parêntese da frente tem + e o de trás tem −.</div>
+
+    <h3>Ferramenta 2 — racionalizar (quando tem raiz)</h3>
+    <p>Com raiz, cancelar não sai direto. Multiplique em cima e embaixo pelo <strong>conjugado</strong> — a mesma expressão com o sinal do meio trocado. O objetivo é sempre criar <span class="mono">(a − b)(a + b) = a² − b²</span>, porque é isso que <em>elimina a raiz</em>, que era o que estava impedindo o cancelamento.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · raiz no numerador</div>
+      <div class="ex-b">
+        <div class="f">lim(h→0) (√(9 + h) − 3) / h
+
+× conjugado (√(9+h) + 3) em cima e embaixo:
+
+numerador vira:   (9 + h) − 9 = h
+denominador vira: h(√(9+h) + 3)
+
+cancela o h:      1/(√(9+h) + 3)</div>
+        <span class="res">= 1/(3 + 3) = 1/6</span>
+        <p>Note que o 3 do denominador final é √9 — por isso a resposta é 1/(2√9) = 1/6, e não 1/3 nem 1/9.</p>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · raiz no denominador (funciona igual)</div>
+      <div class="ex-b">
+        <div class="f">lim(x→0) x / (√(1 + 3x) − 1)
+
+× (√(1+3x) + 1):
+
+denominador vira: (1 + 3x) − 1 = 3x
+fica: x(√(1+3x) + 1) / (3x)
+cancela o x: (√(1+3x) + 1)/3</div>
+        <span class="res">= (1 + 1)/3 = 2/3</span>
+        <p>Não importa de que lado está a raiz — o conjugado sempre transforma (a − b)(a + b) em a² − b².</p>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">O erro que a lista caça</span>Quando racionalizar produz um <b>coeficiente</b>, ele muda a resposta. Em <span class="mono">lim(u→2) (√(4u+1) − 3)/(u − 2)</span>, o numerador vira (4u + 1) − 9 = 4u − 8 = <b>4</b>(u − 2). Quem esquece esse 4 chega em 1/6 em vez de 2/3. <b>Sempre fatore o numerador depois de racionalizar, antes de cancelar.</b></div>
+
+    <h3>Ferramenta 3 — MMC (frações somadas, ou ∞ − ∞)</h3>
+    <p>Quando o limite tem frações somadas ou subtraídas, junte tudo numa fração só <em>antes</em> de qualquer outra coisa.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · o tipo ∞ − ∞</div>
+      <div class="ex-b">
+        <div class="f">lim(t→0) [ 1/t − 1/(t² + t) ]
+
+fatore o 2º denominador: t² + t = t(t + 1)
+MMC = t(t + 1):
+
+= [(t + 1) − 1] / [t(t + 1)]
+= t / [t(t + 1)]
+cancela o t: 1/(t + 1)</div>
+        <span class="res">= 1</span>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">Nunca faça isto</span>Não calcule ∞ − ∞ "termo a termo". Os dois termos explodem, mas <b>a diferença entre eles é perfeitamente finita</b> — como acabou de dar 1. ∞ − ∞ é indeterminação, igual a 0/0.</div>
+
+    <p><strong>Expoente negativo é fração disfarçada.</strong> Em <span class="mono">lim(h→0) [(3 + h)⁻¹ − 3⁻¹]/h</span>, reescreva como <span class="mono">[1/(3+h) − 1/3]/h</span> e caia direto nesta ferramenta: MMC dá <span class="mono">−h/[3(3+h)]</span>, divide por h e sobra <span class="mono">−1/[3(3+h)] → −1/9</span>.</p>
+
+    <h3>Três atalhos que economizam a conta inteira</h3>
+    <div class="tab-box">
+      <table class="dic">
+        <tr><td>lim(t→1) (tⁿ − 1)/(tᵐ − 1)</td><td>= <strong>n/m</strong>. Cuidado para não inverter — é o erro mais comum de quem aplica de cabeça.</td></tr>
+        <tr><td>lim(h→0) (√(a+h) − √a)/h</td><td>= <strong>1/(2√a)</strong>.</td></tr>
+        <tr><td>x = (√x)²</td><td>Transforma 16 − x na diferença de quadrados (4 − √x)(4 + √x). Sem esse passo, o fator que cancela nem aparece.</td></tr>
+      </table>
+    </div>
+
+    <div class="cal cal-info"><span class="rot">Confira sem gabarito</span>Vários limites da 2.3 são <b>derivadas disfarçadas</b> — vieram da fórmula lim(h→0) [f(a+h) − f(a)]/h da aula 1. Então dá para conferir a resposta pela derivada: em (2+h)³, x³ → 3x² dá 3(2)² = 12 ✓. Em (3+h)⁻¹, 1/x → −1/x² dá −1/9 ✓. Se bater, sua conta está certa.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Seguir o roteiro substituir → identificar 0/0 → simplificar → substituir de novo; escolher entre fatorar, racionalizar e MMC conforme apareça polinômio, raiz ou fração; distinguir 0/0 de número/0; e conferir o resultado pela derivada quando o limite tem cara de (f(a+h) − f(a))/h.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="cal-5">
+  <summary><span class="aula-n">5</span><span>A definição precisa de limite<span class="aula-sub">Stewart 2.4 · épsilon e delta</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>Por que a tabelinha não prova nada</h3>
+    <p>Até aqui, limite foi tratado assim: monte uma tabela, veja para onde os valores parecem ir, conclua. Funciona como intuição — e falha como demonstração.</p>
+
+    <div class="ex">
+      <div class="ex-h">O contraexemplo que derruba a tabela</div>
+      <div class="ex-b">
+        <div class="f">f(x) = sen(π/x),  com x → 0
+
+x = 1     → sen(π)    = 0
+x = 0,5   → sen(2π)   = 0
+x = 0,1   → sen(10π)  = 0
+x = 0,01  → sen(100π) = 0
+
+a tabela "prova" que o limite é 0
+— e o limite não existe</div>
+        <p>A tabela escolheu justamente os pontos em que a função vale zero. Entre eles, ela continua subindo até 1 e descendo até −1, infinitas vezes. Nenhuma quantidade de linhas revelaria isso.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">O problema de fundo</span>É a palavra <b>perto</b>. "Quando x fica perto de a, f(x) fica perto de L" não é uma afirmação matemática: perto <em>quanto</em>? A definição ε-δ existe exatamente para trocar a palavra "perto" por um número.</div>
+
+    <h3>A caixa de tolerância</h3>
+    <p>Antes dos símbolos, a imagem geométrica — que é a mesma do slide da aula:</p>
+    <div class="duasc">
+      <div class="mini"><span class="rot">Faixa deitada — eixo y</span>Vai de <span class="mono">L − ε</span> até <span class="mono">L + ε</span>. É a <strong>margem de erro aceita na saída</strong>. Quem escolhe a altura dela é o adversário, e ele vai escolher fina.</div>
+      <div class="mini"><span class="rot">Faixa em pé — eixo x</span>Vai de <span class="mono">a − δ</span> até <span class="mono">a + δ</span>. É a <strong>janela de segurança na entrada</strong>. Quem escolhe a largura dela é você, depois de ver o ε.</div>
+    </div>
+
+    <div class="cal cal-info"><span class="rot">A regra do retângulo</span>No cruzamento das duas faixas forma-se um retângulo. O limite existe se, para <b>qualquer altura</b> que o adversário der ao retângulo, você conseguir apertar a largura o bastante para a curva sair dele <b>só pelas laterais</b> — nunca pelo teto nem pelo chão. Escapar pelo teto significa que existe um x dentro da sua janela cujo f(x) estourou a margem de erro: sua janela não serviu, e você precisa de uma mais estreita.</div>
+
+    <h3>A definição, com os quantificadores no lugar</h3>
+    <div class="f">lim(x→a) f(x) = L significa:
+
+para todo ε &gt; 0,  existe δ &gt; 0  tal que
+
+   se   0 &lt; |x − a| &lt; δ
+   então  |f(x) − L| &lt; ε</div>
+
+    <ul>
+      <li><strong>para todo ε &gt; 0</strong> — a promessa vale contra qualquer exigência, por menor que seja. Não basta funcionar para ε = 0,1.</li>
+      <li><strong>existe δ &gt; 0</strong> — basta você exibir <em>um</em> δ que funcione. Não precisa ser o maior possível.</li>
+      <li><span class="mono">|x − a| &lt; δ</span> — traduzindo o módulo: a distância de x até a é menor que δ, ou seja <span class="mono">a − δ &lt; x &lt; a + δ</span>.</li>
+      <li><span class="mono">|f(x) − L| &lt; ε</span> — a distância da saída até L é menor que ε, ou seja <span class="mono">L − ε &lt; f(x) &lt; L + ε</span>.</li>
+    </ul>
+
+    <div class="cal cal-atencao"><span class="rot">A ordem É o conteúdo</span>O ε vem primeiro e o δ depois, porque <b>δ depende de ε</b> — você só escolhe a largura da janela depois de saber que precisão foi exigida. Inverter isso ("existe δ para todo ε") produz uma afirmação diferente e <b>falsa</b>. É a alternativa errada favorita das provas.</div>
+
+    <h3>O detalhe do "0 &lt;" à esquerda</h3>
+    <p>Por que a condição não é só <span class="mono">|x − a| &lt; δ</span>, mas <span class="mono">0 &lt; |x − a| &lt; δ</span>? Porque <span class="mono">|x − a| = 0</span> significa exatamente <span class="mono">x = a</span>. Escrever <span class="mono">0 &lt;</span> é a forma técnica de dizer <strong>menos o próprio ponto a</strong>.</p>
+    <p>Esse simbolozinho é o que faz o limite ignorar o valor da função no ponto. É a versão formal do que a aula 2 já dizia: a função pode ser contínua ali, pode ter um buraco, pode nem estar definida em a — e o limite continua o mesmo, porque a definição nunca olha para x = a.</p>
+    <p>E <span class="mono">|f(x) − L| &lt; ε</span> é desigualdade <strong>estrita</strong>: nunca se exige que f(x) alcance L, só que chegue tão perto quanto se queira.</p>
+
+    <h3>O jogo em dois turnos</h3>
+    <div class="duasc">
+      <div class="mini"><span class="rot">Turno 1 — o desafiador</span>Joga um ε na mesa. "Exijo que f(x) acerte L com erro menor que 0,001." Ele pode voltar quantas vezes quiser, sempre com um ε menor.</div>
+      <div class="mini"><span class="rot">Turno 2 — o defensor</span>Responde com um δ. "Fique a menos de 0,0005 de a e eu garanto o seu erro." Ele responde <em>depois</em> de ver o ε.</div>
+    </div>
+    <p>O defensor vence se tiver uma <strong>fórmula</strong> de δ em função de ε que funcione sempre. Aí o limite está provado. Aqueles números do slide não são aleatórios: <span class="mono">δ = 0,0005</span> é exatamente <span class="mono">ε/2</span> com <span class="mono">ε = 0,001</span>.</p>
+
+    <h3>Uma prova de verdade, do rascunho ao texto final</h3>
+    <p>Provar que <span class="mono">lim(x→3) (2x − 1) = 5</span>. Toda prova ε-δ tem duas partes, e <strong>só a segunda vai no papel entregue</strong>.</p>
+
+    <div class="ex">
+      <div class="ex-h">Parte 1 · rascunho — descobrir o δ, de trás para frente</div>
+      <div class="ex-b">
+        <div class="f">quero: |f(x) − L| &lt; ε
+
+|(2x − 1) − 5| = |2x − 6| = |2(x − 3)| = 2·|x − 3|
+
+então preciso de:  2·|x − 3| &lt; ε
+ou seja:           |x − 3| &lt; ε/2</div>
+        <span class="res">achei: basta tomar δ = ε/2</span>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-h">Parte 2 · a prova, escrita para frente — é esta que vale nota</div>
+      <div class="ex-b">
+        <div class="f">Seja ε &gt; 0 dado. Tome δ = ε/2.
+Suponha 0 &lt; |x − 3| &lt; δ. Então:
+
+   |f(x) − 5| = |2x − 6| = 2·|x − 3|
+              &lt; 2·δ = 2·(ε/2) = ε
+
+Logo |f(x) − 5| &lt; ε sempre que 0 &lt; |x − 3| &lt; δ.
+Portanto lim(x→3) (2x − 1) = 5.  ∎</div>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">A estrutura fixa, vale decorar</span><b>Seja ε &gt; 0 → tome δ = (fórmula) → suponha 0 &lt; |x − a| &lt; δ → conclua |f(x) − L| &lt; ε.</b> Entregar só o rascunho conta como não ter provado: o rascunho mostra de onde veio o δ, mas a lógica dele corre ao contrário da lógica da definição.</div>
+
+    <div class="cal cal-atencao"><span class="rot">Ninguém adivinha o δ</span>Ele sempre sai de manipular <span class="mono">|f(x) − L|</span> até aparecer um <span class="mono">|x − a|</span> multiplicado por alguma coisa. Para funções do 1º grau <span class="mono">f(x) = mx + b</span>, o resultado é sempre <span class="mono">δ = ε/|m|</span>.</div>
+
+    <div class="cal cal-ia"><span class="rot">Onde isso aparece no seu curso</span>Isso não é formalidade acadêmica — é literalmente como se testa código numérico. Quando você escreve <span class="mono">np.allclose(a, b, atol=1e-8)</span>, o <span class="mono">1e-8</span> é o ε. Quando um treino para porque a perda mudou menos que um limiar, o limiar é o ε. E "quantas iterações preciso rodar para garantir essa precisão?" é a pergunta "qual é o δ?".</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Por que a tabela não prova limite; ler a caixa de tolerância em termos de ε e δ; escrever a definição com os quantificadores na ordem certa; explicar o papel do "0 &lt;" à esquerda; e montar uma prova ε-δ para função do 1º grau separando rascunho de texto final. Isso fecha a Seção 2.4 e o conteúdo do simulado.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Voltar ao topo ↑</button>
+    </div>
+  </div>
+</details></div>
+    <div class="aulas" data-sub="sim-pe"><details class="card aula" data-aula="pe-1">
+  <summary><span class="aula-n">1</span><span>Espaço amostral e eventos<span class="aula-sub">Montgomery 2-1 a 2-31 · onde tudo começa</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>Espaço amostral: a lista de tudo que pode acontecer</h3>
+    <p>O <strong>espaço amostral S</strong> é o conjunto de todos os resultados possíveis de um experimento. Todo problema de probabilidade começa aqui — e boa parte dos erros vem de listar S errado.</p>
+
+    <div class="f">uma moeda:  S = {C, K}
+um dado:    S = {1, 2, 3, 4, 5, 6}
+duas moedas: S = {CC, CK, KC, KK}
+tempo até queimar: S = {t | t ≥ 0}</div>
+
+    <div class="cal cal-atencao"><span class="rot">O erro que custa metade do capítulo</span>Em duas moedas, <b>CK e KC são resultados diferentes</b> — a primeira deu cara e a segunda coroa, ou o contrário. Quem escreve S = {CC, CK, KK} com três elementos calcula P(uma cara) = 1/3, quando a resposta é 2/4 = 1/2. Listar S com cuidado resolve metade dos problemas.</div>
+
+    <h3>A pegadinha nº 1 do Montgomery: discreto × contínuo</h3>
+    <p>Quando os resultados são contáveis (dados, moedas, número de defeitos), o espaço é <strong>discreto</strong>. Quando formam um intervalo (tempo, peso, resistência), é <strong>contínuo</strong>. Até aí, tranquilo. O problema é este:</p>
+
+    <div class="ex">
+      <div class="ex-h">Exercício 2-7 · a alternativa que quase todo mundo erra</div>
+      <div class="ex-b">
+        <p>"Uma escala que mostra <strong>duas casas decimais</strong> é usada para medir, em toneladas, alimentações de materiais. Descreva o espaço amostral."</p>
+        <p>A tentação é responder "contínuo, porque peso é uma medida". <strong>Errado.</strong></p>
+        <div class="f">S = {0,00; 0,01; 0,02; 0,03; ...}</div>
+        <span class="res">Discreto — ainda que infinito</span>
+        <p>A <em>grandeza</em> (peso) é contínua, mas o <em>espaço amostral do experimento</em> é o conjunto do que o <strong>instrumento consegue registrar</strong>. Com duas casas decimais, os resultados possíveis são contáveis.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">Cai na lista</span>O Montgomery usa esse par de exercícios de propósito: <b>2-6</b> (amperímetro de três dígitos) e <b>2-7</b> (escala de dois decimais), justamente para separar "a natureza da grandeza" de "a precisão do instrumento". Se o enunciado descreve um mostrador, um contador ou um número de casas decimais, o espaço é discreto.</div>
+
+    <h3>Evento é um subconjunto de S</h3>
+    <p>Um <strong>evento</strong> é qualquer coleção de resultados. No lançamento de um dado:</p>
+    <div class="f">A = "sair par"        = {2, 4, 6}
+B = "sair maior que 4" = {5, 6}</div>
+
+    <p>A partir daí, três operações resolvem praticamente tudo:</p>
+    <ul>
+      <li><strong>Complemento A′ ("não A")</strong> = {1, 3, 5}. Tudo que está em S mas não em A.</li>
+      <li><strong>Interseção A ∩ B ("A E B")</strong> = {6}. O que está nos dois ao mesmo tempo.</li>
+      <li><strong>União A ∪ B ("A OU B")</strong> = {2, 4, 5, 6}. O que está em pelo menos um dos dois — note que o 6 aparece <em>uma vez só</em>.</li>
+    </ul>
+
+    <div class="cal cal-prova"><span class="rot">Traduza antes de calcular</span>"e", "ambos" → <b>interseção ∩</b> · "ou", "pelo menos um" → <b>união ∪</b> · "não", "nenhum" → <b>complemento ′</b><br>O "ou" da matemática é <em>inclusivo</em>: A ∪ B inclui o caso em que os dois acontecem.</div>
+
+    <h3>Espaço amostral ordenado e amostragem sem reposição</h3>
+    <p>Quando o enunciado pede o espaço <strong>ordenado</strong>, cada resultado é um par (1º, 2º). Com 3 categorias possíveis por posição:</p>
+    <div class="f">3 × 3 = 9 pares ordenados
+
+(n,n) (n,p) (n,g)
+(p,n) (p,p) (p,g)
+(g,n) (g,p) (g,g)</div>
+    <p>São <strong>9</strong>, não 3 (uma por categoria) nem 6 (combinações de duas entre três).</p>
+
+    <div class="cal cal-atencao"><span class="rot">Sem reposição, o que sobra depende do que saiu</span>No exercício 2-31, o item (b) muda a batelada para ter apenas <b>1</b> placa com grandes defeitos. Aí o resultado (g,g) torna-se <b>impossível</b> e o espaço amostral cai de 9 para 8. É exatamente esse detalhe que o exercício quer testar.</div>
+
+    <h3>Mutuamente exclusivos: quando não dá para acontecer junto</h3>
+    <p>Dois eventos são <strong>mutuamente exclusivos</strong> (ou disjuntos) quando não podem ocorrer ao mesmo tempo: <span class="mono">A ∩ B = ∅</span>.</p>
+    <p>"Sair par" e "sair ímpar" são mutuamente exclusivos. Já "sair par" e "sair maior que 4" <strong>não são</strong>: o 6 satisfaz os dois.</p>
+
+    <div class="cal cal-atencao"><span class="rot">A confusão mais cobrada do capítulo</span>Não confunda <b>mutuamente exclusivos</b> com <b>independentes</b> — são quase opostos.<br>• Mutuamente exclusivos: se um aconteceu, o outro <em>certamente não</em> aconteceu.<br>• Independentes: saber que um aconteceu <em>não muda nada</em> sobre o outro.<br>Dois eventos de probabilidade não nula que sejam mutuamente exclusivos são, necessariamente, <b>dependentes</b>. Voltamos nisso na aula 4.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Listar o espaço amostral com cuidado (inclusive distinguindo CK de KC); decidir discreto × contínuo pelo instrumento, não pela grandeza; montar espaços ordenados e ajustar para amostragem sem reposição; traduzir enunciado em união, interseção e complemento; e separar mutuamente exclusivos de independentes.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="pe-2">
+  <summary><span class="aula-n">2</span><span>Contagem: quando listar um a um não dá<span class="aula-sub">Montgomery 2-35 a 2-49 · regra do produto</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>A regra da multiplicação</h3>
+    <p>Quando uma escolha tem n₁ opções e a seguinte tem n₂ opções, o total é o <strong>produto</strong>:</p>
+    <div class="f">n₁ × n₂ × ... × n_k</div>
+    <p>Um diagrama de árvore mostra por quê — cada galho de um nível se abre em todos os galhos do próximo.</p>
+
+    <div class="cal cal-prova"><span class="rot">A palavrinha que decide tudo</span><b>Some</b> quando as opções são <em>alternativas</em> ("ou isto ou aquilo"). <b>Multiplique</b> quando são <em>etapas</em> ("isto e depois aquilo").<br>Escolher uma entrada <em>ou</em> uma sobremesa entre 3 e 4 → 3 + 4 = 7. Escolher uma entrada <em>e</em> uma sobremesa → 3 × 4 = 12.</div>
+
+    <div class="ex">
+      <div class="ex-h">Exercício 2-37 · quatro decisões em sequência</div>
+      <div class="ex-b">
+        <p>Um tanque tem 3 formas, 4 tamanhos, 3 localizações de válvula de alimentação e 4 de retirada. Quantos projetos diferentes?</p>
+        <div class="f">3 × 4 × 3 × 4</div>
+        <span class="res">= 144 projetos</span>
+        <p>Conferência mental: se qualquer fator fosse 1 (só uma opção), ele não mudaria o total — e é isso que a multiplicação faz naturalmente. Somar daria 14, que seria a resposta se o projeto pudesse variar em <em>uma</em> característica só.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">O fator que passa batido</span>Toda característica <b>"tem / não tem" entra como ×2</b>. No exercício 2-35, "pode incluir <em>ou não</em> um extensor de memória" é uma escolha de 2 opções: 5 × 3 × 4 × <b>2</b> = 120. Esquecer esse 2 dá 60 — metade da resposta.</div>
+
+    <h3>Repetição permitida: o expoente é o número de posições</h3>
+    <div class="ex">
+      <div class="ex-h">Exercícios 2-5 e 2-57 · dois clássicos</div>
+      <div class="ex-b">
+        <div class="f">24 trilhas, cada uma boa ou defeituosa:
+2 × 2 × ... × 2  (24 vezes)  =  2²⁴</div>
+        <span class="res">= 16.777.216 resultados</span>
+        <div class="f">placa: 3 dígitos (0-9) + 3 letras (A-Z):
+10 × 10 × 10 × 26 × 26 × 26 = 10³ × 26³</div>
+        <span class="res">= 17.576.000 placas</span>
+        <p>A pergunta do livro é a probabilidade de <em>a sua</em> placa ser sorteada: como todas são igualmente prováveis, P = 1/17.576.000 ≈ 5,7 × 10⁻⁸.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">Não use arranjo aqui</span>Nada impede a placa <span class="mono">AAA-000</span>, então <b>há repetição</b> e a conta é regra do produto, não arranjo. Arranjo só entra quando um elemento usado não pode ser reutilizado.</div>
+
+    <h3>A pergunta que separa arranjo de combinação</h3>
+    <p><strong>Trocar a ordem dos escolhidos gera um resultado diferente?</strong> Se "João presidente e Maria tesoureira" ≠ "Maria presidente e João tesoureiro", é arranjo. Se "comissão do João e da Maria" = "comissão da Maria e do João", é combinação.</p>
+
+    <div class="duasc">
+      <div class="mini"><span class="rot">Ordem importa → arranjo</span><span class="mono">ₙPᵣ = n! / (n − r)!</span><br>Pódio (1º, 2º, 3º), senha, cargos distintos, ordem de fila.</div>
+      <div class="mini"><span class="rot">Ordem não importa → combinação</span><span class="mono">C(n,r) = n! / [r!(n − r)!]</span><br>Comissão, mão de cartas, amostra, grupo de peças.</div>
+    </div>
+
+    <p>A relação entre as duas é direta: <span class="mono">C(n,r) = ₙPᵣ / r!</span>. Cada grupo sem ordem foi contado r! vezes na versão com ordem — uma para cada embaralhamento dos escolhidos. Dividir por r! desfaz a repetição.</p>
+
+    <h3>Permutação: tudo em ordem</h3>
+    <div class="ex">
+      <div class="ex-h">Exercícios 2-38 e 2-39 · com e sem restrição</div>
+      <div class="ex-b">
+        <p><strong>2-38:</strong> 10 operações que podem ser feitas em qualquer ordem.</p>
+        <div class="f">10 escolhas para a 1ª, 9 para a 2ª (uma já foi usada),
+8 para a 3ª... até 1.
+
+10 × 9 × 8 × ... × 1 = 10!</div>
+        <span class="res">= 3.628.800 sequências</span>
+        <p><strong>2-39:</strong> as mesmas 10, mas as 5 usinagens têm de terminar antes de qualquer montagem começar. A restrição divide em dois blocos independentes:</p>
+        <div class="f">5! (ordem entre as usinagens) × 5! (entre as montagens)
+= 120 × 120</div>
+        <span class="res">= 14.400 sequências</span>
+        <p>Compare: sem a restrição eram 3.628.800. Fixar a ordem entre os dois grupos corta o total por um fator de 252.</p>
+      </div>
+    </div>
+
+    <p>Com elementos <strong>repetidos</strong>, divida pelos fatoriais das repetições — a lógica é a mesma da combinação, você contou cada arranjo várias vezes:</p>
+    <div class="f">ARARA (5 letras: 3 A e 2 R)
+= 5! / (3!·2!) = 120/(6·2) = 10
+
+caso geral: n! / (r₁! · r₂! · ... · r_k!)</div>
+
+    <h3>Onde contagem vira probabilidade</h3>
+    <p>Num espaço amostral com resultados <strong>igualmente prováveis</strong>:</p>
+    <div class="f">P(A) = casos favoráveis / casos possíveis</div>
+    <p>Exemplo do capítulo — a probabilidade de receber 3 ases numa mão de pôquer de 5 cartas. O denominador é C(52, 5) = 2.598.960 mãos possíveis. O numerador é C(4, 3) × C(48, 2) = 4 × 1.128 = 4.512: escolher 3 dos 4 ases <em>e</em> 2 das 48 cartas restantes. Logo P ≈ 0,0017.</p>
+
+    <div class="cal cal-info"><span class="rot">O padrão</span>Note as duas operações trabalhando juntas: <b>combinação</b> para escolher cada grupo (a ordem em que as cartas chegam não importa) e <b>multiplicação</b> para juntar as escolhas. Esse padrão — C(...) × C(...) sobre C(...) — resolve a maior parte dos exercícios de contagem com probabilidade.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Multiplicar etapas e somar alternativas; contar "tem/não tem" como ×2; usar expoente quando há repetição; decidir entre arranjo e combinação pela pergunta da ordem; tratar permutação com restrição por blocos e com elementos repetidos dividindo por fatoriais; e montar P(A) = favoráveis / possíveis.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="pe-3">
+  <summary><span class="aula-n">3</span><span>Axiomas, regra aditiva e complemento<span class="aula-sub">Montgomery 2-49 a 2-72 · e as tabelas de dupla entrada</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>Os axiomas: três regras que tudo obedece</h3>
+    <p>Antes de qualquer cálculo, três fatos que valem sempre — e que servem para <strong>conferir resposta</strong>:</p>
+    <div class="f">0 ≤ P(A) ≤ 1
+P(S) = 1    ← algum resultado vai acontecer
+P(∅) = 0    ← o impossível não acontece</div>
+
+    <div class="cal cal-atencao"><span class="rot">Sua conta deu 1,4?</span>Probabilidade <b>nunca</b> é negativa nem maior que 1. Se deu, não é arredondamento — é erro de método, quase sempre <em>somar coisas que se sobrepõem</em>. Um exercício do livro é literalmente "encontre os erros" em afirmações desse tipo.</div>
+
+    <p>A probabilidade de um evento é a <strong>soma</strong> das probabilidades dos resultados que o compõem:</p>
+
+    <div class="ex">
+      <div class="ex-h">Exercício 2-49 · o básico, feito direito</div>
+      <div class="ex-b">
+        <p>S = {a, b, c, d, e} com probabilidades 0,1; 0,1; 0,2; 0,4 e 0,2. Seja A = {a, b, c}.</p>
+        <div class="f">P(A) = P(a) + P(b) + P(c)
+     = 0,1 + 0,1 + 0,2</div>
+        <span class="res">= 0,4</span>
+        <p><strong>Antes de tudo</strong>, confira que as cinco somam 1: 0,1 + 0,1 + 0,2 + 0,4 + 0,2 = 1,0 ✓. Essa conferência de dois segundos é para o que o axioma P(S) = 1 serve.</p>
+      </div>
+    </div>
+
+    <h3>A regra aditiva: cuidado com a sobreposição</h3>
+    <div class="f">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</div>
+    <p>O termo que se subtrai é a alma da fórmula. Ao somar P(A) e P(B), os resultados que estão nos dois eventos foram contados <strong>duas vezes</strong> — a subtração corrige isso. No diagrama de Venn, é a área da sobreposição.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo · um dado, A = par, B = maior que 4</div>
+      <div class="ex-b">
+        <div class="f">A = {2,4,6}  → P(A) = 3/6
+B = {5,6}    → P(B) = 2/6
+A ∩ B = {6}  → P(A ∩ B) = 1/6
+
+P(A ∪ B) = 3/6 + 2/6 − 1/6</div>
+        <span class="res">= 4/6 = 2/3</span>
+        <p>Conferindo pela lista: A ∪ B = {2, 4, 5, 6}, quatro resultados em seis ✓. Sem subtrair daria 5/6 — errado, porque o 6 teria sido contado duas vezes.</p>
+      </div>
+    </div>
+
+    <p><strong>Caso especial:</strong> se A e B são mutuamente exclusivos, P(A ∩ B) = 0 e a fórmula simplifica para P(A ∪ B) = P(A) + P(B). <em>Só nesse caso</em> você pode somar direto.</p>
+
+    <div class="cal cal-prova"><span class="rot">Pergunte sempre</span>Antes de somar probabilidades: <b>esses eventos podem acontecer juntos?</b> Se podem, você é obrigado a subtrair a interseção. Somar direto sem verificar é o que produz respostas maiores que 1.</div>
+
+    <h3>O complemento: o atalho do "pelo menos um"</h3>
+    <div class="f">P(A) = 1 − P(A′)</div>
+    <p>Talvez a ferramenta mais econômica do capítulo. Ela vale ouro quando o enunciado diz <strong>"pelo menos um"</strong> ou <strong>"no mínimo um"</strong>: calcular diretamente exigiria somar os casos de exatamente um, exatamente dois, exatamente três… O complemento de "pelo menos um" é simplesmente <strong>"nenhum"</strong> — um caso só.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exercício 2-55 · os dois caminhos</div>
+      <div class="ex-b">
+        <p>Carga de níquel: 0 → 0,17 · +2 → 0,35 · +3 → 0,33 · +4 → 0,15. Qual a probabilidade de a célula ter <em>no mínimo uma</em> das opções carregadas positivamente?</p>
+        <div class="f">caminho longo:  0,35 + 0,33 + 0,15 = 0,83
+caminho curto:  1 − P(carga 0) = 1 − 0,17 = 0,83</div>
+        <span class="res">= 0,83 — pelos dois caminhos ✓</span>
+        <p>No item (b) o livro pede P(<em>não ser maior do que</em> +3), que <strong>inclui</strong> as cargas 0, +2 e +3: 0,17 + 0,35 + 0,33 = 0,85. Trocar por "menor que +3" mudaria a resposta para 0,52.</p>
+      </div>
+    </div>
+
+    <h3>Tabela de dupla entrada: o roteiro de 4 passos</h3>
+    <p>Boa parte dos exercícios 2-61 a 2-72 são tabelas 2×2 ou 3×2. O roteiro é sempre o mesmo:</p>
+    <ol class="passos">
+      <li><strong>Some a tabela inteira</strong> para achar o total. Ele nem sempre é 100.</li>
+      <li><strong>Escreva por extenso o que é A e o que é B</strong> antes de somar qualquer coisa.</li>
+      <li><strong>A interseção de dois eventos simples é UMA célula.</strong> Se você precisou somar mais de uma célula para uma interseção, traduziu o enunciado errado.</li>
+      <li><strong>Confira pelo complemento.</strong> O que fica de fora da união costuma ser uma célula só.</li>
+    </ol>
+
+    <div class="ex">
+      <div class="ex-h">Exercício 2-62 · discos de policarbonato (100 discos)</div>
+      <div class="ex-b">
+        <div class="tab-box">
+          <table class="t2">
+            <thead><tr><th>arranhões</th><th>choque: alta</th><th>choque: baixa</th></tr></thead>
+            <tbody>
+              <tr><td>alta</td><td>70</td><td>9</td></tr>
+              <tr><td>baixa</td><td>16</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A = alta resistência ao <strong>choque</strong> · B = alta resistência a <strong>arranhões</strong>.</p>
+        <div class="f">A = coluna "choque: alta" = 70 + 16 = 86  → P(A) = 0,86
+B = linha  "alta"        = 70 + 9  = 79  → P(B) = 0,79
+A ∩ B = a célula das duas altas = 70    → 0,70
+
+P(A ∪ B) = 0,86 + 0,79 − 0,70</div>
+        <span class="res">= 0,95</span>
+        <p>Confira pelo complemento: o único grupo fora da união é "arranhões baixa E choque baixa" = 5 discos, e 100 − 5 = 95 ✓.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">O erro fatal</span>Trocar <b>linha por coluna</b>. A tabela é de dupla entrada justamente para punir quem não lê o rótulo. Escreva "A = ..." e "B = ..." por extenso antes de somar — custa cinco segundos e salva a questão.</div>
+
+    <div class="cal cal-prova"><span class="rot">Duas armadilhas de leitura</span><b>1.</b> O total nem sempre é 100. No 2-72 (óleos), é 7 + 13 + 93 + 77 = <b>190</b>. Usar 100 por hábito dá 0,07 em vez de 0,0368 — quase o dobro.<br><b>2.</b> Às vezes o enunciado quer a <b>contagem</b> (95 discos), não a probabilidade (0,95). Leia o que ele pede.</div>
+
+    <p>A regra aditiva se estende para três eventos, com inclusão e exclusão alternando sinais:</p>
+    <div class="f">P(A ∪ B ∪ C) = P(A) + P(B) + P(C)
+               − P(A∩B) − P(A∩C) − P(B∩C)
+               + P(A∩B∩C)</div>
+    <p>Some os individuais, tire os pares, devolva o triplo — porque a interseção dos três foi somada três vezes e subtraída três vezes, ficando de fora.</p>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Os três axiomas e como usá-los para conferir resposta; a regra aditiva com a subtração da interseção; o atalho do complemento para "pelo menos um"; e o roteiro de quatro passos para tabela de dupla entrada, incluindo somar o total antes de dividir.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="pe-4">
+  <summary><span class="aula-n">4</span><span>Probabilidade condicional e independência<span class="aula-sub">Montgomery 2-77 a 2-115 · está na lista</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <div class="cal cal-info"><span class="rot">Por que esta aula está aqui</span>O banco de questões do simulado para em 2-72, mas <b>a Lista 1 vai até 2-129</b> — ou seja, cobra condicional, independência e Bayes. Estas duas últimas aulas fecham o que a lista pede.</div>
+
+    <h3>Condicional é encolher o espaço amostral</h3>
+    <p><span class="mono">P(A | B)</span> lê-se "probabilidade de A <strong>dado que</strong> B ocorreu". A ideia é simples: saber que B aconteceu <strong>elimina</strong> todos os resultados fora de B. O espaço amostral encolhe, e você recalcula dentro do que sobrou.</p>
+
+    <div class="f">P(A | B) = P(A ∩ B) / P(B),   com P(B) &gt; 0</div>
+
+    <p>O numerador é a parte de A que sobreviveu (a que está dentro de B), e o denominador é o novo total.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo · um dado</div>
+      <div class="ex-b">
+        <div class="f">P(sair 6 | saiu par) = P({6}) / P({2,4,6})
+                     = (1/6) / (3/6)</div>
+        <span class="res">= 1/3</span>
+        <p>Subiu de 1/6 para 1/3, porque três resultados foram descartados. É literalmente o mesmo evento, num espaço menor.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">O atalho da tabela</span>Em tabela de dupla entrada, condicional é <b>olhar só uma linha ou só uma coluna</b>. Se o enunciado diz "dado que a peça veio da máquina A", você ignora as outras linhas e usa <b>o total daquela linha</b> como denominador. Esse atalho resolve quase todo exercício de condicional da lista.</div>
+
+    <h3>A regra multiplicativa</h3>
+    <p>Reorganizando a definição, sai a fórmula que se usa para calcular interseções:</p>
+    <div class="f">P(A ∩ B) = P(B)·P(A | B) = P(A)·P(B | A)</div>
+    <p>Ela descreve eventos <strong>em sequência</strong>: a chance de o primeiro acontecer, vezes a chance do segundo <em>já sabendo</em> que o primeiro aconteceu.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo · duas cartas, sem reposição</div>
+      <div class="ex-b">
+        <div class="f">P(1ª ser ás) = 4/52
+P(2ª ser ás | 1ª foi ás) = 3/51   ← sobraram 3 ases em 51
+
+P(dois ases) = (4/52)(3/51) = 12/2652</div>
+        <span class="res">≈ 0,0045</span>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">Procure esta palavra no enunciado</span><b>Com reposição</b> ou <b>sem reposição</b> muda tudo. Se você devolve a carta ao baralho, a segunda probabilidade continua 4/52 e os eventos ficam <em>independentes</em>. Sem devolver, o denominador cai para 51 e o numerador para 3.</div>
+
+    <h3>Independência: quando a informação não muda nada</h3>
+    <div class="f">P(A | B) = P(A)
+
+equivalente a:  P(A ∩ B) = P(A) · P(B)</div>
+    <p>A segunda forma é a mais prática. Para <strong>testar</strong> independência, calcule P(A)·P(B) e compare com P(A ∩ B). Deu igual, são independentes; não deu, são dependentes.</p>
+
+    <div class="cal cal-atencao"><span class="rot">A confusão mais cobrada do capítulo inteiro</span>• <b>Mutuamente exclusivos</b> → P(A ∩ B) = 0. Um <em>exclui</em> o outro.<br>• <b>Independentes</b> → P(A ∩ B) = P(A)·P(B). Um <em>ignora</em> o outro.<br>Se A e B têm probabilidade positiva e são mutuamente exclusivos, então P(A|B) = 0 ≠ P(A) — ou seja, eles são <b>dependentes</b>. Saber que B ocorreu te diz, com certeza, que A não ocorreu. Um conceito quase exclui o outro.</div>
+
+    <p>Independência costuma vir do <strong>contexto físico</strong>: lançamentos sucessivos de moeda, componentes que falham por causas separadas, amostragem com reposição. É por isso que a probabilidade de cinco caras seguidas é (1/2)⁵ — os lançamentos são independentes, então as probabilidades se multiplicam.</p>
+
+    <h3>Aplicação de engenharia: série e paralelo</h3>
+    <p>Cada componente tem uma probabilidade de funcionar, e a pergunta é a <strong>confiabilidade do sistema inteiro</strong>. A resposta depende de como eles estão ligados.</p>
+
+    <div class="duasc">
+      <div class="mini"><span class="rot">Série — multiplicativa</span>Se qualquer um falhar, o sistema para. Funcionar exige que <strong>todos</strong> funcionem.<br><span class="mono">P = P(A) · P(B)</span></div>
+      <div class="mini"><span class="rot">Paralelo — complemento</span>Só falha se <strong>todos</strong> os caminhos falharem — redundância.<br><span class="mono">P = 1 − P(A′)·P(B′)</span></div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo resolvido · dois em série (0,90) alimentando dois em paralelo (0,80)</div>
+      <div class="ex-b">
+        <div class="f">Bloco em série:   0,90 × 0,90 = 0,81
+
+Bloco em paralelo: 1 − (1 − 0,80)(1 − 0,80)
+                 = 1 − 0,04 = 0,96
+
+Os dois blocos estão em série entre si:
+0,81 × 0,96</div>
+        <span class="res">= 0,7776  (77,8%)</span>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">O truque mental</span><b>Série multiplica probabilidades de sucesso</b> — por isso a confiabilidade só cai ao adicionar componentes em série. <b>Paralelo multiplica probabilidades de falha</b> e depois faz 1 menos o resultado — é exatamente a regra do complemento para "pelo menos um funciona".</div>
+
+    <div class="cal cal-ia"><span class="rot">Onde isso aparece no seu curso</span>É o mesmo raciocínio de arquiteturas tolerantes a falha: servidores redundantes em <em>paralelo</em> aumentam a disponibilidade; uma cadeia de microsserviços onde cada um depende do anterior é uma <em>série</em> — e a confiabilidade do pipeline cai multiplicativamente a cada elo adicionado.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Calcular condicional encolhendo o espaço amostral (ou lendo uma linha da tabela); usar a regra multiplicativa em sequências com e sem reposição; testar independência comparando P(A ∩ B) com P(A)·P(B); não confundir independente com mutuamente exclusivo; e calcular confiabilidade em série e em paralelo.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Próxima aula →</button>
+    </div>
+  </div>
+</details>
+
+<details class="card aula" data-aula="pe-5">
+  <summary><span class="aula-n">5</span><span>Probabilidade total e Bayes<span class="aula-sub">Montgomery 2-115 a 2-129 · fecha o capítulo</span></span><span class="marca"></span></summary>
+  <div class="aula-corpo">
+
+    <h3>Probabilidade total: somar por caminhos</h3>
+    <p>Antes de Bayes vem a ferramenta que o sustenta. Se os eventos B₁, B₂, …, B<sub>k</sub> <strong>particionam</strong> o espaço amostral — são mutuamente exclusivos e cobrem tudo — então:</p>
+    <div class="f">P(A) = Σ P(Bᵢ) · P(A | Bᵢ)</div>
+    <p>Em português: para achar a chance de A, considere <strong>todos os caminhos</strong> que levam a A e some as probabilidades de cada caminho. É exatamente o que um diagrama de árvore desenha.</p>
+
+    <div class="ex">
+      <div class="ex-h">Exemplo do livro · três máquinas produzindo peças defeituosas</div>
+      <div class="ex-b">
+        <div class="tab-box">
+          <table class="t2">
+            <thead><tr><th>máquina</th><th>% da produção</th><th>% defeituosas</th></tr></thead>
+            <tbody>
+              <tr><td>B₁</td><td>0,30</td><td>0,02</td></tr>
+              <tr><td>B₂</td><td>0,45</td><td>0,03</td></tr>
+              <tr><td>B₃</td><td>0,25</td><td>0,02</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="f">P(A) = (0,30)(0,02) + (0,45)(0,03) + (0,25)(0,02)
+     = 0,006 + 0,0135 + 0,005</div>
+        <span class="res">= 0,0245</span>
+      </div>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">Confira sempre</span>As probabilidades da partição têm de <b>somar 1</b> (aqui, 0,30 + 0,45 + 0,25 = 1 ✓). Se não somam, você esqueceu um caminho — e o resultado sai errado sem dar nenhum sinal.</div>
+
+    <h3>Bayes: inverter o condicionamento</h3>
+    <p>A probabilidade total responde "qual a chance de sair defeituosa?". Bayes responde a pergunta invertida: <strong>"saiu defeituosa — de qual máquina ela provavelmente veio?"</strong></p>
+
+    <div class="f">P(Bᵣ | A) =  P(Bᵣ)·P(A | Bᵣ)  /  Σ P(Bᵢ)·P(A | Bᵢ)
+
+   um caminho específico, dividido por todos os caminhos</div>
+
+    <p>Continuando o exemplo: <span class="mono">P(B₃ | A) = 0,005 / 0,0245 ≈ 0,204</span>. Ou seja, dada uma peça defeituosa, há cerca de 20% de chance de ela ter vindo da máquina 3.</p>
+
+    <div class="cal cal-info"><span class="rot">O atalho</span>O <b>denominador de Bayes é sempre a probabilidade total</b>. Se você já calculou P(A), o resto é uma divisão. Por isso os dois assuntos vêm juntos: são a mesma árvore, lida em duas direções.</div>
+
+    <h3>Por que isso é tão contraintuitivo</h3>
+    <div class="ex">
+      <div class="ex-h">O teste médico · o exemplo que mais cai</div>
+      <div class="ex-b">
+        <p>Doença com prevalência de 1%, teste com sensibilidade de 99% e especificidade de 95%. Você testa positivo. Qual a chance de estar doente?</p>
+        <div class="f">em 10.000 pessoas:
+
+   100 doentes   → 99 detectados  (verdadeiros +)
+ 9.900 sadios    → 5% de 9.900 = 495 alarmes falsos
+
+P(doente | positivo) = 99 / (99 + 495) = 99/594</div>
+        <span class="res">≈ 0,167 — apenas ~17%</span>
+        <p>O motivo é aritmético, não filosófico: os falsos positivos são <em>cinco vezes</em> mais numerosos que os verdadeiros, simplesmente porque há muito mais gente sadia.</p>
+      </div>
+    </div>
+
+    <div class="cal cal-atencao"><span class="rot">A lição central do capítulo</span><b>P(A | B) ≠ P(B | A).</b> "A chance de o teste dar positivo, dado que a pessoa está doente" (99%) e "a chance de a pessoa estar doente, dado que o teste deu positivo" (17%) são perguntas completamente diferentes. Trocá-las tem nome — <em>falácia da taxa de base</em> — e é o erro mais caro que se comete com probabilidade condicional.</div>
+
+    <div class="cal cal-ia"><span class="rot">Onde isso aparece no seu curso</span>É o mesmo raciocínio de <strong>precisão e recall</strong>. Recall é P(detectou | é positivo); precisão é P(é positivo | detectou). Um modelo antifraude com 99% de recall pode ter precisão péssima se fraude for rara — exatamente pelo motivo do teste médico. Entender Bayes aqui é entender por que a métrica escolhida muda a avaliação do modelo.</div>
+
+    <h3>A matriz de decisão: qual técnica usar na prova</h3>
+    <p>O capítulo 2 dá quatro ferramentas parecidas, e a dificuldade real não é a conta — é escolher a certa. Uma pergunta resolve: <strong>o que exatamente o enunciado quer saber?</strong></p>
+
+    <div class="tab-box">
+      <table class="dic">
+        <tr><td>P(B|A)</td><td>Chance de <strong>um</strong> evento, sabendo que outro já ocorreu? → <strong>Condicional</strong></td></tr>
+        <tr><td>P(A ∩ B)</td><td>Chance de <strong>ambos</strong> ocorrerem juntos, em sequência? → <strong>Regra multiplicativa</strong></td></tr>
+        <tr><td>P(A) = ΣP(Bᵢ)P(A|Bᵢ)</td><td>Vários caminhos possíveis, quero a chance final de um resultado? → <strong>Probabilidade total</strong></td></tr>
+        <tr><td>P(Bᵢ|A)</td><td>Sei o resultado final (ex: defeito) — de qual caminho ele veio? → <strong>Bayes</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="cal cal-prova"><span class="rot">Como saber se é Bayes</span>O sinal mais claro: o enunciado dá o <b>efeito</b> ("a peça saiu defeituosa") e pede a <b>causa</b> ("qual máquina produziu?"). Se a pergunta anda na direção causa → efeito, é probabilidade total. Se anda efeito → causa, é Bayes. As duas usam a mesma árvore, lida em direções opostas.</div>
+
+    <div class="chk"><span class="rot">Você fecha esta aula sabendo</span>Montar a árvore e calcular P(A) somando todos os caminhos; conferir que a partição soma 1; aplicar Bayes dividindo um caminho pelo total; não confundir P(A|B) com P(B|A); e escolher entre as quatro técnicas pela direção da pergunta. Isso fecha o capítulo 2 e a Lista 1 inteira.</div>
+
+    <div class="aula-fim">
+      <button type="button" class="btn ghost marcar">Marcar como estudada</button>
+      <button type="button" class="btn proxima">Voltar ao topo ↑</button>
+    </div>
+  </div>
+</details></div>
+  </div>
+
+  <section class="placar" data-vista="questoes">
+    <div class="placar-titulo">
+      <strong id="pl-titulo">Cálculo A</strong>
+      <button class="zerar" id="zerar" type="button">zerar respostas</button>
+    </div>
+    <div class="barra" id="barra" role="img" aria-label="progresso do simulado">
+      <span class="b-ok" style="width:0"></span><span class="b-erro" style="width:0"></span><span class="b-rever" style="width:0"></span>
+    </div>
+    <div class="placar-linha">
+      <span class="pt-ok"><b id="n-ok">0</b> acertos</span>
+      <span class="pt-erro"><b id="n-erro">0</b> erros</span>
+      <span class="pt-rever"><b id="n-rever">0</b> espiadas</span>
+      <span><b id="n-total">0</b> no banco</span>
+    </div>
+  </section>
+
+  <!-- =================== ESCOPO =================== -->
+  <div class="escopo" data-sub="sim-cal" data-vista="aulas">
+    <dl>
+      <dt>Livro</dt><dd>Stewart, <em>Cálculo — Volume 1</em>, tradução da 7ª ed.</dd>
+      <dt>Escopo</dt><dd>Seções 2.1 a 2.4 — tangente e velocidade, limite de uma função, propriedades dos limites, definição precisa.</dd>
+      <dt>Lista 1</dt><dd class="lista-ex">2.1 &rarr; 1, 3, 5, 7, 9<br>2.2 &rarr; 1, 3, 5, 9, 11, 15, 21, 27, 31, 39, 41, 47<br>2.3 &rarr; 1, 3, 5, 9, 11, 17, 23, 29, 33, 41, 47, 51, 63<br>2.4 &rarr; 1, 3, 9, 11, 17, 25, 31, 35, 37, 43</dd>
+    </dl>
+  </div>
+  <div class="escopo" data-sub="sim-pe" data-vista="aulas">
+    <dl>
+      <dt>Livro</dt><dd>Montgomery &amp; Runger, <em>Estatística Aplicada e Probabilidade para Engenheiros</em>, 4ª ed. <strong>Não é o Walpole</strong> — numeração com hífen (2&#8209;49) é do Montgomery, com ponto (1.3) é do Walpole, e os números não correspondem entre os dois.</dd>
+      <dt>Escopo</dt><dd>Cap. 2, Probabilidade. O professor falou em caps. 1 a 3, mas só o cap. 2 aparece na lista.</dd>
+      <dt>Lista 1</dt><dd class="lista-ex">2&#8209;1 &middot; 2&#8209;5 &middot; 2&#8209;7 &middot; 2&#8209;15 &middot; 2&#8209;19 &middot; 2&#8209;21 &middot; 2&#8209;31 &middot; 2&#8209;37 &middot; 2&#8209;49 &middot; 2&#8209;53 &middot; 2&#8209;55 &middot; 2&#8209;57 &middot; 2&#8209;65 &middot; 2&#8209;67 &middot; 2&#8209;71 &middot; 2&#8209;77 &middot; 2&#8209;89 &middot; 2&#8209;95 &middot; 2&#8209;97 &middot; 2&#8209;101 &middot; 2&#8209;103 &middot; 2&#8209;111 &middot; 2&#8209;115 &middot; 2&#8209;127 &middot; 2&#8209;129</dd>
+    </dl>
+  </div>
+
+  <!-- =================== COLA: CALCULO =================== -->
+  <div data-sub="sim-cal" data-vista="cola">
+    <div class="bloco-h"><h2>A cola</h2></div>
+    <div class="cola">
+
+      <details class="card" open>
+        <summary>O roteiro de todo limite</summary>
+        <div class="corpo">
+          <p>Decore o fluxo, não os resultados. Toda questão de limite da lista passa por aqui.</p>
+          <ol class="passos">
+            <li><strong>Substitua o valor.</strong> Deu um número normal? Acabou — esse é o limite, e a justificativa é que a função é contínua ali.</li>
+            <li><strong>Deu 0/0?</strong> Indeterminado. Simplifique (fatorar, racionalizar ou MMC), cancele o fator comum e substitua de novo na expressão já simplificada.</li>
+            <li><strong>Deu número/0, com numerador ≠ 0?</strong> Aí o limite vai mesmo para ±∞, e você tem uma assíntota vertical. Não tente cancelar nada.</li>
+          </ol>
+          <div class="aviso"><b>A distinção mais importante da matéria:</b> 0/0 é <em>indeterminado</em> — pode dar qualquer coisa, precisa simplificar. Já 5/0 <em>não</em> é indeterminado: explode. Confundir os dois faz você racionalizar sem necessidade ou parar cedo demais.</div>
+          <p>0/0 não é resposta, é <strong>sintoma</strong>: o aviso de que existe um fator comum esperando para ser cancelado. Três limites que dão 0/0 no mesmo ponto x = 2 e terminam diferentes:</p>
+          <div class="f">(x² − 4)/(x − 2)       → 4
+(x² − 4x + 4)/(x − 2) → 0
+(x³ − 8)/(x − 2)      → 12</div>
+          <p>E o contraexemplo que a lista adora: <span class="mono">lim(x→3) (x² − 9)/(x + 3)</span> dá 0/6 = 0. Aqui <strong>não há indeterminação nenhuma</strong> — o denominador não zerou. Não fatore, não cancele: só substitua.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>As 3 ferramentas de simplificação</summary>
+        <div class="corpo">
+          <div class="mini">
+            <span class="rot">1 &middot; Fatorar — quando é polinômio</span>
+            <div class="f">lim(x→3) (x² − 9)/(x − 3)
+= (x − 3)(x + 3)/(x − 3)
+= x + 3  →  6</div>
+          </div>
+          <div class="mini">
+            <span class="rot">2 &middot; Racionalizar — quando tem raiz</span>
+            <p>Multiplique em cima e embaixo pelo <strong>conjugado</strong> (a mesma expressão com o sinal do meio trocado). O objetivo é sempre criar (a − b)(a + b) = a² − b², porque isso <em>elimina a raiz</em> — que é o que estava impedindo o cancelamento.</p>
+            <div class="f">lim(x→1) (√x − 1)/(x − 1)
+× (√x + 1)/(√x + 1)
+= (x − 1)/[(x − 1)(√x + 1)]
+= 1/(√x + 1)  →  1/2</div>
+            <p>Funciona igual com a raiz no <strong>denominador</strong>, e igual com <strong>duas</strong> raízes subtraídas — o conjugado mata as duas de uma vez.</p>
+          </div>
+          <div class="mini">
+            <span class="rot">3 &middot; MMC — frações somadas, ou ∞ − ∞</span>
+            <p>Junte tudo numa fração só antes de qualquer outra coisa. Nunca calcule ∞ − ∞ termo a termo: os dois explodem, mas a diferença entre eles pode ser perfeitamente finita.</p>
+            <div class="f">lim(t→0) [ 1/t − 1/(t² + t) ]
+t² + t = t(t + 1), MMC = t(t + 1)
+= [(t + 1) − 1]/[t(t + 1)]
+= t/[t(t + 1)] = 1/(t + 1)  →  1</div>
+          </div>
+          <p>Expoente negativo é fração disfarçada: <span class="mono">(3 + h)⁻¹ = 1/(3 + h)</span>. Reescreva e caia na ferramenta 3.</p>
+          <p>Às vezes precisa de <strong>duas</strong> na mesma questão — MMC primeiro, racionalização depois; ou racionalizar e depois ainda fatorar o que apareceu.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Fatorações que você precisa saber de cor</summary>
+        <div class="corpo">
+          <div class="f">a² − b² = (a + b)(a − b)
+a³ − b³ = (a − b)(a² + ab + b²)
+a³ + b³ = (a + b)(a² − ab + b²)
+a² ± 2ab + b² = (a ± b)²</div>
+          <div class="aviso"><b>O sinal do meio do segundo parêntese é sempre o contrário do primeiro</b> — é o único ponto onde as fórmulas dos cubos se confundem.</div>
+          <p>Dois atalhos que economizam a conta inteira:</p>
+          <table class="dic">
+            <tr><td>lim(t→1) (tⁿ − 1)/(tᵐ − 1)</td><td>= <strong>n/m</strong>. Cuidado para não inverter — é o erro mais comum de quem aplica de cabeça.</td></tr>
+            <tr><td>lim(h→0) (√(a+h) − √a)/h</td><td>= <strong>1/(2√a)</strong>.</td></tr>
+          </table>
+          <p>E o truque que destrava as questões com raiz e polinômio juntos: <strong>x = (√x)²</strong>. É isso que transforma 16 − x na diferença de quadrados (4 − √x)(4 + √x). Sem esse passo, o fator que cancela nem aparece.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Propriedades (2.3) e a hipótese que ninguém lê</summary>
+        <div class="corpo">
+          <div class="aviso"><b>Hipótese obrigatória:</b> lim f(x) e lim g(x) precisam <em>existir</em>. Sem isso, nenhuma das regras abaixo pode ser usada.</div>
+          <div class="f">lim [f + g] = lim f + lim g
+lim [f − g] = lim f − lim g
+lim [c · f] = c · lim f
+lim [f · g] = lim f · lim g
+lim [f / g] = lim f / lim g   ← só se lim g ≠ 0</div>
+          <p>Quatro delas dizem a mesma coisa: a operação passa para dentro do limite. Só o quociente cobra pedágio.</p>
+          <p><strong>A regra não vale ao contrário:</strong> lim [f + g] pode existir sem que lim f e lim g existam separadamente.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Limites laterais e o que o limite NÃO é (2.2)</summary>
+        <div class="corpo">
+          <div class="f">lim(x→a) f(x) = L
+     ⟺
+lim(x→a⁻) f(x) = lim(x→a⁺) f(x) = L</div>
+          <p>O bilateral existe <strong>se e somente se</strong> os dois laterais existem <em>e são iguais</em>. Diferentes → o limite não existe, ponto final. Não se tira média, não há prioridade da esquerda.</p>
+          <div class="aviso"><b>f(a) é irrelevante para o limite.</b> O limite descreve para onde a função <em>aponta</em> ao se aproximar de a, não quanto ela <em>vale</em> em a. Uma função pode ter limite num ponto onde nem está definida, e estar definida num ponto onde não tem limite.</div>
+          <p>Essa independência é exatamente o que a continuidade usa: f é contínua em a quando <span class="mono">lim(x→a) f(x) = f(a)</span>. Por isso, achar o L que "tampa o buraco" de uma função definida por partes é só calcular o limite.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Tangente e velocidade (2.1)</summary>
+        <div class="corpo">
+          <p>A inclinação da secante por P(a, f(a)) e Q(x, f(x)) é [f(x) − f(a)]/(x − a). A <strong>tangente é o limite</strong> dessas inclinações quando Q se aproxima de P ao longo da curva:</p>
+          <div class="f">m = lim(x→a) [f(x) − f(a)] / (x − a)
+
+trocando x = a + h:
+
+m = lim(h→0) [f(a + h) − f(a)] / h</div>
+          <p>Não existe "o ponto Q mais próximo de P" — sempre cabe outro entre os dois. É precisamente essa impossibilidade que <em>exige</em> o conceito de limite, e é por isso que o capítulo 2 começa aqui.</p>
+          <p>A segunda forma é a que aparece nos exercícios da 2.3 com (2 + h)³ e (3 + h)⁻¹: eles são derivadas disfarçadas. Dá para conferir o resultado pela derivada — <span class="mono">x³ → 3x²</span> em x = 2 dá 12; <span class="mono">1/x → −1/x²</span> em x = 3 dá −1/9.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Épsilon-delta (2.4), sem decoreba</summary>
+        <div class="corpo">
+          <div class="f">lim(x→a) f(x) = L significa:
+
+∀ ε &gt; 0, ∃ δ &gt; 0 tal que
+   se 0 &lt; |x − a| &lt; δ
+   então |f(x) − L| &lt; ε</div>
+          <p>A ordem lógica é um jogo: <strong>ε é o desafio</strong> (a tolerância no eixo <em>y</em>, escolhida pelo adversário) e <strong>δ é a sua resposta</strong> (a vizinhança no eixo <em>x</em>). Trocar os dois de lugar inverte o jogo e torna a definição falsa — é a alternativa errada favorita das provas.</p>
+          <div class="aviso"><b>O "0 &lt;" não é enfeite:</b> ele exclui o próprio ponto x = a, garantindo que o limite não depende do valor de f em a — o mesmo que a intuição da 2.2 já dizia.</div>
+          <p>E |f(x) − L| &lt; ε é desigualdade <strong>estrita</strong>: nunca se exige que f(x) alcance L, só que chegue tão perto quanto se queira.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- =================== COLA: PROBABILIDADE =================== -->
+  <div data-sub="sim-pe" data-vista="cola">
+    <div class="bloco-h"><h2>A cola</h2></div>
+    <div class="cola">
+
+      <details class="card" open>
+        <summary>"E" multiplica, "OU" soma</summary>
+        <div class="corpo">
+          <p>É a decisão que resolve quase toda questão de contagem do capítulo 2.</p>
+          <div class="duasc">
+            <div class="mini"><span class="rot">etapas juntas — "E"</span>Escolher a prensa <em>e</em> a cavidade: 2 × 8 = <strong>16</strong>. Multiplica.</div>
+            <div class="mini"><span class="rot">alternativas — "OU"</span>Passar por usinagem <em>ou</em> polimento <em>ou</em> pintura: 3 + 4 + 3 = <strong>10</strong>. Soma.</div>
+          </div>
+          <div class="aviso"><b>Toda característica "tem / não tem" entra como ×2.</b> "Pode incluir ou não um extensor de memória" é uma escolha de 2 opções. Esquecer esse 2 corta a resposta pela metade.</div>
+          <p>Mesma lógica para posições com repetição permitida — o expoente é o número de posições:</p>
+          <div class="f">placa: 3 dígitos + 3 letras
+= 10³ × 26³ = 17.576.000
+
+24 trilhas boas-ou-ruins
+= 2²⁴ = 16.777.216</div>
+          <p>Nada impede a placa AAA‑000, então é regra do produto com repetição — <strong>não</strong> é arranjo.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Permutação, arranjo, combinação</summary>
+        <div class="corpo">
+          <p>A pergunta que decide tudo: <strong>trocar a ordem dos escolhidos gera um resultado diferente?</strong> Se "João presidente e Maria tesoureira" ≠ "Maria presidente e João tesoureiro", é arranjo. Se "comissão do João e da Maria" = "comissão da Maria e do João", é combinação.</p>
+          <div class="duasc">
+            <div class="mini"><span class="rot">ordem importa → arranjo</span><span class="mono">ₙPᵣ = n! / (n − r)!</span><br>Pódio, senha, cargos distintos, ordem de fila.</div>
+            <div class="mini"><span class="rot">ordem não importa → combinação</span><span class="mono">C(n,r) = n! / [r!(n − r)!]</span><br>Comissão, mão de cartas, amostra, grupo de peças.</div>
+          </div>
+          <p><span class="mono">C(n,r) = ₙPᵣ / r!</span> — cada grupo sem ordem foi contado r! vezes na versão com ordem, e dividir desfaz a repetição.</p>
+          <table class="dic">
+            <tr><td>n objetos distintos</td><td>n! sequências. 10 operações em qualquer ordem = 10! = 3.628.800.</td></tr>
+            <tr><td>restrição de blocos</td><td>Multiplique os blocos: 5 usinagens antes de 5 montagens = 5! × 5! = 14.400.</td></tr>
+            <tr><td>elementos repetidos</td><td>n!/(r₁!·r₂!·…·r<sub>k</sub>!). ARARA = 5!/(3!·2!) = 10.</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Espaço amostral: a pegadinha discreto × contínuo</summary>
+        <div class="corpo">
+          <div class="aviso"><b>A grandeza pode ser contínua e o espaço amostral ser discreto.</b> O que vale é o que o <em>instrumento</em> consegue registrar. Balança de duas casas decimais → S = {0,00; 0,01; 0,02; …}, um conjunto discreto (contável), ainda que infinito. A alternativa "contínuo, porque peso é medida" é a que a maioria marca — e é a errada.</div>
+          <p>Espaço amostral <strong>ordenado</strong> = pares (1º, 2º). Com 3 categorias por posição são 3 × 3 = <strong>9</strong> pares ordenados, não 3 nem 6.</p>
+          <p>Em amostragem <strong>sem reposição</strong>, o que sobra depende do que saiu: se a batelada tem só 1 peça de uma categoria, o par (essa, essa) fica <em>impossível</em> e o espaço cai de 9 para 8.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Axiomas, regra aditiva e complemento</summary>
+        <div class="corpo">
+          <div class="f">0 ≤ P(A) ≤ 1
+P(S) = 1
+A e B disjuntos → P(A ∪ B) = P(A) + P(B)</div>
+          <p>A probabilidade de um evento é a <strong>soma</strong> das probabilidades dos resultados que o compõem. Antes de tudo, confira se as probabilidades dadas somam 1 — é conferência de dois segundos, e é para isso que o axioma P(S) = 1 serve.</p>
+          <div class="f">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</div>
+          <p>Somar sem subtrair a interseção costuma produzir número maior que 1 — a denúncia clássica do erro.</p>
+          <div class="aviso"><b>Atalho do "pelo menos um":</b> P(pelo menos um) = 1 − P(nenhum). Quase sempre mais rápido que somar caso a caso, e em tabela 2×2 o complemento costuma ser uma célula só.</div>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Tabela de dupla entrada: o roteiro</summary>
+        <div class="corpo">
+          <ol class="passos">
+            <li><strong>Some a tabela inteira</strong> para achar o total. Ele nem sempre é 100 — usar 100 por hábito pode quase dobrar a resposta.</li>
+            <li><strong>Escreva por extenso o que é A e o que é B</strong> antes de somar. Trocar linha por coluna é o erro fatal; a tabela é de dupla entrada justamente para punir quem não lê o rótulo.</li>
+            <li><strong>A interseção de dois eventos simples é UMA célula.</strong> Se você precisou somar mais de uma célula para uma interseção, traduziu o enunciado errado.</li>
+            <li><strong>Confira pelo complemento.</strong> O que fica de fora da união costuma ser uma célula só, e a conta sai em segundos.</li>
+          </ol>
+          <p><span class="mono">A′ ∩ B</span> lê-se "não‑A <em>e</em> B" — a célula da linha errada com a coluna certa.</p>
+          <div class="aviso"><b>Leia o que o enunciado pede:</b> às vezes ele quer a <em>contagem</em> (95 discos), não a probabilidade (0,95).</div>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>Dicionário de enunciado</summary>
+        <div class="corpo">
+          <p>Metade dos erros do capítulo 2 é de português, não de matemática.</p>
+          <table class="dic">
+            <tr><td>no mínimo um</td><td>= um <em>ou</em> mais de um. Atalho: 1 − P(nenhum).</td></tr>
+            <tr><td>pelo menos um</td><td>Mesma coisa — complemento de "nenhum".</td></tr>
+            <tr><td>maior ou igual a 5</td><td><strong>Inclui</strong> o 5 → {5,6,7,8,9} = 0,5. Se fosse "maior que 5", cairia para 0,4.</td></tr>
+            <tr><td>não maior do que +3</td><td><strong>Inclui</strong> o +3. Trocar por "menor que +3" muda a resposta.</td></tr>
+            <tr><td>qualquer critério</td><td>É a <strong>união</strong> dos defeitos = complemento de "satisfatório nos dois".</td></tr>
+            <tr><td>não solicitar mais de um</td><td>= nenhum <em>ou</em> um.</td></tr>
+          </table>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- =================== QUESTOES =================== -->
+  <div class="bloco-h" data-vista="questoes"><h2>As questões</h2></div>
+  <div class="filtros" id="filtros" data-vista="questoes">
+    <button class="chip" type="button" data-f="todas" aria-pressed="true">Todas</button>
+    <button class="chip" type="button" data-f="lista" aria-pressed="false">Só as da lista</button>
+    <button class="chip" type="button" data-f="pendentes" aria-pressed="false">Não respondidas</button>
+    <button class="chip" type="button" data-f="revisar" aria-pressed="false">Errei / espiei</button>
+    <button class="chip" type="button" data-f="sorteio" aria-pressed="false">Sortear 10</button>
+  </div>
+  <div class="deck" id="deck" data-vista="questoes"></div>
+
+  <p class="rodape">
+    Questões transcritas dos livros que o professor usa — Stewart (Cálculo, seções 2.1 a 2.4) e Montgomery &amp; Runger (cap. 2), com as da lista marcadas.
+    As numéricas aceitam vírgula ou ponto: as de resposta inteira precisam bater exatamente, as decimais têm a mesma tolerância do simulado do site.
+    Suas respostas ficam salvas só neste aparelho, neste navegador.
+  </p>
+</main>
+
+<script id="banco" type="application/json">[{"id":"sim-pe","titulo":"Simulado — Probabilidade","materia":"Probabilidade e Estatística","subjectSlug":"probabilidade-estatistica","livro":"Montgomery & Runger — Estatística Aplicada e Probabilidade para Engenheiros, 4ª ed.","escopoConfirmado":"Cap. 2 (Probabilidade) — confirmado pela Lista 1, exercícios 2-1 a 2-129","escopoDeclarado":"O professor falou em caps. 1 a 3; só o cap. 2 aparece na lista","quantidade":10,"minutos":60,"cor":"from-indigo-500 to-violet-600","questoes":[{"id":"pe-2-5","fonte":"Montgomery 2-5","capitulo":"Cap. 2 — Espaço amostral","assunto":"Espaço amostral por regra do produto","naLista":true,"kind":"numeric","prompt":"Na fabricação de fitas cassetes digitais, cada uma das 24 trilhas é classificada como contendo ou não contendo um ou mais bits defeituosos. Quantos resultados diferentes tem o espaço amostral desse experimento?","answer":16777216,"formato":"um número inteiro","solucao":"Cada trilha tem 2 estados possíveis (contém ou não contém bit defeituoso), e são 24 trilhas independentes. Pela regra da multiplicação: 2 × 2 × … × 2 (24 vezes) = 2²⁴ = 16.777.216 resultados. O enunciado do livro pede para DESCREVER o espaço amostral — a descrição correta é \"o conjunto de todas as sequências de 24 símbolos, cada um sendo defeituoso ou não\". Saber contá-lo é o que garante que você entendeu a descrição."},{"id":"pe-2-7","fonte":"Montgomery 2-7","capitulo":"Cap. 2 — Espaço amostral","assunto":"Discreto × contínuo","naLista":true,"kind":"choice","prompt":"Uma escala que mostra duas casas decimais é usada para medir, em toneladas, alimentações de materiais em uma planta química. Como se descreve o espaço amostral desse experimento?","options":["Contínuo: S = {x | x ≥ 0}, porque peso é uma medida","Discreto: S = {0,00; 0,01; 0,02; …}, porque o instrumento só registra dois decimais","Discreto e finito, com exatamente 100 resultados possíveis","Não é possível descrever, porque o valor máximo não foi informado"],"answer":1,"solucao":"A pegadinha é essa: a GRANDEZA (peso) é contínua, mas o ESPAÇO AMOSTRAL do experimento é o conjunto do que o instrumento consegue registrar. Com duas casas decimais, os resultados possíveis são 0,00; 0,01; 0,02; … — um conjunto discreto (contável), ainda que infinito. Montgomery usa esse par de exercícios (2-6 amperímetro de três dígitos, 2-7 escala de dois decimais) exatamente para separar \"a natureza da grandeza\" de \"a precisão do instrumento\". A alternativa contínua é a que a maioria marca — e é a errada."},{"id":"pe-2-15","fonte":"Montgomery 2-15","capitulo":"Cap. 2 — Espaço amostral","assunto":"Regra da multiplicação","naLista":true,"kind":"numeric","prompt":"Uma peça amostrada, moldada por injeção, poderia ter sido produzida em uma das duas prensas e em qualquer uma das oito cavidades em cada prensa. Quantos resultados diferentes existem no espaço amostral?","answer":16,"formato":"um número inteiro","solucao":"Duas etapas: escolher a prensa (2 opções) e escolher a cavidade (8 opções). Pela regra da multiplicação, 2 × 8 = 16 resultados. O espaço amostral se escreve como os pares (prensa, cavidade): (1,1), (1,2), …, (2,8). Repare que é MULTIPLICAÇÃO e não soma: as duas escolhas acontecem juntas (\"prensa E cavidade\"), não são alternativas."},{"id":"pe-2-31","fonte":"Montgomery 2-31","capitulo":"Cap. 2 — Espaço amostral","assunto":"Amostragem sem reposição","naLista":true,"kind":"choice","prompt":"Uma amostra de duas placas de circuito impresso é selecionada SEM reposição a partir de uma batelada que contém 90 placas não-defeituosas, 8 placas com pequenos defeitos e 2 placas com grandes defeitos. Descrevendo o espaço amostral ORDENADO por categoria, quantos resultados ele tem?","options":["3 resultados — uma para cada categoria","6 resultados — as combinações de duas categorias entre três","9 resultados — todos os pares ordenados (categoria da 1ª, categoria da 2ª)","100 resultados — o total de placas na batelada"],"answer":2,"solucao":"Como o espaço amostral é ORDENADO, cada resultado é um par (categoria da primeira placa, categoria da segunda placa). Há 3 categorias possíveis para cada posição, logo 3 × 3 = 9 pares ordenados: (n,n), (n,p), (n,g), (p,n), (p,p), (p,g), (g,n), (g,p), (g,g). Atenção ao item (b) do livro, que muda a batelada para apenas 1 placa com grandes defeitos: aí o resultado (g,g) torna-se IMPOSSÍVEL e o espaço amostral cai para 8 pares. É exatamente esse detalhe que o exercício quer testar — sem reposição, o que sobra depende do que saiu."},{"id":"pe-2-37","fonte":"Montgomery 2-37","capitulo":"Cap. 2 — Técnicas de contagem","assunto":"Regra da multiplicação","naLista":true,"kind":"numeric","prompt":"Novos projetos para um tanque de tratamento de águas residuais têm propostas três formas possíveis, quatro tamanhos diferentes, três localizações diferentes para válvulas de alimentação de material e quatro localizações diferentes para as válvulas de retirada de material. Quantos projetos diferentes do produto são possíveis?","answer":144,"formato":"um número inteiro","solucao":"Quatro decisões independentes em sequência — multiplique todas: 3 formas × 4 tamanhos × 3 localizações de alimentação × 4 localizações de retirada = 144 projetos. A conferência mental: se qualquer fator fosse 1 (só uma opção), ele não mudaria o total — e é isso que a multiplicação faz naturalmente. Somar daria 14, que seria a resposta se o projeto pudesse variar em UMA característica só."},{"id":"pe-2-49a","fonte":"Montgomery 2-49 (a)","capitulo":"Cap. 2 — Axiomas da probabilidade","assunto":"Probabilidade de um evento","naLista":true,"kind":"numeric","prompt":"O espaço amostral de um experimento aleatório é {a, b, c, d, e}, com probabilidades 0,1; 0,1; 0,2; 0,4 e 0,2, respectivamente. Seja A o evento {a, b, c}. Determine P(A).","answer":0.4,"formato":"decimal com vírgula, ex: 0,4","solucao":"A probabilidade de um evento é a SOMA das probabilidades dos resultados que o compõem: P(A) = P(a) + P(b) + P(c) = 0,1 + 0,1 + 0,2 = 0,4. Antes de qualquer coisa, confira que as cinco probabilidades somam 1: 0,1 + 0,1 + 0,2 + 0,4 + 0,2 = 1,0 ✓. Se não somassem, o enunciado estaria mal formulado — e essa conferência de dois segundos é o que o axioma P(S) = 1 serve para fazer."},{"id":"pe-2-49d","fonte":"Montgomery 2-49 (d)","capitulo":"Cap. 2 — Axiomas da probabilidade","assunto":"Regra aditiva","naLista":true,"kind":"numeric","prompt":"Mesmo espaço amostral {a, b, c, d, e} com probabilidades 0,1; 0,1; 0,2; 0,4 e 0,2. Com A = {a, b, c} e B = {c, d, e}, determine P(A ∪ B).","answer":1,"formato":"decimal com vírgula, ex: 0,4","solucao":"Pela regra aditiva: P(A ∪ B) = P(A) + P(B) − P(A ∩ B). P(A) = 0,1 + 0,1 + 0,2 = 0,4. P(B) = 0,2 + 0,4 + 0,2 = 0,8. A ∩ B = {c}, logo P(A ∩ B) = 0,2. P(A ∪ B) = 0,4 + 0,8 − 0,2 = 1,0. Confira pelo caminho curto: A ∪ B = {a, b, c, d, e} = S inteiro, e P(S) = 1 por axioma ✓. Quem soma direto sem subtrair a interseção obtém 1,2 — uma probabilidade maior que 1, que é a denúncia clássica do erro."},{"id":"pe-2-55","fonte":"Montgomery 2-55 (a)","capitulo":"Cap. 2 — Axiomas da probabilidade","assunto":"Soma de probabilidades por categoria","naLista":true,"kind":"numeric","prompt":"Em uma bateria de NiCd, uma célula completamente carregada é composta de Hidróxido de Níquel. O níquel é um elemento que tem múltiplos estados de oxidação, encontrado nas proporções da tabela. Qual é a probabilidade de uma célula ter no mínimo uma das opções de níquel carregado positivamente?","tabela":{"titulo":"carga de níquel × proporções encontradas","cabecalho":["carga de níquel","proporção"],"linhas":[[0,"0,17"],["+2","0,35"],["+3","0,33"],["+4","0,15"]]},"answer":0.83,"formato":"decimal com vírgula, ex: 0,83","solucao":"\"Carregado positivamente\" são as cargas +2, +3 e +4 — a carga 0 fica de fora. P = 0,35 + 0,33 + 0,15 = 0,83. O caminho pelo complemento é ainda mais rápido: P = 1 − P(carga 0) = 1 − 0,17 = 0,83 ✓. No item (b) o livro pede P(não ser maior do que +3), que inclui as cargas 0, +2 e +3: 0,17 + 0,35 + 0,33 = 0,85. Repare que \"não maior que +3\" INCLUI o +3 — trocar isso por \"menor que +3\" muda a resposta para 0,52."},{"id":"pe-2-57","fonte":"Montgomery 2-57","capitulo":"Cap. 2 — Técnicas de contagem","assunto":"Regra do produto com repetição","naLista":true,"kind":"numeric","prompt":"Suponha que seu veículo seja licenciado em um estado que emita placas que consistam em três dígitos (entre 0 e 9), seguidos de três letras (entre A e Z). Quantas placas diferentes são possíveis?","answer":17576000,"formato":"um número inteiro","solucao":"São seis posições independentes, com repetição permitida: 10 × 10 × 10 × 26 × 26 × 26 = 10³ × 26³ = 1.000 × 17.576 = 17.576.000 placas. A pergunta do livro é a probabilidade de a SUA placa ser sorteada: como todas são igualmente prováveis, P = 1/17.576.000 ≈ 5,7 × 10⁻⁸. Cuidado para não usar arranjo aqui: nada impede a placa AAA-000, então há repetição e o expoente é o número de posições."},{"id":"pe-2-71","fonte":"Montgomery 2-71 (a)","capitulo":"Cap. 2 — Probabilidade em tabelas","assunto":"Complemento em tabela de dupla entrada","naLista":true,"kind":"numeric","prompt":"Um fabricante de faróis para automóveis testa lâmpadas sob ambientes com alta umidade e com alta temperatura, usando intensidade e vida útil como as respostas de interesse. A tabela mostra o desempenho de 130 lâmpadas. Encontre a probabilidade de uma lâmpada selecionada aleatoriamente fornecer resultados insatisfatórios sob QUALQUER critério.","tabela":{"titulo":"intensidade × vida útil (130 lâmpadas)","cabecalho":["intensidade","vida útil satisfatória","vida útil insatisfatória"],"linhas":[["satisfatória",117,3],["insatisfatória",8,2]]},"answer":0.1,"formato":"decimal com vírgula, ex: 0,10","solucao":"\"Insatisfatório sob qualquer critério\" é a UNIÃO dos dois defeitos — o complemento de \"satisfatório nos dois\". Satisfatório em ambos: 117 lâmpadas. Logo insatisfatório em pelo menos um critério: 130 − 117 = 13. P = 13/130 = 0,10. Somando as células diretamente dá o mesmo: 3 + 8 + 2 = 13 ✓ — repare que a célula (8) e a (3) e a (2) não se sobrepõem, por isso aqui a soma direta funciona. No item (b), os consumidores exigem 95% de resultados satisfatórios: o fabricante entrega 117/130 = 90%, então NÃO atende a demanda."},{"id":"pe-2-51","fonte":"Montgomery 2-51","capitulo":"Cap. 2 — Axiomas da probabilidade","assunto":"Resultados igualmente prováveis","naLista":false,"kind":"numeric","prompt":"Se o último dígito de uma medida de peso for igualmente provável de ser qualquer um dos dígitos de 0 a 9, qual é a probabilidade de que o último dígito seja maior que ou igual a 5?","answer":0.5,"formato":"decimal com vírgula, ex: 0,5","solucao":"Os dígitos ≥ 5 são 5, 6, 7, 8 e 9 — cinco dos dez resultados igualmente prováveis. P = 5/10 = 0,5. O detalhe que derruba gente: \"maior que OU IGUAL a 5\" inclui o próprio 5. Se fosse \"maior que 5\", seriam quatro dígitos e a resposta cairia para 0,4. No item (a) o livro pergunta P(último dígito ser 0) = 1/10 = 0,1."},{"id":"pe-2-52","fonte":"Montgomery 2-52 (a)","capitulo":"Cap. 2 — Axiomas da probabilidade","assunto":"Tradução de \"no mínimo\"","naLista":false,"kind":"numeric","prompt":"Pedidos de compras de um computador são sumarizados pelos itens opcionais solicitados: nenhum item opcional, 0,3; um item opcional, 0,5; mais de um item opcional, 0,2. Qual é a probabilidade de um pedido de compra solicitar no mínimo um item opcional?","answer":0.7,"formato":"decimal com vírgula, ex: 0,7","solucao":"\"No mínimo um\" = \"um\" OU \"mais de um\" = 0,5 + 0,2 = 0,7. Pelo complemento: 1 − P(nenhum) = 1 − 0,3 = 0,7 ✓ — sempre o caminho mais curto quando aparece \"no mínimo um\". No item (b), \"não solicitar mais de um item\" = nenhum OU um = 0,3 + 0,5 = 0,8. As três categorias somam 1,0, o que confirma que elas particionam o espaço amostral."},{"id":"pe-2-61","fonte":"Montgomery 2-61 (e)","capitulo":"Cap. 2 — Probabilidade em tabelas","assunto":"Regra aditiva em tabela","naLista":false,"kind":"numeric","prompt":"Amostras de emissões de três fornecedores são classificadas com relação a satisfazer as especificações de qualidade do ar. Os resultados de 100 amostras estão na tabela. Seja A o evento de a amostra ser proveniente do fornecedor 1 e B o evento de a amostra atender às especificações. Determine P(A ∪ B).","tabela":{"titulo":"fornecedor × conforme (100 amostras)","cabecalho":["fornecedor","conforme: sim","conforme: não"],"linhas":[[1,22,8],[2,25,5],[3,30,10]]},"answer":0.85,"formato":"decimal com vírgula, ex: 0,85","solucao":"Primeiro os totais: fornecedor 1 tem 22 + 8 = 30 amostras, então P(A) = 0,30. Conformes são 22 + 25 + 30 = 77, então P(B) = 0,77. A interseção (fornecedor 1 E conforme) é a célula 22, logo P(A ∩ B) = 0,22. P(A ∪ B) = 0,30 + 0,77 − 0,22 = 0,85. Conferindo por contagem direta: as amostras em A ∪ B são as 30 do fornecedor 1 mais as conformes dos fornecedores 2 e 3 (25 + 30 = 55), totalizando 85 de 100 ✓."},{"id":"pe-2-62","fonte":"Montgomery 2-62 (e)","capitulo":"Cap. 2 — Probabilidade em tabelas","assunto":"Regra aditiva em tabela","naLista":false,"kind":"numeric","prompt":"Discos de plástico de policarbonato, provenientes de um fornecedor, são analisados com relação às resistências a arranhões e ao choque. Os resultados de 100 discos estão na tabela. Seja A o evento de um disco ter alta resistência ao choque e B o evento de um disco ter alta resistência a arranhões. Determine P(A ∪ B).","tabela":{"titulo":"resistência a arranhões × resistência a choque (100 discos)","cabecalho":["resistência a arranhões","choque: alta","choque: baixa"],"linhas":[["alta",70,9],["baixa",16,5]]},"answer":0.95,"formato":"decimal com vírgula, ex: 0,95","solucao":"A = alta resistência ao CHOQUE = coluna \"choque: alta\" = 70 + 16 = 86, então P(A) = 0,86. B = alta resistência a ARRANHÕES = linha \"alta\" = 70 + 9 = 79, então P(B) = 0,79. A ∩ B = a célula onde as duas são altas = 70, então P(A ∩ B) = 0,70. P(A ∪ B) = 0,86 + 0,79 − 0,70 = 0,95. O erro fatal aqui é trocar linha por coluna. Antes de somar, escreva por extenso o que é A e o que é B — a tabela é de dupla entrada justamente para punir quem não lê o rótulo."},{"id":"pe-2-70","fonte":"Montgomery 2-70 (a)","capitulo":"Cap. 2 — Probabilidade em tabelas","assunto":"Regra aditiva em tabela","naLista":false,"kind":"numeric","prompt":"Cabos de fio de cobre, provenientes de um fabricante, são analisados em relação à resistência e à condutividade. Os resultados de 100 cabos estão na tabela. Se um cabo for selecionado aleatoriamente, qual é a probabilidade de sua condutividade ser alta OU sua resistência ser alta?","tabela":{"titulo":"condutividade × resistência (100 cabos)","cabecalho":["condutividade","resistência: alta","resistência: baixa"],"linhas":[["alta",74,8],["baixa",15,3]]},"answer":0.97,"formato":"decimal com vírgula, ex: 0,97","solucao":"P(condutividade alta) = 74 + 8 = 82 → 0,82. P(resistência alta) = 74 + 15 = 89 → 0,89. A interseção (as duas altas) é a célula 74 → 0,74. P(união) = 0,82 + 0,89 − 0,74 = 0,97. Confira contando o complemento: o único caso fora da união é \"condutividade baixa E resistência baixa\" = 3 cabos. Logo P = 1 − 0,03 = 0,97 ✓. Esse truque do complemento costuma ser mais rápido que a regra aditiva em tabelas 2×2."},{"id":"pe-2-72","fonte":"Montgomery 2-72 (b)","capitulo":"Cap. 2 — Probabilidade em tabelas","assunto":"Probabilidade de uma célula","naLista":false,"kind":"numeric","prompt":"Óleo de cozinha é produzido em duas variedades principais: mono e poliinsaturado. Duas fontes comuns de óleo de cozinha são milho e canola. A tabela mostra o número de garrafas desses óleos em um supermercado. Se uma garrafa for selecionada ao acaso, qual é a probabilidade de ser óleo de canola monoinsaturado?","tabela":{"titulo":"tipo de insaturação × tipo de óleo","cabecalho":["tipo de insaturação","canola","milho"],"linhas":[["mono",7,13],["poli",93,77]]},"answer":0.0368,"tolerancia":0.02,"formato":"decimal com vírgula, ex: 0,0368","solucao":"O total de garrafas é 7 + 13 + 93 + 77 = 190. A célula pedida (mono E canola) tem 7 garrafas. P = 7/190 = 0,0368, ou cerca de 3,7%. O passo que mais se esquece é calcular o total: ele NÃO é 100 aqui, ao contrário das tabelas anteriores. Usar 100 como denominador por hábito dá 0,07 — quase o dobro do certo. Sempre some a tabela inteira antes de dividir."},{"id":"pe-2-35","fonte":"Montgomery 2-35","capitulo":"Cap. 2 — Técnicas de contagem","assunto":"Regra da multiplicação com opcional","naLista":false,"kind":"numeric","prompt":"Um pedido de compra de um computador pessoal digital pode especificar qualquer um dos cinco tamanhos de memória, qualquer um dos três tipos de vídeo, qualquer um dos quatro tamanhos de disco rígido e pode incluir ou não um extensor de memória. Quantos sistemas diferentes podem ser encomendados?","answer":120,"formato":"um número inteiro","solucao":"5 memórias × 3 vídeos × 4 discos × 2 (com ou sem extensor) = 120 sistemas. O fator que passa batido é o último: \"pode incluir OU NÃO\" também é uma escolha, com 2 opções. Esquecer esse 2 dá 60 — metade da resposta. Toda característica binária de \"tem/não tem\" entra na multiplicação como 2."},{"id":"pe-2-36","fonte":"Montgomery 2-36","capitulo":"Cap. 2 — Técnicas de contagem","assunto":"Regra da multiplicação","naLista":false,"kind":"numeric","prompt":"Em uma operação de fabricação, um item é produzido por usinagem, polimento e pintura. Se há três ferramentas de usinagem, quatro ferramentas de polimento e três ferramentas de pintura, quantas rotinas diferentes (consistindo em usinagem, seguida de polimento e depois pintura) são possíveis para o item?","answer":36,"formato":"um número inteiro","solucao":"3 × 4 × 3 = 36 rotinas. São três ETAPAS que acontecem em sequência (usinagem E polimento E pintura), então multiplica. Se o enunciado dissesse \"o item passa por usinagem OU polimento OU pintura\", seriam alternativas e a conta viraria 3 + 4 + 3 = 10. A palavrinha que decide entre somar e multiplicar é \"e\" contra \"ou\"."},{"id":"pe-2-38","fonte":"Montgomery 2-38","capitulo":"Cap. 2 — Técnicas de contagem","assunto":"Permutação","naLista":false,"kind":"numeric","prompt":"Um processo de fabricação consiste em 10 operações que podem ser completadas em qualquer ordem. Quantas sequências diferentes de produção são possíveis?","answer":3628800,"formato":"um número inteiro","solucao":"É uma permutação de 10 elementos distintos: 10! = 3.628.800 sequências. O raciocínio passo a passo: 10 escolhas para a primeira operação, 9 para a segunda (uma já foi usada), 8 para a terceira… até 1. O produto 10 × 9 × 8 × … × 1 é exatamente o fatorial. Aqui a ordem IMPORTA (é uma sequência de produção), e não há repetição — por isso é permutação e não a regra do produto com repetição."},{"id":"pe-2-39","fonte":"Montgomery 2-39","capitulo":"Cap. 2 — Técnicas de contagem","assunto":"Permutação com restrição","naLista":false,"kind":"numeric","prompt":"Um processo de fabricação consiste em 10 operações. Entretanto, cinco operações de usinagem devem ser completadas antes que qualquer uma das cinco operações restantes de montagem possa começar. Quantas sequências diferentes são possíveis?","answer":14400,"formato":"um número inteiro","solucao":"A restrição divide o problema em dois blocos independentes: as 5 usinagens vêm primeiro, em qualquer ordem entre si (5! = 120 maneiras), e depois as 5 montagens, também em qualquer ordem entre si (5! = 120 maneiras). Total = 5! × 5! = 120 × 120 = 14.400. Compare com o 2-38: sem a restrição eram 3.628.800 sequências. A restrição corta o total por um fator de 252 — é o que se ganha ao fixar a ordem entre os dois grupos."},{"id":"pe-2-26","fonte":"Montgomery 2-26","capitulo":"Cap. 2 — Operações com eventos","assunto":"União e complemento por contagem","naLista":false,"kind":"numeric","prompt":"Discos de plástico de policarbonato são analisados com relação à resistência a arranhões e a choque; os resultados de 100 discos estão na tabela. Seja A o evento de um disco ter alta resistência ao choque e B o evento de um disco ter alta resistência a arranhões. Determine o NÚMERO de discos em A ∪ B.","tabela":{"titulo":"resistência a arranhões × resistência a choque (100 discos)","cabecalho":["resistência a arranhões","choque: alta","choque: baixa"],"linhas":[["alta",70,9],["baixa",16,5]]},"answer":95,"formato":"um número inteiro de discos","solucao":"A (choque alto) = 70 + 16 = 86 discos. B (arranhões alto) = 70 + 9 = 79 discos. A ∩ B = 70 discos. A ∪ B = 86 + 79 − 70 = 95 discos. Confira pelo complemento: o único grupo fora da união é \"arranhões baixa E choque baixa\" = 5 discos, e 100 − 5 = 95 ✓. O livro pede também A ∩ B (70 discos) e A′ (100 − 86 = 14 discos). Note que a resposta aqui é uma CONTAGEM, não uma probabilidade — ler o que o enunciado pede evita entregar 0,95 quando ele quer 95."},{"id":"pe-2-27","fonte":"Montgomery 2-27 (a)","capitulo":"Cap. 2 — Operações com eventos","assunto":"Interseção com complemento","naLista":false,"kind":"numeric","prompt":"Amostras de alumínio fundido são classificadas com base no acabamento da superfície e no acabamento de borda; os resultados de 100 peças estão na tabela. Seja A o evento de uma amostra ter excelente acabamento na superfície e B o evento de ter excelente acabamento de borda. Determine o número de amostras em A′ ∩ B.","tabela":{"titulo":"acabamento de superfície × acabamento de borda (100 peças)","cabecalho":["acabamento de superfície","borda: excelente","borda: bom"],"linhas":[["excelente",80,2],["bom",10,8]]},"answer":10,"formato":"um número inteiro de amostras","solucao":"A′ ∩ B lê-se \"superfície NÃO excelente E borda excelente\" — é exatamente a célula da linha \"bom\" com a coluna \"borda: excelente\": 10 amostras. O caminho longo confirma: B (borda excelente) = 80 + 10 = 90; dentro de B, os que TÊM superfície excelente são 80; logo os que não têm são 90 − 80 = 10 ✓. Em tabela de dupla entrada, toda interseção de dois eventos simples é UMA célula. Se você precisou somar mais de uma célula para uma interseção, provavelmente traduziu o enunciado errado."}]},{"id":"sim-cal","titulo":"Simulado — Cálculo A","materia":"Cálculo A","subjectSlug":"calculo-a","livro":"Stewart — Cálculo, Volume 1, 7ª ed.","escopoConfirmado":"Seções 2.1 a 2.4 — confirmado pela Lista 1 (2.1: 1,3,5,7,9 · 2.2: 1,3,5,9,11,15,21,27,31,39,41,47 · 2.3: 1,3,5,9,11,17,23,29,33,41,47,51,63 · 2.4: 1,3,9,11,17,25,31,35,37,43)","quantidade":10,"minutos":60,"cor":"from-emerald-500 to-teal-600","questoes":[{"id":"cal-l01","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Expansão de binômio","naLista":true,"kind":"numeric","prompt":"Calcule lim(h→0) [(2 + h)³ − 8] / h.","answer":12,"formato":"um número","solucao":"Substituindo dá 0/0 — indeterminado, então tem que simplificar. Expanda o cubo: (2 + h)³ = 8 + 12h + 6h² + h³. O numerador vira 8 + 12h + 6h² + h³ − 8 = 12h + 6h² + h³ = h(12 + 6h + h²). Cancelando o h: lim(h→0) (12 + 6h + h²) = 12. Esse limite é a derivada de x³ em x = 2 — é por isso que ele aparece tanto: 3x² em x = 2 dá 12 ✓."},{"id":"cal-l02","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Diferença de cubos","naLista":true,"kind":"choice","prompt":"Calcule lim(x→−2) (x + 2) / (x³ + 8).","options":["1/12","1/4","0","12"],"answer":0,"solucao":"Substituindo: (−2 + 2)/((−2)³ + 8) = 0/0 — indeterminado. O denominador é uma SOMA de cubos: x³ + 8 = x³ + 2³ = (x + 2)(x² − 2x + 4). Cancelando o (x + 2) que aparece em cima e embaixo: lim(x→−2) 1/(x² − 2x + 4) = 1/(4 + 4 + 4) = 1/12. A alternativa 0 é o que se obtém parando na substituição — o erro clássico de tratar 0/0 como resposta. Fórmula para guardar: a³ + b³ = (a + b)(a² − ab + b²), com o sinal do meio TROCADO em relação ao primeiro parêntese."},{"id":"cal-l03","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Fatoração de diferença de potências","naLista":true,"kind":"choice","prompt":"Calcule lim(t→1) (t⁴ − 1) / (t³ − 1).","options":["4/3","3/4","1","0"],"answer":0,"solucao":"Dá 0/0. Fatore os dois lados pelo fator comum (t − 1): t⁴ − 1 = (t − 1)(t + 1)(t² + 1) e t³ − 1 = (t − 1)(t² + t + 1). Cancelando (t − 1): lim(t→1) (t + 1)(t² + 1)/(t² + t + 1) = (2)(2)/(1 + 1 + 1) = 4/3. Atalho útil: para lim(t→1) (tⁿ − 1)/(tᵐ − 1) o resultado é sempre n/m — aqui 4/3 ✓. A alternativa 3/4 é a resposta invertida, o erro mais comum quando se aplica o atalho de cabeça."},{"id":"cal-l04","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Racionalização","naLista":true,"kind":"choice","prompt":"Calcule lim(h→0) (√(9 + h) − 3) / h.","options":["1/6","1/3","1/9","0"],"answer":0,"solucao":"Dá 0/0 e tem raiz — então racionalize multiplicando em cima e embaixo pelo conjugado (√(9 + h) + 3): o numerador vira (9 + h) − 9 = h, e o denominador vira h(√(9 + h) + 3). Cancelando o h: lim(h→0) 1/(√(9 + h) + 3) = 1/(3 + 3) = 1/6. Note que o 3 do denominador final é √9 — por isso a resposta é 1/(2√9) = 1/6, e não 1/3 nem 1/9. Regra geral: lim(h→0) (√(a + h) − √a)/h = 1/(2√a)."},{"id":"cal-l05","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Racionalização com coeficiente","naLista":true,"kind":"choice","prompt":"Calcule lim(u→2) (√(4u + 1) − 3) / (u − 2).","options":["2/3","3/2","1/3","2"],"answer":0,"solucao":"Racionalizando pelo conjugado (√(4u + 1) + 3), o numerador vira (4u + 1) − 9 = 4u − 8 = 4(u − 2). A expressão fica 4(u − 2) / [(u − 2)(√(4u + 1) + 3)], e o (u − 2) cancela. Sobra lim(u→2) 4/(√(4u + 1) + 3) = 4/(√9 + 3) = 4/6 = 2/3. O detalhe que muda tudo é o coeficiente 4 que sai da raiz: quem esquece dele e escreve (u − 2) no numerador chega em 1/6. Sempre fatore o numerador depois de racionalizar, antes de cancelar."},{"id":"cal-l06","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Fração de frações","naLista":true,"kind":"choice","prompt":"Calcule lim(x→−4) (1/4 + 1/x) / (4 + x).","options":["−1/16","1/16","−1/4","−1/8"],"answer":0,"solucao":"Some as frações do numerador primeiro: 1/4 + 1/x = (x + 4)/(4x). A expressão vira [(x + 4)/(4x)] / (4 + x) = (x + 4) / [4x(4 + x)], e como (x + 4) = (4 + x), tudo cancela: sobra 1/(4x). Substituindo x = −4: 1/(4 × (−4)) = −1/16. O erro de sinal é o que este exercício caça: 4x em x = −4 dá −16, não 16. Depois de cancelar, sempre substitua com o sinal do valor original."},{"id":"cal-l07","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Conjugado com duas raízes","naLista":true,"kind":"numeric","prompt":"Calcule lim(t→0) (√(1 + t) − √(1 − t)) / t.","answer":1,"formato":"um número","solucao":"Multiplique pelo conjugado (√(1 + t) + √(1 − t)). O numerador vira (1 + t) − (1 − t) = 2t. A expressão fica 2t / [t(√(1 + t) + √(1 − t))], e o t cancela. Sobra lim(t→0) 2/(√(1 + t) + √(1 − t)) = 2/(1 + 1) = 1. Quando há DUAS raízes subtraídas, o conjugado é a mesma expressão com o sinal do meio trocado — e o resultado elimina as duas raízes de uma vez, porque (a − b)(a + b) = a² − b²."},{"id":"cal-l08","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Subtração de frações","naLista":true,"kind":"numeric","prompt":"Calcule lim(t→0) [ 1/t − 1/(t² + t) ].","answer":1,"formato":"um número","solucao":"Aqui a indeterminação é do tipo ∞ − ∞, não 0/0 — mas o tratamento é o mesmo: junte tudo numa fração só. Fatore o segundo denominador: t² + t = t(t + 1). MMC = t(t + 1): 1/t − 1/[t(t + 1)] = [(t + 1) − 1] / [t(t + 1)] = t / [t(t + 1)]. Cancelando o t: lim(t→0) 1/(t + 1) = 1. Nunca calcule ∞ − ∞ \"termo a termo\": os dois termos explodem, mas a diferença entre eles é perfeitamente finita."},{"id":"cal-l09","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Fatorar com raiz no numerador","naLista":true,"kind":"choice","prompt":"Calcule lim(x→16) (4 − √x) / (16x − x²).","options":["1/128","1/64","1/32","−1/128"],"answer":0,"solucao":"Fatore o denominador: 16x − x² = x(16 − x). E note que 16 − x é diferença de quadrados em termos de √x: 16 − x = (4 − √x)(4 + √x). A expressão vira (4 − √x) / [x(4 − √x)(4 + √x)], e o (4 − √x) cancela. Sobra lim(x→16) 1/[x(4 + √x)] = 1/[16 × (4 + 4)] = 1/128. A sacada é enxergar que x = (√x)², o que transforma 16 − x numa diferença de quadrados. Sem esse passo, não aparece o fator que cancela."},{"id":"cal-l10","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Expoente negativo","naLista":true,"kind":"choice","prompt":"Calcule lim(h→0) [ (3 + h)⁻¹ − 3⁻¹ ] / h.","options":["−1/9","1/9","−1/3","−1/6"],"answer":0,"solucao":"Reescreva os expoentes negativos como frações: [1/(3 + h) − 1/3] / h. MMC no numerador: [3 − (3 + h)] / [3(3 + h)] = −h / [3(3 + h)]. Dividindo por h: −1 / [3(3 + h)]. Substituindo h = 0: −1/(3 × 3) = −1/9. O sinal negativo não é acidente: 1/(3+h) é MENOR que 1/3 para h > 0, então a diferença é negativa. Esse limite é a derivada de 1/x em x = 3, e a derivada de 1/x é −1/x² — que em x = 3 dá −1/9 ✓."},{"id":"cal-l11","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Fração com raiz e ∞ − ∞","naLista":true,"kind":"choice","prompt":"Calcule lim(t→0) [ 1/(t·√(1 + t)) − 1/t ].","options":["−1/2","1/2","−1","0"],"answer":0,"solucao":"Junte numa fração só, colocando t√(1 + t) como denominador comum: [1 − √(1 + t)] / [t·√(1 + t)]. Agora racionalize o numerador pelo conjugado (1 + √(1 + t)): ele vira 1 − (1 + t) = −t. A expressão fica −t / [t·√(1 + t)·(1 + √(1 + t))], e o t cancela. Sobra lim(t→0) −1 / [√(1 + t)(1 + √(1 + t))] = −1/[1 × (1 + 1)] = −1/2. Duas técnicas na mesma questão — MMC primeiro, racionalização depois. É o tipo de exercício que separa quem decorou de quem entendeu o roteiro."},{"id":"cal-l12","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Racionalização com fatoração","naLista":true,"kind":"choice","prompt":"Calcule lim(x→−4) (√(x² + 9) − 5) / (x + 4).","options":["−4/5","4/5","−5/4","−1/5"],"answer":0,"solucao":"Racionalizando pelo conjugado, o numerador vira (x² + 9) − 25 = x² − 16 = (x − 4)(x + 4). A expressão fica (x − 4)(x + 4) / [(x + 4)(√(x² + 9) + 5)], e o (x + 4) cancela. Sobra lim(x→−4) (x − 4)/(√(x² + 9) + 5) = (−4 − 4)/(√25 + 5) = −8/10 = −4/5. Repare que foram necessários DOIS passos de fatoração: racionalizar produziu x² − 16, que ainda precisou ser fatorado como diferença de quadrados para o (x + 4) aparecer e cancelar."},{"id":"cal-l13","fonte":"Stewart 2.3","capitulo":"2.3 — Propriedades dos limites","assunto":"Raiz no denominador","naLista":true,"kind":"choice","prompt":"Calcule lim(x→0) x / (√(1 + 3x) − 1).","options":["2/3","3/2","1/3","3"],"answer":0,"solucao":"A raiz está no DENOMINADOR desta vez, mas o conjugado resolve igual. Multiplicando por (√(1 + 3x) + 1) em cima e embaixo, o denominador vira (1 + 3x) − 1 = 3x. A expressão fica x(√(1 + 3x) + 1) / (3x), e o x cancela. Sobra lim(x→0) (√(1 + 3x) + 1)/3 = (1 + 1)/3 = 2/3. Não importa de que lado está a raiz — o conjugado sempre transforma (a − b)(a + b) em a² − b², e é isso que a elimina."},{"id":"cal-c01","fonte":"Stewart 2.2","capitulo":"2.2 — O limite de uma função","assunto":"Limites laterais","naLista":true,"kind":"choice","prompt":"Para uma função f, sabe-se que lim(x→3⁻) f(x) = 5 e lim(x→3⁺) f(x) = 2, e que f(3) = 5. O que se pode afirmar sobre lim(x→3) f(x)?","options":["Não existe, porque os limites laterais são diferentes","Vale 5, porque coincide com o valor de f(3)","Vale 5, porque o limite pela esquerda tem prioridade","Vale 3,5, que é a média dos dois limites laterais"],"answer":0,"solucao":"O limite bilateral existe se, e somente se, os DOIS limites laterais existem e são IGUAIS. Aqui 5 ≠ 2, então lim(x→3) f(x) não existe. Repare que f(3) = 5 é irrelevante para o limite: o limite descreve para onde a função aponta ao se APROXIMAR de 3, não o que ela vale EM 3. Uma função pode ter limite num ponto onde nem está definida, e pode estar definida num ponto onde não tem limite — como aqui. Essa independência entre \"limite\" e \"valor\" é exatamente o que a Seção 2.5 usa para definir continuidade."},{"id":"cal-c02","fonte":"Stewart 2.2","capitulo":"2.2 — O limite de uma função","assunto":"Indeterminação 0/0","naLista":true,"kind":"choice","prompt":"Ao substituir o valor num limite de uma fração, você obtém 0/0. Qual é a conclusão correta?","options":["É uma indeterminação: numerador e denominador têm fator comum e é preciso simplificar antes de concluir","O limite não existe","O limite vale 0","O limite vale 1, porque zero dividido por zero dá um"],"answer":0,"solucao":"0/0 é uma FORMA INDETERMINADA — ela não decide nada sozinha. Três limites que dão 0/0 no mesmo ponto x = 2: (x² − 4)/(x − 2) → 4, (x² − 4x + 4)/(x − 2) → 0, (x³ − 8)/(x − 2) → 12. Mesmo sintoma, três respostas. A frase para guardar: 0/0 não é resposta, é sintoma — o aviso de que há um fator comum esperando para ser cancelado. Cuidado para não confundir com 5/0 (numerador não-nulo): esse NÃO é indeterminado, é ±∞, e indica assíntota vertical. Distinguir 0/0 de 5/0 é a decisão mais importante da lista inteira."},{"id":"cal-c03","fonte":"Stewart 2.1","capitulo":"2.1 — Tangente e velocidade","assunto":"Reta secante e reta tangente","naLista":true,"kind":"choice","prompt":"Na Seção 2.1, a inclinação da reta tangente à curva y = f(x) no ponto P(a, f(a)) é obtida a partir das retas secantes PQ. Qual é a relação correta?","options":["É o limite das inclinações das secantes PQ quando Q tende a P ao longo da curva","É a média das inclinações de todas as secantes PQ","É a inclinação da secante PQ quando Q é o ponto mais próximo de P","É a inclinação da reta que liga os extremos do domínio de f"],"answer":0,"solucao":"A inclinação da secante por P(a, f(a)) e Q(x, f(x)) é [f(x) − f(a)]/(x − a). A tangente é o LIMITE dessas inclinações quando x → a: m = lim(x→a) [f(x) − f(a)]/(x − a). A alternativa \"Q é o ponto mais próximo de P\" é sedutora e errada: não existe \"ponto mais próximo\", sempre cabe outro entre os dois. É precisamente essa impossibilidade que exige o conceito de limite — e é por isso que o Capítulo 2 começa por aqui. Substituindo x = a + h, a mesma fórmula vira lim(h→0) [f(a + h) − f(a)]/h, que é a forma dos exercícios da 2.3."},{"id":"cal-c04","fonte":"Stewart 2.4","capitulo":"2.4 — Definição precisa de limite","assunto":"Épsilon-delta","naLista":true,"kind":"choice","prompt":"Na definição precisa de limite, lim(x→a) f(x) = L significa: para todo ε > 0 existe δ > 0 tal que…","options":["se 0 < |x − a| < δ, então |f(x) − L| < ε","se |x − a| < ε, então |f(x) − L| < δ","se 0 < |f(x) − L| < δ, então |x − a| < ε","se |x − a| < δ, então |f(x) − L| = 0"],"answer":0,"solucao":"A ordem lógica é: o desafio vem em ε (a tolerância no EIXO Y) e a resposta vem em δ (a vizinhança no EIXO X). Quem escolhe ε é o adversário; quem tem de achar δ é você. Trocar os dois de lugar (alternativa 2) inverte o jogo e torna a definição falsa. O detalhe do \"0 < |x − a|\" também é obrigatório: ele EXCLUI o próprio ponto x = a, garantindo que o limite não depende do valor de f em a — exatamente o que a intuição da Seção 2.2 já dizia. E |f(x) − L| < ε é uma desigualdade estrita, não uma igualdade: nunca se exige que f(x) alcance L, só que chegue tão perto quanto se queira."}]}]</script>
+<script>
+(function(){
+  "use strict";
+  var BANCOS = JSON.parse(document.getElementById('banco').textContent);
+  var porId = {};
+  BANCOS.forEach(function(b){ porId[b.id] = b; });
+
+  var subAtual = 'sim-cal';
+  var vistaAtual = 'aulas';        // aulas | cola | questoes — comeca pela aula, nao pelo exercicio
+  var filtro = 'todas';
+  var sorteio = null;              // ids sorteados, quando o filtro "Sortear 10" esta ligado
+  var CHAVE = 'simulado-bolso-v1';
+  var CHAVE_AULAS = 'simulado-bolso-aulas-v1';
+  var estado = ler(CHAVE);
+  var aulasLidas = ler(CHAVE_AULAS);
+
+  function ler(k){
+    try { return JSON.parse(localStorage.getItem(k)) || {}; }
+    catch(e){ return {}; }
+  }
+  function gravar(){
+    try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch(e){}
+  }
+  function gravarAulas(){
+    try { localStorage.setItem(CHAVE_AULAS, JSON.stringify(aulasLidas)); } catch(e){}
+  }
+
+  /* --- numero em pt-BR: "0,4" / "3.628.800" / "0.4" --- */
+  function paraNumero(txt){
+    var s = String(txt).replace(/\s| /g, '').replace(/%/g, '');
+    if(!s) return NaN;
+    if(s.indexOf(',') > -1){ s = s.replace(/\./g, '').replace(',', '.'); }
+    else if(/^-?\d{1,3}(\.\d{3})+$/.test(s)){ s = s.replace(/\./g, ''); }
+    var v = parseFloat(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function acertou(q, v){
+    if(Number.isInteger(q.answer)) return v === q.answer;
+    var tol = (q.tolerancia == null) ? 0.005 : q.tolerancia;
+    return Math.abs(v - q.answer) <= Math.abs(q.answer) * tol + 1e-12;
+  }
+  function formatar(n){
+    if(Number.isInteger(n)) return n.toLocaleString('pt-BR');
+    return String(n).replace('.', ',');
+  }
+  function esc(s){
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  var LETRAS = ['A', 'B', 'C', 'D', 'E'];
+
+  var deck = document.getElementById('deck');
+
+  /* ---------------- selecao ---------------- */
+  function visiveis(){
+    var qs = porId[subAtual].questoes;
+    if(filtro === 'lista')     return qs.filter(function(q){ return q.naLista; });
+    if(filtro === 'pendentes') return qs.filter(function(q){ return !estado[q.id]; });
+    if(filtro === 'revisar')   return qs.filter(function(q){ var e = estado[q.id]; return e && e.st !== 'acerto'; });
+    if(filtro === 'sorteio' && sorteio){
+      return sorteio.map(achaQ).filter(Boolean);
+    }
+    return qs;
+  }
+  function achaQ(id){
+    var qs = porId[subAtual].questoes;
+    for(var i = 0; i < qs.length; i++){ if(qs[i].id === id) return qs[i]; }
+    return null;
+  }
+  function embaralhar(a){
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  /* sorteia como o simulado de verdade: prioriza o que o professor colocou na lista */
+  function sortear(){
+    var qs = porId[subAtual].questoes;
+    var n = porId[subAtual].quantidade || 10;
+    var daLista = embaralhar(qs.filter(function(q){ return q.naLista; }));
+    var resto   = embaralhar(qs.filter(function(q){ return !q.naLista; }));
+    sorteio = daLista.concat(resto).slice(0, n).map(function(q){ return q.id; });
+  }
+
+  /* ---------------- html ---------------- */
+  function tabelaHTML(t){
+    var h = '<div class="tab-box">';
+    if(t.titulo) h += '<div class="tab-cap">' + esc(t.titulo) + '</div>';
+    h += '<table class="dados"><thead><tr>';
+    t.cabecalho.forEach(function(c){ h += '<th>' + esc(c) + '</th>'; });
+    h += '</tr></thead><tbody>';
+    t.linhas.forEach(function(l){
+      h += '<tr>';
+      l.forEach(function(c){ h += '<td>' + esc(c) + '</td>'; });
+      h += '</tr>';
+    });
+    return h + '</tbody></table></div>';
+  }
+
+  function vereditoTexto(q, e){
+    if(!e) return '';
+    var certa = (q.kind === 'choice')
+      ? LETRAS[q.answer] + ') ' + q.options[q.answer]
+      : formatar(q.answer);
+    if(e.st === 'acerto') return 'Acertou &mdash; <span class="val">' + esc(certa) + '</span>';
+    if(e.st === 'rever')  return 'Gabarito: <span class="val">' + esc(certa) + '</span>';
+    return 'Errou &mdash; o certo é <span class="val">' + esc(certa) + '</span>';
+  }
+
+  function questaoHTML(q, i){
+    var e = estado[q.id];
+    var st = e ? e.st : '';
+    var feita = !!e;
+    var h = '<article class="q" data-id="' + q.id + '"' + (st ? ' data-st="' + st + '"' : '') + '>';
+
+    h += '<div class="q-topo">'
+       +   '<span class="q-n">' + ('0' + (i + 1)).slice(-2) + '</span>'
+       +   '<span class="q-fonte">' + esc(q.fonte) + '</span>'
+       +   (q.naLista ? '<span class="flag">na lista</span>' : '')
+       +   '<span class="dot"></span>'
+       + '</div>';
+
+    h += '<div class="q-corpo">';
+    h += '<div class="q-assunto">' + esc(q.assunto) + '</div>';
+    h += '<p class="q-prompt">' + esc(q.prompt) + '</p>';
+    if(q.tabela) h += tabelaHTML(q.tabela);
+
+    if(q.kind === 'choice'){
+      h += '<div class="alts">';
+      q.options.forEach(function(op, k){
+        var cls = 'alt';
+        if(feita){
+          if(k === q.answer) cls += ' certa';
+          else if(e.resp === k) cls += ' errada';
+        }
+        h += '<button type="button" class="' + cls + '" data-alt="' + k + '"' + (feita ? ' disabled' : '') + '>'
+           +   '<span class="letra">' + LETRAS[k] + '</span><span>' + esc(op) + '</span>'
+           + '</button>';
+      });
+      h += '</div>';
+    } else {
+      h += '<div class="numlinha">'
+         +   '<input type="text" inputmode="decimal" autocomplete="off" aria-label="sua resposta" placeholder="sua resposta"'
+         +     (feita ? ' disabled value="' + esc(e.resp == null ? '' : e.resp) + '"' : '') + '>'
+         +   '<button type="button" class="btn conferir"' + (feita ? ' disabled' : '') + '>Conferir</button>'
+         + '</div>';
+      if(q.formato) h += '<div class="formato">' + esc(q.formato) + '</div>';
+    }
+
+    h += '<div class="acoes">'
+       + (feita ? '<button type="button" class="btn ghost refazer">Refazer</button>'
+                : '<button type="button" class="btn ghost espiar">Não sei &mdash; ver resolução</button>')
+       + '</div>';
+
+    var vc = (st === 'acerto') ? ' v-ok' : (st === 'erro') ? ' v-erro' : (st === 'rever') ? ' v-rever' : '';
+    h += '<div class="veredito' + vc + '"' + (feita ? '' : ' hidden') + '>' + vereditoTexto(q, e) + '</div>';
+
+    h += '<div class="gab" data-aberto="' + (feita ? '1' : '0') + '"><div><div class="gab-in">'
+       +   '<div class="gab-rot">Resolução</div><p class="gab-txt">' + esc(q.solucao) + '</p>'
+       + '</div></div></div>';
+
+    return h + '</div></article>';
+  }
+
+  /* ---------------- render ---------------- */
+  function render(){
+    document.documentElement.setAttribute('data-sub', subAtual);
+    document.getElementById('pl-titulo').textContent = porId[subAtual].materia;
+
+    document.querySelectorAll('.tab').forEach(function(t){
+      t.setAttribute('aria-selected', t.dataset.tab === subAtual ? 'true' : 'false');
+    });
+    /* um elemento so aparece se a materia E o modo baterem; sem o atributo, nao filtra */
+    document.querySelectorAll('main [data-sub], main [data-vista]').forEach(function(el){
+      var okSub = !el.dataset.sub || el.dataset.sub === subAtual;
+      var okVista = !el.dataset.vista || el.dataset.vista === vistaAtual;
+      el.classList.toggle('esconde', !(okSub && okVista));
+    });
+    document.querySelectorAll('#seg button').forEach(function(b){
+      b.setAttribute('aria-selected', b.dataset.ir === vistaAtual ? 'true' : 'false');
+    });
+    placarAulas();
+
+    var qs = visiveis();
+    deck.innerHTML = qs.length
+      ? qs.map(questaoHTML).join('')
+      : '<div class="vazio">Nada aqui com esse filtro. Boa notícia, provavelmente.</div>';
+    placar();
+  }
+
+  /* ---------------- aulas ---------------- */
+  function aulasDaMateria(){
+    var caixa = document.querySelector('.aulas[data-sub="' + subAtual + '"]');
+    return caixa ? [].slice.call(caixa.querySelectorAll('details.aula')) : [];
+  }
+
+  function placarAulas(){
+    var as = aulasDaMateria();
+    var lidas = as.filter(function(d){ return aulasLidas[d.dataset.aula]; }).length;
+    as.forEach(function(d){
+      if(aulasLidas[d.dataset.aula]) d.dataset.lida = '1';
+      else delete d.dataset.lida;
+      var b = d.querySelector('.marcar');
+      if(b) b.textContent = aulasLidas[d.dataset.aula] ? 'Estudada ✓' : 'Marcar como estudada';
+    });
+    document.getElementById('ap-txt').textContent = lidas + ' de ' + as.length;
+    document.getElementById('ap-barra').style.width = as.length ? (lidas / as.length * 100) + '%' : '0';
+    document.getElementById('seg-aulas').textContent = lidas + '/' + as.length;
+
+    var qs = porId[subAtual].questoes;
+    var ok = qs.filter(function(q){ var e = estado[q.id]; return e && e.st === 'acerto'; }).length;
+    document.getElementById('seg-quest').textContent = ok + '/' + qs.length;
+  }
+
+  function placar(){
+    var qs = porId[subAtual].questoes;
+    var tot = qs.length, ok = 0, er = 0, rv = 0;
+    qs.forEach(function(q){
+      var e = estado[q.id];
+      if(!e) return;
+      if(e.st === 'acerto') ok++;
+      else if(e.st === 'erro') er++;
+      else rv++;
+    });
+    var b = document.getElementById('barra').children;
+    b[0].style.width = (ok / tot * 100) + '%';
+    b[1].style.width = (er / tot * 100) + '%';
+    b[2].style.width = (rv / tot * 100) + '%';
+    document.getElementById('n-ok').textContent = ok;
+    document.getElementById('n-erro').textContent = er;
+    document.getElementById('n-rever').textContent = rv;
+    document.getElementById('n-total').textContent = tot;
+    placarAulas();
+  }
+
+  /* ---------------- eventos ---------------- */
+  function aplica(card, q, st, resp){
+    estado[q.id] = { st: st, resp: resp };
+    gravar();
+    card.dataset.st = st;
+
+    /* marca o gabarito na lista de alternativas — inclusive quando ele so espiou */
+    if(q.kind === 'choice'){
+      card.querySelectorAll('.alt').forEach(function(b, idx){
+        if(idx === q.answer) b.classList.add('certa');
+        else if(idx === resp) b.classList.add('errada');
+      });
+    }
+
+    var v = card.querySelector('.veredito');
+    v.className = 'veredito ' + (st === 'acerto' ? 'v-ok' : st === 'erro' ? 'v-erro' : 'v-rever');
+    v.innerHTML = vereditoTexto(q, estado[q.id]);
+    v.hidden = false;
+
+    card.querySelector('.gab').dataset.aberto = '1';
+    card.querySelectorAll('.alt, .conferir, .numlinha input').forEach(function(el){ el.disabled = true; });
+    card.querySelector('.acoes').innerHTML = '<button type="button" class="btn ghost refazer">Refazer</button>';
+    placar();
+  }
+
+  deck.addEventListener('click', function(ev){
+    var card = ev.target.closest('.q');
+    if(!card) return;
+    var q = achaQ(card.dataset.id);
+    if(!q) return;
+
+    var alt = ev.target.closest('.alt');
+    if(alt && !alt.disabled){
+      var k = +alt.dataset.alt;
+      aplica(card, q, k === q.answer ? 'acerto' : 'erro', k);
+      return;
+    }
+    if(ev.target.closest('.conferir')){
+      var inp = card.querySelector('.numlinha input');
+      var v = paraNumero(inp.value);
+      if(isNaN(v)){ inp.focus(); return; }
+      aplica(card, q, acertou(q, v) ? 'acerto' : 'erro', inp.value);
+      return;
+    }
+    if(ev.target.closest('.espiar')){
+      aplica(card, q, 'rever', null);
+      return;
+    }
+    if(ev.target.closest('.refazer')){
+      delete estado[q.id];
+      gravar();
+      var i = visiveis().indexOf(q);
+      card.outerHTML = questaoHTML(q, i < 0 ? 0 : i);
+      placar();
+      return;
+    }
+  });
+
+  deck.addEventListener('keydown', function(ev){
+    if(ev.key !== 'Enter') return;
+    var inp = ev.target.closest('.numlinha input');
+    if(!inp) return;
+    ev.preventDefault();
+    var b = inp.parentNode.querySelector('.conferir');
+    if(b) b.click();
+  });
+
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      subAtual = t.dataset.tab;
+      if(filtro === 'sorteio') sortear();
+      render();
+      window.scrollTo(0, 0);
+    });
+  });
+
+  document.getElementById('seg').addEventListener('click', function(ev){
+    var b = ev.target.closest('button[data-ir]');
+    if(!b) return;
+    vistaAtual = b.dataset.ir;
+    render();
+    window.scrollTo(0, 0);
+  });
+
+  /* marcar aula como estudada / ir para a proxima */
+  document.getElementById('painel-aulas').addEventListener('click', function(ev){
+    var aula = ev.target.closest('details.aula');
+    if(!aula) return;
+
+    if(ev.target.closest('.marcar')){
+      var id = aula.dataset.aula;
+      if(aulasLidas[id]) delete aulasLidas[id]; else aulasLidas[id] = 1;
+      gravarAulas();
+      placarAulas();
+      return;
+    }
+    if(ev.target.closest('.proxima')){
+      var lista = aulasDaMateria();
+      var i = lista.indexOf(aula);
+      aulasLidas[aula.dataset.aula] = 1;
+      gravarAulas();
+      aula.open = false;
+      var prox = lista[i + 1];
+      if(prox){
+        prox.open = true;
+        prox.scrollIntoView({ block: 'start' });
+      } else {
+        aula.scrollIntoView({ block: 'start' });
+      }
+      placarAulas();
+    }
+  });
+
+  document.getElementById('filtros').addEventListener('click', function(ev){
+    var c = ev.target.closest('.chip');
+    if(!c) return;
+    filtro = c.dataset.f;
+    if(filtro === 'sorteio') sortear();
+    document.querySelectorAll('.chip').forEach(function(x){
+      x.setAttribute('aria-pressed', x === c ? 'true' : 'false');
+    });
+    render();
+  });
+
+  document.getElementById('zerar').addEventListener('click', function(){
+    porId[subAtual].questoes.forEach(function(q){ delete estado[q.id]; });
+    gravar();
+    render();
+  });
+
+  render();
+})();
+</script>
