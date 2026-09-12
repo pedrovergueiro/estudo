@@ -42,3 +42,11 @@ next-env.d.ts
 
 # banco local de progresso
 /data/
+
+# guardian research prototype
+/guardian_data/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

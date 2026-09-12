@@ -1,0 +1,38 @@
+services:
+  guardian:
+    build:
+      context: ..
+      dockerfile: guardian/Dockerfile
+    image: guardian:0.1.0
+    container_name: guardian
+    # Guardian never needs the network. Removing it makes the sandbox claim
+    # structural rather than aspirational.
+    network_mode: none
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=64m"]
+    volumes:
+      - guardian-data:/data
+    command: ["demo", "-n", "4"]
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: guardian/Dockerfile
+    image: guardian:0.1.0
+    container_name: guardian-dashboard
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=64m"]
+    volumes:
+      - guardian-data:/data
+    ports:
+      - "127.0.0.1:8787:8787"
+    command: ["dashboard", "--host", "0.0.0.0", "--port", "8787"]
+    depends_on:
+      - guardian
+
+volumes:
+  guardian-data:

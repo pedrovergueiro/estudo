@@ -1,0 +1,35 @@
+# GUARDIAN configuration.
+# Only capability-layer knobs live here.  Safety thresholds are defined in
+# guardian/safety/policy.py and cannot be overridden from configuration.
+
+[guardian]
+seed = 20260912
+data_dir = "guardian_data"
+log_level = "INFO"
+log_json = false
+
+[fitness]
+# Multi-objective: capability alone never promotes a version.
+capability_gain = 1.00
+robustness = 0.60
+detection_accuracy = 0.50
+efficiency = 0.20
+reliability = 0.40
+hallucination = 0.90
+false_positive = 0.70
+false_negative = 0.80
+safety_regression = 2.50
+
+[evolution]
+population_size = 4
+max_patches_per_candidate = 3
+max_generations = 8
+exploration_rate = 0.35
+memory_penalty = 0.5
+
+[data]
+train_size = 900
+eval_size = 600
+holdout_size = 400
+noise_level = 0.12
+seed = 20260912
