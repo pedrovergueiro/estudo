@@ -47,10 +47,13 @@ def setup_logging(log_dir: str | Path | None = None, level: str = "INFO",
             root.addHandler(fh)
         except OSError as e:  # armazenamento indisponível não pode parar a inspeção
             print(f"[capsule_inspector] falha ao abrir log em {d}: {e}", file=sys.stderr)
+    sh = logging.StreamHandler(sys.stderr)
     if console:
-        sh = logging.StreamHandler(sys.stderr)
         sh.setFormatter(fmt)
-        root.addHandler(sh)
+    else:  # modo operador: só avisos/erros, em texto simples
+        sh.setLevel(logging.WARNING)
+        sh.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    root.addHandler(sh)
     root.propagate = False
     return root
 

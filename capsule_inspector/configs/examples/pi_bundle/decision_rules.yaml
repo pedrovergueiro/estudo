@@ -1,0 +1,25 @@
+# Sem classes de defeito no modelo: o resultado esperado é REVIEW (PASS bloqueado por falta
+# de validação). Imagem ruim/sem objetos também vira REVIEW; falhas viram SYSTEM_ERROR.
+rules_version: "0.1.0-pi-demo"
+capsule_class: pill
+capsule_min_confidence: 0.25
+expected_capsules: {min: 1, max: 200}      # blister com várias unidades
+default_thresholds: {fail: 0.50, review: 0.20}
+class_thresholds: {}
+severity_actions: {critical: FAIL, major: FAIL, minor: REVIEW}
+max_defects_per_capsule_before_review: 6
+unassociated_defect_action: REVIEW
+anomaly_action: REVIEW
+quality_failure_action: REVIEW
+pass_requires:
+  validated_profile: true
+  approved_model: true
+  validated_critical_classes: true
+  required_acquisition_present: true
+quality:
+  min_mean_intensity: 20
+  max_mean_intensity: 245
+  max_saturated_fraction: 0.15
+  min_sharpness_laplacian_var: 5.0
+  border_margin_px: 0
+  min_capsule_area_fraction: 0.0005

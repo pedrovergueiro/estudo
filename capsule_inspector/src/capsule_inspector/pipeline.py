@@ -246,7 +246,8 @@ class InspectionPipeline:
                     annotated = None
 
         rec.status, rec.category = decision.status.value, decision.category.value
-        rec.reasons = list(decision.reasons) + [r for c in decision.capsules for r in c.reasons]
+        # sem repetir o mesmo motivo para cada unidade (ordem preservada)
+        rec.reasons = list(dict.fromkeys(list(decision.reasons) + [r for c in decision.capsules for r in c.reasons]))
         rec.capsules = [c.to_dict() for c in decision.capsules]
         out = InspectionOutput(rec, decision, annotated, originals)
         # tempos gravados no registro: da captura até a anotação (antes da persistência)

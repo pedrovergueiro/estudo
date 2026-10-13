@@ -18,6 +18,10 @@ class CaptureError(RuntimeError):
     """Falha de captura (câmera desconectada, timeout, quadro vazio)."""
 
 
+class CorruptFrame(CaptureError):
+    """Um quadro/arquivo ilegível; a fonte continua utilizável (passa para o próximo)."""
+
+
 class EndOfStream(CaptureError):
     """Fonte de arquivos esgotada (não é falha de hardware)."""
 

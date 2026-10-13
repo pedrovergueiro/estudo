@@ -1,0 +1,14 @@
+lighting_profiles_version: "0.1.0-pi-demo"
+profiles:
+  blister_demo:
+    product_family: "demo_medical_pills"
+    finish: opaque
+    color: "yellow"
+    geometry: {}
+    validated: false
+    background: "desconhecido"
+    acquisition:
+      steps:
+        - {name: camera, kind: diffuse, light: none}
+    fusion: {mode: none}
+    preprocessing: []          # o modelo foi treinado com imagens sem pré-processamento

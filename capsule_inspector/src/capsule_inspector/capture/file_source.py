@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 from ..dataset.yolo_io import IMAGE_EXTS
-from .base import CaptureError, EndOfStream, FrameSource
+from .base import CaptureError, CorruptFrame, EndOfStream, FrameSource
 
 VIDEO_EXTS = {".mp4", ".avi", ".mkv", ".mov"}
 
@@ -64,7 +64,7 @@ class FileSource(FrameSource):
         self.current = p
         img = cv2.imdecode(np.fromfile(str(p), dtype=np.uint8), cv2.IMREAD_COLOR)
         if img is None:
-            raise CaptureError(f"imagem corrompida: {p}")
+            raise CorruptFrame(f"imagem corrompida ou ilegível: {p}")
         return img
 
     def read(self, view: str = "default"):

@@ -309,11 +309,21 @@ class FileSourceConfig(_Strict):
     loop: bool = False
 
 
+class CsiCameraConfig(_Strict):
+    """Câmera CSI via rpicam-vid (fluxo MJPEG)."""
+    width: int = 1920
+    height: int = 1080
+    fps: int = 15
+    extra_args: list[str] = Field(default_factory=list)
+
+
 class CameraConfig(_Strict):
     camera_version: str
-    type: Literal["usb", "libcamera", "file"]
+    # auto: USB (UVC) se houver; senão CSI (rpicam-vid); libcamera = Picamera2 (Python do sistema)
+    type: Literal["usb", "csi", "libcamera", "file", "auto"]
     usb: UsbCameraConfig = Field(default_factory=UsbCameraConfig)
     libcamera: LibcameraConfig = Field(default_factory=LibcameraConfig)
+    csi: CsiCameraConfig = Field(default_factory=CsiCameraConfig)
     file: FileSourceConfig = Field(default_factory=FileSourceConfig)
 
 

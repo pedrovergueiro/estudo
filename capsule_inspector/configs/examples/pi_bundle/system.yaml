@@ -1,0 +1,20 @@
+system_version: "0.1.0-pi-demo"
+deployment_mode: experimental
+storage:
+  root: var
+  database: var/inspections.sqlite3
+  images_dir: var/images
+  status_file: var/status.json
+  retention:
+    pass_images_days: 7
+    review_images_days: 14
+    fail_images_days: 30
+    max_images_gb: 4.0           # cartão SD: limite conservador
+    min_free_disk_gb: 1.0
+logging: {dir: var/logs, level: INFO, max_bytes: 5242880, backup_count: 5}
+interface: {host: 127.0.0.1, port: 8080, auth_token_env: CAPSULE_UI_TOKEN, recent_limit: 50}
+integration:
+  trigger: {type: interval, interval_s: 1.0, gpio_pin: 17}
+  reject_actuator: {enabled: false, interlock_validated: false, type: gpio, gpio_pin: 27, pulse_ms: 50,
+                    reject_on: [FAIL, REVIEW, SYSTEM_ERROR]}
+  publisher: {enabled: false, url: null, timeout_s: 3.0, include_images: false, max_outbox: 1000}

@@ -8,7 +8,7 @@ import threading
 import time
 from typing import Any
 
-from .capture import CaptureError, EndOfStream, NullLightingController, capture_views, create_source
+from .capture import CaptureError, CorruptFrame, EndOfStream, LazySource, NullLightingController, capture_views
 from .config import Settings
 from .integration.actuators import create_actuator
 from .integration.publisher import OutboxPublisher
@@ -22,6 +22,7 @@ from .storage.files import atomic_write_json
 from .storage.retention import apply_retention
 
 log = logging.getLogger("capsule_inspector.runtime")
+SKIPPED = "SKIPPED"  # ciclo sem inspeção (câmera indisponível sem sensor de presença)
 
 
 class InspectionService:
@@ -46,7 +47,7 @@ class InspectionService:
                                            load_model=predictor is None and not model_path)
         if model_path and predictor is None:
             self.pipeline.model_error = f"falha ao carregar {model_path}"
-        self.source = create_source(settings.camera, settings)
+        self.source = LazySource(settings.camera, settings)
         self.lighting = NullLightingController()
         self.trigger = create_trigger(sysc.integration.trigger)
         self.actuator = create_actuator(sysc.integration.reject_actuator)
@@ -94,7 +95,7 @@ class InspectionService:
             return False
 
     # ------------------------------------------------------------------ ciclo
-    def inspect_once(self, lot_id: str | None = None) -> InspectionOutput | None:
+    def inspect_once(self, lot_id: str | None = None) -> InspectionOutput | None | str:
         steps = self.pipeline.profile.steps
         if self.pipeline.profile.fusion_mode == "none":
             steps = steps[:1]
@@ -102,12 +103,20 @@ class InspectionService:
         frames = []
         if not self.source.opened and not self._open_source():
             err = self.camera_state["error"]
+            if self.s.system.integration.trigger.type != "gpio":
+                # sem sensor de presença não há cápsula confirmada: não gera um registro por ciclo;
+                # o erro aparece no status/interface e a câmera é tentada de novo
+                self.write_status()
+                self.stop_evt.wait(5.0)
+                return SKIPPED
         else:
             try:
                 frames = capture_views(self.source, steps, self.lighting)
                 self.camera_state = {"ok": True, "error": None}
             except EndOfStream:
                 return None
+            except CorruptFrame as e:  # só este quadro falhou: registra e segue para o próximo
+                err = str(e)
             except CaptureError as e:
                 err = str(e)
                 self.camera_state = {"ok": False, "error": err}
@@ -141,6 +150,8 @@ class InspectionService:
                 if out is None:
                     log.info("fonte de imagens esgotada; encerrando")
                     break
+                if out == SKIPPED:
+                    continue
                 n += 1
                 self.write_status()
                 if time.monotonic() - self._last_retention > 3600:

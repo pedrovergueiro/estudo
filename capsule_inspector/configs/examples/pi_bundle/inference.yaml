@@ -1,0 +1,16 @@
+inference_version: "0.1.0-pi-demo"
+model:
+  registry_dir: models/registry
+  # modelo empacotado (fora do registro => resultados marcados como não aprovados)
+  path_override: models/bundle/detect_yolo11n_medical_pills.onnx
+  backend: onnxruntime
+  imgsz: 640
+  nms_iou: 0.70                # mesmo valor padrão da Ultralytics (paridade verificada)
+  candidate_conf: 0.05
+  max_det: 300
+  num_threads: 4
+  warmup_runs: 2
+profile: blister_demo
+roi: {method: detector, margin_px: 12, crop_second_stage: false}
+anomaly: {enabled: false, model_path: models/anomaly/none.npz}
+annotation: {save_original: true, save_annotated: true, jpeg_quality: 88}

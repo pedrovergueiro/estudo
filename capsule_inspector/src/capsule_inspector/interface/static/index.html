@@ -145,7 +145,7 @@ async function show(id) {
   $("img-ann").src = imgs.annotated ? withTok(`/api/inspections/${encodeURIComponent(id)}/image/annotated`) : "";
   const tb = $("dets"); tb.replaceChildren();
   for (const c of r.capsules || []) {
-    if (!c.defects.length) { const tr = el("tr"); tr.append(el("td", "#" + c.index), el("td", "— sem defeitos acima do limiar de revisão"), el("td", ""), el("td", (c.box || []).join(", ")), el("td", "")); tb.append(tr); }
+    if (!c.defects.length) { const tr = el("tr"); tr.append(el("td", "#" + c.index), el("td", HAS_DEFECT_CLASSES ? "— sem defeitos acima do limiar de revisão" : "— unidade localizada (modelo sem classes de defeito)"), el("td", ""), el("td", (c.box || []).join(", ")), el("td", "")); tb.append(tr); }
     for (const d of c.defects) { const tr = el("tr"); tr.append(el("td", "#" + c.index), el("td", d.class_name), el("td", d.confidence.toFixed(3)), el("td", d.box.join(", ")), el("td", d.view || "")); tb.append(tr); }
   }
   const rl = $("revlist"); rl.replaceChildren(); for (const v of r.reviews || []) rl.append(el("div", `${fmtTime(v.ts)} — ${v.reviewer}: ${v.verdict}${v.defect_class ? " (" + v.defect_class + ")" : ""}${v.note ? " — " + v.note : ""}`));
@@ -161,7 +161,8 @@ $("rev").onsubmit = async (ev) => {
 $("csv").onclick = () => { location.href = withTok("/api/export.csv"); };
 $("json").onclick = () => { location.href = withTok("/api/export.json"); };
 $("f-status").onchange = refreshHistory; $("f-unrev").onchange = refreshHistory;
-api("/api/classes").then(cs => { for (const c of cs) { const o = el("option", c.display_name); o.value = c.key; $("classes").append(o); } }).catch(() => {});
+let HAS_DEFECT_CLASSES = true;
+api("/api/classes").then(cs => { HAS_DEFECT_CLASSES = cs.some(c => c.severity !== "none"); for (const c of cs) { const o = el("option", c.display_name); o.value = c.key; $("classes").append(o); } }).catch(() => {});
 refreshStatus(); refreshHistory();
 setInterval(refreshStatus, 2000); setInterval(refreshHistory, 2000);
 </script>

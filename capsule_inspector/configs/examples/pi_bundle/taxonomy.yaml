@@ -1,0 +1,12 @@
+# Pacote Raspberry Pi — modelo DEMONSTRATIVO treinado só com dados públicos (Medical Pills).
+# O detector tem UMA classe: "pill" (comprimido/cápsula em blister). Ele LOCALIZA e CONTA
+# unidades; NÃO detecta defeitos. Por isso nenhum resultado vira PASS (ver decision_rules.yaml).
+taxonomy_version: "0.1.0-pi-demo"
+classes:
+  - key: pill
+    role: object
+    display_name: "Comprimido/cápsula"
+    enabled: true
+    severity: none
+    validated: false
+    aliases: [pill]

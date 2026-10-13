@@ -33,3 +33,6 @@ data/samples/*
 reports/*
 !reports/README.md
 !reports/examples/
+
+# pacotes gerados por packaging/build_pi_bundle.py
+dist/

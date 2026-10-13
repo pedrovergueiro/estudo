@@ -1,0 +1,28 @@
+camera_version: "0.1.0-pi-demo"
+# auto: câmera USB (UVC) se houver; senão câmera oficial do Pi (CSI) via rpicam-vid.
+type: auto
+usb:
+  device: 0
+  backend: v4l2
+  width: 1280
+  height: 720
+  fps: 15
+  fourcc: MJPG
+  auto_exposure: true          # sem estação de iluminação definida: exposição automática
+  exposure: null
+  autofocus: true
+  auto_white_balance: true
+  warmup_frames: 10
+  flush_frames: 2
+  read_timeout_s: 3.0
+  reconnect_attempts: 2
+  reconnect_backoff_s: 1.0
+csi:
+  width: 1280
+  height: 720
+  fps: 15
+  extra_args: []
+file:
+  path: exemplos
+  pattern: "*"
+  loop: false

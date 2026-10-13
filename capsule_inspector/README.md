@@ -148,6 +148,25 @@ python scripts/manage_models.py activate caps-v2-640 --by "Nome (QA)" && sudo sy
 python scripts/manage_models.py rollback --by "Nome (QA)" && sudo systemctl restart capsule-inspector
 ```
 
+## Pacote offline para Raspberry Pi (`capsule-inspector`)
+
+Gera um `.tar.gz` com aplicativo, modelo ONNX, imagens de exemplo e **todas as dependências
+ARM64** (Python 3.11 = Raspberry Pi OS Bookworm; 3.13 = Trixie). No Pi não precisa de internet,
+pip nem venv: `./instalar.sh` extrai as dependências, cria o comando `capsule-inspector` e roda
+um autoteste. Comandos: `pasta`, `camera` (USB UVC ou câmera CSI via `rpicam-vid`, detecção
+automática), `interface [--rede]`, `iniciar`, `diagnostico`, `teste`, `exportar`. Guia do usuário:
+[packaging/pi/LEIA-ME.md](packaging/pi/LEIA-ME.md).
+
+```bash
+python packaging/build_pi_bundle.py --model <detector.onnx> --model-info <info.json> \
+    --examples <imagens...> --examples-license <licença> --out dist/          # aarch64
+python packaging/build_pi_bundle.py ... --arch x86_64                         # pacote de teste em PC
+```
+
+O pacote 0.1.0 usa o detector YOLO11n do projeto `acg_capsule_vision` (Medical Pills, classe
+única `pill`), exportado para ONNX e conferido contra o PyTorch no teste (405/405 caixas; 13 FP
+× 14 FP). Ele localiza e conta; não detecta defeitos — todo resultado sai como REVIEW.
+
 ## Estados de resultado
 
 | Estado | Quando |

@@ -40,8 +40,8 @@ def main() -> int:
     if a.once:
         out = svc.inspect_once(a.lot)
         svc.shutdown()
-        if out is None:
-            print("sem imagens", file=sys.stderr)
+        if out is None or isinstance(out, str):
+            print(f"sem imagens/câmera: {svc.camera_state.get('error')}", file=sys.stderr)
             return 1
         print(json.dumps(out.record.to_dict(), indent=2, ensure_ascii=False, default=str))
         return 0
