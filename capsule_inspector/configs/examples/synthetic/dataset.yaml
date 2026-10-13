@@ -1,0 +1,33 @@
+# Overlay de EXEMPLO: dataset sintético. Ver configs/dataset.yaml para documentação.
+dataset_version: "0.1.0-synthetic"
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  splits: data/splits/synthetic
+  reports: data/reports/synthetic
+
+working_dataset:
+  name: synthetic
+  root: data/processed/synthetic
+  task: detect
+  metadata_csv: data/processed/synthetic/metadata.csv
+
+metadata_columns: [image, unit_id, lot, session, finish, color, lighting, profile]
+
+split:
+  seed: 20251013
+  ratios: {train: 0.70, val: 0.15, test: 0.15}
+  group_by: [unit_id, lot, session]
+  near_duplicate_ncc: 0.995
+  holdout_lots: []
+
+validation:
+  min_box_size_px: 2
+  max_aspect_ratio_image: 4.0
+  min_instances_per_enabled_class: 30
+  imbalance_warning_ratio: 20.0
+  near_duplicate_ncc: 0.995
+
+sources: {}

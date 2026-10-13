@@ -1,0 +1,1298 @@
+{
+  "split": "val",
+  "model": {
+    "model_id": "best.pt",
+    "path": "runs/train_synthetic/synthetic-20261013-103022/weights/best.pt",
+    "backend": "ultralytics",
+    "imgsz": 320,
+    "sha256": "f624be2b997ff024d4035bda2bbc63bed4937a7ba64477677faad9dfe6df0654"
+  },
+  "model_sha256": "f624be2b997ff024d4035bda2bbc63bed4937a7ba64477677faad9dfe6df0654",
+  "class_names": [
+    "capsule",
+    "crack",
+    "hole",
+    "stain",
+    "scratch",
+    "foreign_particle"
+  ],
+  "dataset_fingerprint": "5955662cf746f819f5416566a344988717c0c3044e25e6c4d1c28712a4fbaff0",
+  "summary": {
+    "n_images": 72,
+    "map50": 0.9557605760576058,
+    "map50_95": 0.6940605059255143,
+    "defects_precision": 0.8928571428571429,
+    "defects_recall": 0.9259259259259259,
+    "defects_f1": 0.9090909090909091,
+    "defects_fn_rate": 0.07407407407407407,
+    "classes_without_test_data": [],
+    "latency_ms_p50": 32.398718500189716,
+    "latency_ms_p95": 43.607216200121
+  },
+  "per_class": {
+    "capsule": {
+      "ap50": 1.0,
+      "ap50_95": 0.9211828246748555,
+      "operating": {
+        "threshold": 0.2,
+        "n_gt": 72,
+        "tp": 72,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": null,
+          "medium": null,
+          "large": 1.0
+        },
+        "n_by_size": {
+          "small": 0,
+          "medium": 0,
+          "large": 72
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.5,
+        "n_gt": 72,
+        "tp": 72,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": null,
+          "medium": null,
+          "large": 1.0
+        },
+        "n_by_size": {
+          "small": 0,
+          "medium": 0,
+          "large": 72
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.9292272925376892,
+          0.9288601875305176,
+          0.9273984432220459,
+          0.9245391488075256,
+          0.9235634803771973,
+          0.9233152270317078,
+          0.9230008125305176,
+          0.9219764471054077,
+          0.9213305711746216,
+          0.9204866290092468,
+          0.9203783273696899,
+          0.919543981552124,
+          0.918684184551239,
+          0.9183261394500732,
+          0.9182645082473755,
+          0.9173110723495483,
+          0.9169977307319641,
+          0.9169499278068542,
+          0.9167152047157288,
+          0.9164133667945862,
+          0.9156413674354553,
+          0.9153247475624084,
+          0.915066123008728,
+          0.9148497581481934,
+          0.9126595258712769,
+          0.9118347764015198,
+          0.9114212393760681,
+          0.9092068672180176,
+          0.9087128043174744,
+          0.9085485935211182,
+          0.908097505569458,
+          0.9074522256851196,
+          0.9073391556739807,
+          0.906535804271698,
+          0.9059653878211975,
+          0.9056649208068848,
+          0.9038645625114441,
+          0.9013789296150208,
+          0.9008666276931763,
+          0.9007096290588379,
+          0.8992307186126709,
+          0.8990551233291626,
+          0.898566484451294,
+          0.8982398509979248,
+          0.8975663185119629,
+          0.8965720534324646,
+          0.8964803814888,
+          0.8963278532028198,
+          0.896320104598999,
+          0.8960981965065002,
+          0.8950168490409851,
+          0.8945614695549011,
+          0.8940907716751099,
+          0.8933925628662109,
+          0.8926565647125244,
+          0.8924716711044312,
+          0.8919568657875061,
+          0.8919045925140381,
+          0.8916580080986023,
+          0.8911634683609009,
+          0.8911101818084717,
+          0.8904454708099365,
+          0.8898177146911621,
+          0.8885114192962646,
+          0.8879998922348022,
+          0.8874809741973877,
+          0.8867735266685486,
+          0.8866432309150696,
+          0.8827506303787231,
+          0.8822033405303955,
+          0.8754667043685913,
+          0.8738411068916321
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.013888888888888888,
+          0.027777777777777776,
+          0.041666666666666664,
+          0.05555555555555555,
+          0.06944444444444445,
+          0.08333333333333333,
+          0.09722222222222222,
+          0.1111111111111111,
+          0.125,
+          0.1388888888888889,
+          0.1527777777777778,
+          0.16666666666666666,
+          0.18055555555555555,
+          0.19444444444444445,
+          0.20833333333333334,
+          0.2222222222222222,
+          0.2361111111111111,
+          0.25,
+          0.2638888888888889,
+          0.2777777777777778,
+          0.2916666666666667,
+          0.3055555555555556,
+          0.3194444444444444,
+          0.3333333333333333,
+          0.3472222222222222,
+          0.3611111111111111,
+          0.375,
+          0.3888888888888889,
+          0.4027777777777778,
+          0.4166666666666667,
+          0.4305555555555556,
+          0.4444444444444444,
+          0.4583333333333333,
+          0.4722222222222222,
+          0.4861111111111111,
+          0.5,
+          0.5138888888888888,
+          0.5277777777777778,
+          0.5416666666666666,
+          0.5555555555555556,
+          0.5694444444444444,
+          0.5833333333333334,
+          0.5972222222222222,
+          0.6111111111111112,
+          0.625,
+          0.6388888888888888,
+          0.6527777777777778,
+          0.6666666666666666,
+          0.6805555555555556,
+          0.6944444444444444,
+          0.7083333333333334,
+          0.7222222222222222,
+          0.7361111111111112,
+          0.75,
+          0.7638888888888888,
+          0.7777777777777778,
+          0.7916666666666666,
+          0.8055555555555556,
+          0.8194444444444444,
+          0.8333333333333334,
+          0.8472222222222222,
+          0.8611111111111112,
+          0.875,
+          0.8888888888888888,
+          0.9027777777777778,
+          0.9166666666666666,
+          0.9305555555555556,
+          0.9444444444444444,
+          0.9583333333333334,
+          0.9722222222222222,
+          0.9861111111111112,
+          1.0
+        ]
+      }
+    },
+    "crack": {
+      "ap50": 0.9909990999099907,
+      "ap50_95": 0.5617221722172216,
+      "operating": {
+        "threshold": 0.1,
+        "n_gt": 10,
+        "tp": 9,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.9,
+        "recall": 0.9,
+        "f1": 0.9,
+        "fn_rate": 0.1,
+        "fp_per_image": 0.013888888888888888,
+        "recall_by_size": {
+          "small": 0.875,
+          "medium": 1.0,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 8,
+          "medium": 2,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.45,
+        "n_gt": 10,
+        "tp": 8,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.888888888888889,
+        "fn_rate": 0.2,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.75,
+          "medium": 1.0,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 8,
+          "medium": 2,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.8575540781021118,
+          0.8414654731750488,
+          0.812170147895813,
+          0.8034771084785461,
+          0.7718954086303711,
+          0.7489625811576843,
+          0.7431178092956543,
+          0.7375534176826477,
+          0.33797746896743774,
+          0.19048663973808289,
+          0.09298040717840195
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.9090909090909091
+        ],
+        "recall": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          0.9,
+          1.0
+        ]
+      }
+    },
+    "hole": {
+      "ap50": 1.0,
+      "ap50_95": 0.7759075907590758,
+      "operating": {
+        "threshold": 0.1,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.45,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.8902085423469543,
+          0.882530152797699,
+          0.8711978197097778,
+          0.8649160265922546,
+          0.8645409345626831,
+          0.8438036441802979,
+          0.8422120213508606,
+          0.8044386506080627,
+          0.7510801553726196,
+          0.7499838471412659
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      }
+    },
+    "stain": {
+      "ap50": 1.0,
+      "ap50_95": 0.8022277227722773,
+      "operating": {
+        "threshold": 0.15,
+        "n_gt": 12,
+        "tp": 12,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 12,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.5,
+        "n_gt": 12,
+        "tp": 12,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 12,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.892122745513916,
+          0.8840616345405579,
+          0.8815690279006958,
+          0.8547087907791138,
+          0.8479673862457275,
+          0.8467344045639038,
+          0.8319469690322876,
+          0.8305336236953735,
+          0.8268157243728638,
+          0.8247264623641968,
+          0.8137223124504089,
+          0.8107576966285706
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.4166666666666667,
+          0.5,
+          0.5833333333333334,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333334,
+          0.9166666666666666,
+          1.0
+        ]
+      }
+    },
+    "scratch": {
+      "ap50": 0.7435643564356436,
+      "ap50_95": 0.5253936822253653,
+      "operating": {
+        "threshold": 0.2,
+        "n_gt": 12,
+        "tp": 9,
+        "fp": 5,
+        "fn": 3,
+        "precision": 0.6428571428571429,
+        "recall": 0.75,
+        "f1": 0.6923076923076924,
+        "fn_rate": 0.25,
+        "fp_per_image": 0.06944444444444445,
+        "recall_by_size": {
+          "small": 0.9,
+          "medium": 0.0,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 2,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.55,
+        "n_gt": 12,
+        "tp": 8,
+        "fp": 0,
+        "fn": 4,
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "f1": 0.8,
+        "fn_rate": 0.3333333333333333,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.8,
+          "medium": 0.0,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 2,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.827042281627655,
+          0.8024766445159912,
+          0.7760831117630005,
+          0.665818989276886,
+          0.6649619340896606,
+          0.6370133757591248,
+          0.6369055509567261,
+          0.6366443634033203,
+          0.5357187390327454,
+          0.49371179938316345,
+          0.4551255404949188,
+          0.45246458053588867,
+          0.32314246892929077,
+          0.2640139162540436,
+          0.05179012939333916
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.8888888888888888,
+          0.9,
+          0.8181818181818182,
+          0.75,
+          0.6923076923076923,
+          0.6428571428571429,
+          0.6
+        ],
+        "recall": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.4166666666666667,
+          0.5,
+          0.5833333333333334,
+          0.6666666666666666,
+          0.6666666666666666,
+          0.75,
+          0.75,
+          0.75,
+          0.75,
+          0.75,
+          0.75
+        ]
+      }
+    },
+    "foreign_particle": {
+      "ap50": 1.0,
+      "ap50_95": 0.5779290429042905,
+      "operating": {
+        "threshold": 0.1,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.45,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.7888498306274414,
+          0.7872898578643799,
+          0.7256485819816589,
+          0.7200756072998047,
+          0.7029197812080383,
+          0.7016456127166748,
+          0.6926403641700745,
+          0.6873570680618286,
+          0.6403084397315979,
+          0.62641841173172
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      }
+    }
+  },
+  "decision": {
+    "n_defective": 40,
+    "n_good": 32,
+    "escape_rate": 0.0,
+    "false_reject_rate": 0.0,
+    "review_rate_defective": 0.25,
+    "review_rate_good": 0.0,
+    "escapes": []
+  },
+  "strata": {
+    "finish": {
+      "opaque": {
+        "n_images": 22,
+        "n_defect_instances": 12,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 10,
+          "n_good": 12,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.0,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "translucent": {
+        "n_images": 22,
+        "n_defect_instances": 22,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 0.8333333333333334,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.5,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 16,
+          "n_good": 6,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.25,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "transparent": {
+        "n_images": 28,
+        "n_defect_instances": 20,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.875,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 14,
+          "n_good": 14,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.42857142857142855,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      }
+    },
+    "color": {
+      "blue_yellow": {
+        "n_images": 22,
+        "n_defect_instances": 22,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 0.8333333333333334,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.5,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 16,
+          "n_good": 6,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.25,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "clear": {
+        "n_images": 28,
+        "n_defect_instances": 20,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.875,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 14,
+          "n_good": 14,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.42857142857142855,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "red_white": {
+        "n_images": 22,
+        "n_defect_instances": 12,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 10,
+          "n_good": 12,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.0,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      }
+    },
+    "lot": {
+      "L0": {
+        "n_images": 20,
+        "n_defect_instances": 20,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 14,
+          "n_good": 6,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.2857142857142857,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "L1": {
+        "n_images": 10,
+        "n_defect_instances": 6,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 6,
+          "n_good": 4,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.0,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "L2": {
+        "n_images": 20,
+        "n_defect_instances": 10,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "scratch": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 8,
+          "n_good": 12,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.5,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "L3": {
+        "n_images": 22,
+        "n_defect_instances": 18,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 0.75,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.25,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 12,
+          "n_good": 10,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.16666666666666666,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      }
+    },
+    "lighting": {
+      "backlight": {
+        "n_images": 36,
+        "n_defect_instances": 27,
+        "status": "EVALUATED",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.6666666666666666,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 20,
+          "n_good": 16,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.25,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "diffuse": {
+        "n_images": 36,
+        "n_defect_instances": 27,
+        "status": "EVALUATED",
+        "recall_by_class": {
+          "crack": 0.8,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.8333333333333334,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 20,
+          "n_good": 16,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.25,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      }
+    },
+    "profile": {
+      "synthetic": {
+        "n_images": 72,
+        "n_defect_instances": 54,
+        "status": "EVALUATED",
+        "recall_by_class": {
+          "crack": 0.9,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.75,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 40,
+          "n_good": 32,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.25,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      }
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "capsule",
+      "crack",
+      "hole",
+      "stain",
+      "scratch",
+      "foreign_particle",
+      "background"
+    ],
+    "rows_pred_cols_true": [
+      [
+        72,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        9,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        12,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        9,
+        0,
+        5
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        10,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        3,
+        0,
+        0
+      ]
+    ],
+    "conf_threshold": 0.1
+  },
+  "config": {
+    "versions": {
+      "taxonomy": "0.1.0-synthetic",
+      "dataset": "0.1.0-synthetic",
+      "train": "0.1.0-synthetic",
+      "inference": "0.1.0-synthetic",
+      "decision_rules": "0.1.0-synthetic",
+      "camera": "0.1.0",
+      "lighting_profiles": "0.1.0",
+      "system": "0.1.0"
+    },
+    "hash": "3330c5cd8050d309ae1c629a8cad1bcc6786ca28220d9bc3b530c8c47a85439f"
+  },
+  "warnings": [
+    "CONJUNTO SINTÉTICO: métricas sem valor de validação"
+  ],
+  "calibration": {
+    "crack": {
+      "review": 0.09298040717840195,
+      "fail": 0.09298040717840195,
+      "n_gt": 10,
+      "max_recall": 1.0,
+      "note": ""
+    },
+    "hole": {
+      "review": 0.7499838471412659,
+      "fail": 0.7499838471412659,
+      "n_gt": 10,
+      "max_recall": 1.0,
+      "note": ""
+    },
+    "stain": {
+      "review": 0.8107576966285706,
+      "fail": 0.8107576966285706,
+      "n_gt": 12,
+      "max_recall": 1.0,
+      "note": ""
+    },
+    "scratch": {
+      "review": null,
+      "fail": 0.49371179938316345,
+      "n_gt": 12,
+      "max_recall": 0.75,
+      "note": "recall alvo 0.95 inatingível (máx 0.750)"
+    },
+    "foreign_particle": {
+      "review": 0.62641841173172,
+      "fail": 0.62641841173172,
+      "n_gt": 10,
+      "max_recall": 1.0,
+      "note": ""
+    }
+  },
+  "false_negatives": [
+    {
+      "image": "images/u0151_v0.png",
+      "class": "scratch",
+      "box": [
+        238.8,
+        167.0,
+        299.0,
+        194.6
+      ]
+    },
+    {
+      "image": "images/u0151_v0.png",
+      "class": "crack",
+      "box": [
+        160.6,
+        157.0,
+        192.5,
+        167.9
+      ]
+    },
+    {
+      "image": "images/u0151_v1.png",
+      "class": "scratch",
+      "box": [
+        238.8,
+        167.0,
+        299.0,
+        194.6
+      ]
+    },
+    {
+      "image": "images/u0239_v1.png",
+      "class": "scratch",
+      "box": [
+        227.8,
+        171.0,
+        290.7,
+        184.7
+      ]
+    }
+  ],
+  "false_positives": [
+    {
+      "image": "images/u0239_v1.png",
+      "class": "scratch",
+      "confidence": 0.536,
+      "box": [
+        227.3,
+        169.5,
+        270.7,
+        181.2
+      ]
+    },
+    {
+      "image": "images/u0151_v1.png",
+      "class": "scratch",
+      "confidence": 0.455,
+      "box": [
+        238.5,
+        165.2,
+        271.6,
+        181.2
+      ]
+    },
+    {
+      "image": "images/u0151_v1.png",
+      "class": "scratch",
+      "confidence": 0.452,
+      "box": [
+        268.4,
+        179.4,
+        301.7,
+        195.6
+      ]
+    },
+    {
+      "image": "images/u0151_v0.png",
+      "class": "scratch",
+      "confidence": 0.323,
+      "box": [
+        264.0,
+        178.3,
+        298.5,
+        194.7
+      ]
+    },
+    {
+      "image": "images/u0151_v0.png",
+      "class": "scratch",
+      "confidence": 0.264,
+      "box": [
+        238.5,
+        165.3,
+        271.9,
+        181.8
+      ]
+    },
+    {
+      "image": "images/u0151_v1.png",
+      "class": "crack",
+      "confidence": 0.19,
+      "box": [
+        180.5,
+        154.9,
+        193.2,
+        169.6
+      ]
+    }
+  ]
+}

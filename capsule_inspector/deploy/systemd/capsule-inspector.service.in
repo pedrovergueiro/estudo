@@ -1,0 +1,31 @@
+# Modelo de unidade systemd do serviço de inspeção.
+# scripts/setup_raspberry_pi.sh --install-service substitui:
+#   @APP_DIR@  -> diretório absoluto do projeto no Pi (ex.: /home/operador/capsule_inspector)
+#   @APP_USER@ -> usuário que executa o serviço (precisa dos grupos video e gpio)
+# e grava o resultado em /etc/systemd/system/capsule-inspector.service.
+[Unit]
+Description=Capsule Inspector — inspeção visual de cápsulas
+After=network.target
+# Não depende de rede: a inspeção local funciona offline.
+
+[Service]
+Type=simple
+User=@APP_USER@
+WorkingDirectory=@APP_DIR@
+Environment=PYTHONUNBUFFERED=1
+Environment=OMP_NUM_THREADS=4
+ExecStart=@APP_DIR@/.venv/bin/python @APP_DIR@/scripts/run_inspection.py
+Restart=on-failure
+RestartSec=5
+# Parada limpa: SIGTERM encerra o laço após a inspeção corrente.
+KillSignal=SIGTERM
+TimeoutStopSec=20
+SupplementaryGroups=video gpio
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=@APP_DIR@/var @APP_DIR@/reports
+
+[Install]
+WantedBy=multi-user.target

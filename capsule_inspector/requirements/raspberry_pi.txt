@@ -1,0 +1,17 @@
+# Runtime de inspeção no Raspberry Pi (Raspberry Pi OS 64 bits / aarch64).
+# NÃO inclui PyTorch nem Ultralytics: a inferência usa ONNX Runtime (CPU).
+#
+# Verificado (pip download --platform manylinux_2_28_aarch64) que existem rodas
+# binárias aarch64 para Python 3.11 (Bookworm) e 3.13 (Trixie). numpy 2.5 exige
+# Python >= 3.12; por isso o marcador abaixo.
+# Câmera CSI (Picamera2) e GPIO (gpiozero) vêm do apt — ver scripts/setup_raspberry_pi.sh.
+numpy==2.4.6 ; python_version < "3.12"
+numpy==2.5.4 ; python_version >= "3.12"
+opencv-python-headless==5.0.0.93
+onnxruntime==1.31.0
+pydantic==2.14.1
+PyYAML==6.0.3
+fastapi==0.143.0
+starlette==1.8.0
+uvicorn==0.54.0
+psutil==7.2.2

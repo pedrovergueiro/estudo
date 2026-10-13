@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "capsule-inspector"
+version = "0.1.0"
+description = "Inspeção visual de cápsulas farmacêuticas com YOLO11 e Raspberry Pi (apoio ao controle de qualidade)"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "AGPL-3.0-only (ver LICENSE e docs/LICENSES.md)" }
+# Dependências mínimas do runtime embarcado. Versões fixadas em requirements/*.txt.
+dependencies = [
+  "numpy>=1.26",
+  "opencv-python-headless>=4.9",
+  "onnxruntime>=1.18",
+  "pydantic>=2.6",
+  "PyYAML>=6.0",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "psutil>=5.9",
+]
+
+[project.optional-dependencies]
+training = ["ultralytics>=8.3.0", "onnx>=1.16", "onnxslim>=0.1.30"]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+capsule_inspector = ["interface/static/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "slow: testes que treinam/exportam modelos (exigem ultralytics + torch)",
+]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+# B905: zip estrito é ruído aqui; B023: closures usadas na mesma iteração; UP042/B027: estilo.
+ignore = ["E501", "B008", "B905", "B023", "UP042", "B027"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E702"]

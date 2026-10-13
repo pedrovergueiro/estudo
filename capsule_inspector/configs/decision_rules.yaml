@@ -1,0 +1,50 @@
+# Motor de decisão. Os limiares abaixo são VALORES INICIAIS para bancada.
+# Devem ser recalibrados com `scripts/evaluate_model.py --calibrate` a partir do
+# conjunto de validação e dos requisitos de qualidade (ver docs/VALIDATION_PLAN.md).
+rules_version: "0.1.0"
+
+capsule_class: capsule
+capsule_min_confidence: 0.40
+expected_capsules: {min: 1, max: 1}   # estação de unidade única
+
+default_thresholds: {fail: 0.50, review: 0.20}
+# Classes críticas: limiar de revisão baixo => prioriza recall, encaminha incertos.
+class_thresholds:
+  crack:            {fail: 0.45, review: 0.10}
+  broken:           {fail: 0.45, review: 0.10}
+  hole:             {fail: 0.45, review: 0.10}
+  foreign_particle: {fail: 0.45, review: 0.10}
+  closure_defect:   {fail: 0.45, review: 0.10}
+  incomplete:       {fail: 0.45, review: 0.10}
+  dent:             {fail: 0.50, review: 0.15}
+  stain:            {fail: 0.50, review: 0.15}
+  tip_deformation:  {fail: 0.50, review: 0.15}
+  scratch:          {fail: 0.55, review: 0.20}
+  surface_texture:  {fail: 0.55, review: 0.20}
+
+# Ação quando uma detecção ultrapassa o limiar `fail`, por gravidade.
+severity_actions:
+  critical: FAIL
+  major: FAIL
+  minor: REVIEW
+
+max_defects_per_capsule_before_review: 6
+unassociated_defect_action: REVIEW    # defeito fora de qualquer cápsula
+anomaly_action: REVIEW                # Modo C nunca emite FAIL "confirmado"
+quality_failure_action: REVIEW        # imagem ruim nunca vira PASS
+
+# PASS só é emitido se TODAS as condições habilitadas forem verdadeiras;
+# caso contrário o resultado é rebaixado a REVIEW com o motivo registrado.
+pass_requires:
+  validated_profile: true
+  approved_model: true
+  validated_critical_classes: true
+  required_acquisition_present: true
+
+quality:
+  min_mean_intensity: 25
+  max_mean_intensity: 235
+  max_saturated_fraction: 0.08        # reflexo especular excessivo
+  min_sharpness_laplacian_var: 15.0
+  border_margin_px: 3                 # cápsula tocando a borda => incompleta no quadro
+  min_capsule_area_fraction: 0.005

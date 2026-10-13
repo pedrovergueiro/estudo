@@ -1,0 +1,103 @@
+{
+  "experiment": "baseline",
+  "run_dir": "<projeto>/runs/train_synthetic/synthetic-20261013-103022",
+  "created_at": "20261013-103022",
+  "task": "detect",
+  "class_names": [
+    "capsule",
+    "crack",
+    "hole",
+    "stain",
+    "scratch",
+    "foreign_particle"
+  ],
+  "taxonomy_version": "0.1.0-synthetic",
+  "initial_weights": {
+    "name": "yolo11n.pt",
+    "path": "<projeto>/yolo11n.pt",
+    "sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+  },
+  "best_checkpoint": {
+    "path": "<projeto>/runs/train_synthetic/synthetic-20261013-103022/weights/best.pt",
+    "sha256": "f624be2b997ff024d4035bda2bbc63bed4937a7ba64477677faad9dfe6df0654"
+  },
+  "hyperparameters": {
+    "epochs": 30,
+    "patience": 10,
+    "imgsz": 320,
+    "batch": 16,
+    "hsv_h": 0.005,
+    "hsv_s": 0.3,
+    "hsv_v": 0.25,
+    "degrees": 5.0,
+    "translate": 0.05,
+    "scale": 0.2,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.5,
+    "fliplr": 0.5,
+    "mosaic": 0.0,
+    "mixup": 0.0,
+    "erasing": 0.0
+  },
+  "seed": 20251013,
+  "deterministic": true,
+  "train_config_hash": "7cbacbe2606c2792428f4178885a25979864e5c5fc4c7fdae5c41cc11f2e4cd8",
+  "data_yaml": {
+    "path": "<projeto>/data/splits/synthetic/data.yaml",
+    "sha256": "2d41d4dd694d06c907597d1eeae34c4b4ecfed7b53daab27ee2a40dd3fa96ba8"
+  },
+  "split_manifest_sha256": "81f1c58d07c1e8c6f950850681f0367e641deab6576cdf35af8ee321bad88e09",
+  "dataset_version": "0.1.0-synthetic",
+  "val_metrics_best": {
+    "metrics/precision(B)": 0.9307473149234289,
+    "metrics/recall(B)": 0.9395694881814579,
+    "metrics/mAP50(B)": 0.950909090909091,
+    "metrics/mAP50-95(B)": 0.6982661211532011,
+    "fitness": 0.6982661211532011
+  },
+  "ultralytics_version": "8.4.176",
+  "environment": {
+    "machine": "x86_64",
+    "system": "Linux",
+    "kernel": "6.18.44-fc-v114",
+    "os": "Ubuntu 24.04.5 LTS",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "raspberry_pi_model": null,
+    "memory": {
+      "total_mb": 16093.1875,
+      "available_mb": 13554.4453125
+    },
+    "cpu_temperature_c": null,
+    "cpu_frequency_mhz": null,
+    "throttled": null,
+    "accelerators": {
+      "hailo_device": false,
+      "coral_pcie": false,
+      "nvidia_gpu": false
+    },
+    "onnxruntime_providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "libraries": {
+      "numpy": "2.5.4",
+      "opencv-python-headless": "5.0.0.93",
+      "opencv-python": "5.0.0.93",
+      "onnxruntime": "1.31.0",
+      "onnx": "1.23.2",
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "fastapi": "0.143.0",
+      "uvicorn": "0.54.0",
+      "pydantic": "2.14.1",
+      "PyYAML": "6.0.3",
+      "psutil": "7.2.2",
+      "cv2": "5.0.0"
+    }
+  },
+  "note": "Métricas de validação usadas para seleção do checkpoint; NÃO são métricas finais. Avalie no split de teste com scripts/evaluate_model.py.",
+  "data_root": "<projeto>/data/processed/synthetic"
+}

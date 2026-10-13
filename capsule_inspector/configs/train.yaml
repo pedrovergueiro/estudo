@@ -1,0 +1,55 @@
+# Treinamento YOLO11 (executar em estação de treinamento, NÃO no Raspberry Pi).
+train_version: "0.1.0"
+
+# Pesos iniciais: identificados por nome e, após o primeiro download, por SHA-256
+# registrado no manifesto do experimento. Use `yolo11n.yaml` para treinar do zero
+# (sem download) — útil em ambientes sem internet, mas exige muito mais dados.
+model: yolo11n.pt          # yolo11n.pt | yolo11s.pt | yolo11n-seg.pt | yolo11s-seg.pt
+task: detect               # detect | segment
+
+seed: 20251013
+deterministic: true
+device: cpu                # "cpu", "0" (GPU CUDA na estação), "mps"
+workers: 4
+project: runs/train        # relativo à raiz do projeto
+name: baseline
+
+hyperparameters:
+  epochs: 150
+  patience: 30             # early stopping (épocas sem melhora em fitness)
+  imgsz: 640
+  batch: 16
+  optimizer: auto
+  lr0: 0.01
+  cos_lr: false
+  close_mosaic: 10
+  # --- Aumentos moderados, fisicamente plausíveis para estação controlada ---
+  hsv_h: 0.005             # matiz quase fixa: cor é informação (mancha/descoloração)
+  hsv_s: 0.30
+  hsv_v: 0.25              # variação de exposição/brilho
+  degrees: 5.0             # rotação pequena
+  translate: 0.05
+  scale: 0.20
+  shear: 0.0               # cisalhamento cria geometria irreal de cápsula
+  perspective: 0.0
+  flipud: 0.5              # cápsula é simétrica; flips são plausíveis
+  fliplr: 0.5
+  mosaic: 0.0              # desligado por padrão: ver experimento "mosaic_on"
+  mixup: 0.0               # mixup sobrepõe cápsulas transparentes => defeitos falsos
+  copy_paste: 0.0
+  erasing: 0.0             # apagamento aleatório pode remover o próprio defeito
+  auto_augment: null
+
+# Experimentos comparáveis: cada um sobrescreve chaves de `hyperparameters`
+# (ou `model`). Rodar: python scripts/train_model.py --experiment <nome>
+experiments:
+  baseline: {}
+  yolo11s:
+    model: yolo11s.pt
+  imgsz_960_small_defects:
+    hyperparameters: {imgsz: 960, batch: 8}
+  mosaic_on:
+    hyperparameters: {mosaic: 0.5, close_mosaic: 15}
+  seg_n:
+    model: yolo11n-seg.pt
+    task: segment

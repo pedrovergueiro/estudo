@@ -1,0 +1,1026 @@
+{
+  "platform": {
+    "machine": "x86_64",
+    "system": "Linux",
+    "kernel": "6.18.44-fc-v114",
+    "os": "Ubuntu 24.04.5 LTS",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "raspberry_pi_model": null,
+    "memory": {
+      "total_mb": 16093.1875,
+      "available_mb": 14826.4921875
+    },
+    "cpu_temperature_c": null,
+    "cpu_frequency_mhz": null,
+    "throttled": null,
+    "accelerators": {
+      "hailo_device": false,
+      "coral_pcie": false,
+      "nvidia_gpu": false
+    },
+    "onnxruntime_providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "libraries": {
+      "numpy": "2.5.4",
+      "opencv-python-headless": "5.0.0.93",
+      "opencv-python": "5.0.0.93",
+      "onnxruntime": "1.31.0",
+      "onnx": "1.23.2",
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "fastapi": "0.143.0",
+      "uvicorn": "0.54.0",
+      "pydantic": "2.14.1",
+      "PyYAML": "6.0.3",
+      "psutil": "7.2.2",
+      "cv2": "5.0.0"
+    }
+  },
+  "measured_at": "2026-10-13T11:00:06",
+  "results": [
+    {
+      "model": "<projeto>/models/export/best.pt",
+      "backend": "ultralytics",
+      "imgsz": 320,
+      "threads": 4,
+      "model_size_mb": 5.465,
+      "load_ms": 1913.0,
+      "iterations": 200,
+      "wall_s": 8.75,
+      "fps_sustained": 22.869,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 0.9231629700093436,
+          "std": 0.28940329055872427,
+          "min": 0.6219990000317921,
+          "p50": 0.8583205001286842,
+          "p95": 1.263627150024149,
+          "p99": 2.4970538502520845,
+          "max": 2.854713000033371
+        },
+        "inference": {
+          "n": 200,
+          "mean": 41.00717075000148,
+          "std": 7.333656585009127,
+          "min": 27.125450000312412,
+          "p50": 40.69052899990311,
+          "p95": 52.302335200306516,
+          "p99": 64.49717463011893,
+          "max": 65.90092799979175
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 1.1807472850000522,
+          "std": 0.23082865122757273,
+          "min": 0.8527079999112175,
+          "p50": 1.135303999944881,
+          "p95": 1.6392303000429818,
+          "p99": 1.8389157401315968,
+          "max": 2.070105999791849
+        },
+        "total": {
+          "n": 200,
+          "mean": 43.70857391998925,
+          "std": 7.644015297427081,
+          "min": 29.25150000010035,
+          "p50": 42.99370700005056,
+          "p95": 55.13323095015039,
+          "p99": 68.6291446697578,
+          "max": 68.79168599971308
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 821.9,
+        "peak": 1080.1
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_320_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 320,
+      "threads": 4,
+      "model_size_mb": 10.542,
+      "load_ms": 169.8,
+      "iterations": 200,
+      "wall_s": 4.47,
+      "fps_sustained": 44.699,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 1.09625197999776,
+          "std": 0.8847902133345434,
+          "min": 0.772289999986242,
+          "p50": 1.0103194999828702,
+          "p95": 1.2494511000113557,
+          "p99": 2.9571708201592584,
+          "max": 12.974200999906316
+        },
+        "inference": {
+          "n": 200,
+          "mean": 20.426830474998496,
+          "std": 3.970947383939538,
+          "min": 13.82289999992281,
+          "p50": 20.093110000061642,
+          "p95": 25.871673950018703,
+          "p99": 29.998156300007377,
+          "max": 47.494938999989245
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.8093287050269282,
+          "std": 0.15832858861103186,
+          "min": 0.5478850002873514,
+          "p50": 0.7928054997137224,
+          "p95": 1.0999702499020714,
+          "p99": 1.3142585801779205,
+          "max": 1.3287919996400888
+        },
+        "total": {
+          "n": 200,
+          "mean": 22.357215684996845,
+          "std": 4.212375053375895,
+          "min": 15.568440999686572,
+          "p50": 22.07236499998544,
+          "p95": 27.976083149837883,
+          "p99": 34.17902631998456,
+          "max": 49.024103000192554
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.3,
+        "after_load": 178.8,
+        "peak": 205.3
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_320_fp32.onnx",
+      "backend": "opencv_dnn",
+      "imgsz": 320,
+      "threads": 4,
+      "model_size_mb": 10.542,
+      "load_ms": 90.6,
+      "iterations": 200,
+      "wall_s": 5.33,
+      "fps_sustained": 37.531,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 1.0293707399728191,
+          "std": 0.3016501445323255,
+          "min": 0.7738499998595216,
+          "p50": 0.9744680000949302,
+          "p95": 1.3261675001103868,
+          "p99": 2.214339309743982,
+          "max": 3.760550000151852
+        },
+        "inference": {
+          "n": 200,
+          "mean": 24.944231410017892,
+          "std": 3.9241007709483804,
+          "min": 16.10472199990909,
+          "p50": 24.736172500070097,
+          "p95": 31.99459860031766,
+          "p99": 35.84017928987122,
+          "max": 41.10465700023269
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.6425459800129829,
+          "std": 0.20667062971112848,
+          "min": 0.4656839996641793,
+          "p50": 0.5823389999477513,
+          "p95": 0.938618250120271,
+          "p99": 1.7893943098852103,
+          "max": 2.095805999942968
+        },
+        "total": {
+          "n": 200,
+          "mean": 26.628881625006215,
+          "std": 4.038991664596681,
+          "min": 17.52756900032182,
+          "p50": 26.460172500037515,
+          "p95": 33.698792550353566,
+          "p99": 37.9410310402227,
+          "max": 42.88040399978854
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.3,
+        "after_load": 159.5,
+        "peak": 166.3
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_320_int8.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 320,
+      "threads": 4,
+      "model_size_mb": 3.055,
+      "load_ms": 388.1,
+      "iterations": 200,
+      "wall_s": 5.77,
+      "fps_sustained": 34.639,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 1.117289449996406,
+          "std": 0.6205760876219788,
+          "min": 0.8102359997792519,
+          "p50": 1.012555000215798,
+          "p95": 1.3235849000921005,
+          "p99": 5.223494479778307,
+          "max": 5.506112000148278
+        },
+        "inference": {
+          "n": 200,
+          "mean": 26.89173354001923,
+          "std": 4.029838443112824,
+          "min": 18.509154000184935,
+          "p50": 26.386341000261382,
+          "p95": 33.585749399958324,
+          "p99": 36.413438539889285,
+          "max": 38.371795999864844
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.8217860699960511,
+          "std": 0.17649143798350925,
+          "min": 0.5589390002569417,
+          "p50": 0.8112270002129662,
+          "p95": 1.1113528498754022,
+          "p99": 1.2404564699590979,
+          "max": 1.5927759995975066
+        },
+        "total": {
+          "n": 200,
+          "mean": 28.852402229995278,
+          "std": 4.2953681575903895,
+          "min": 20.160130000022036,
+          "p50": 28.469247999964864,
+          "p95": 36.211646449783075,
+          "p99": 39.472826299661385,
+          "max": 40.71034700018572
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.3,
+        "after_load": 165.5,
+        "peak": 198.3
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_416_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 416,
+      "threads": 4,
+      "model_size_mb": 10.571,
+      "load_ms": 158.2,
+      "iterations": 200,
+      "wall_s": 6.63,
+      "fps_sustained": 30.169,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 2.197292459993605,
+          "std": 1.1034683724071155,
+          "min": 1.6921049996199145,
+          "p50": 1.989060499909101,
+          "p95": 2.7343868500565796,
+          "p99": 3.6788836203595543,
+          "max": 16.981270000087534
+        },
+        "inference": {
+          "n": 200,
+          "mean": 30.07190238000021,
+          "std": 4.640689254236576,
+          "min": 19.420399999944493,
+          "p50": 29.57574099991689,
+          "p95": 38.326242450034435,
+          "p99": 44.58853874984469,
+          "max": 48.88181800015445
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.8394682100015416,
+          "std": 0.1757430866406683,
+          "min": 0.6319879998955003,
+          "p50": 0.7753550000870746,
+          "p95": 1.141908849876927,
+          "p99": 1.3378780599396118,
+          "max": 1.8445769997015304
+        },
+        "total": {
+          "n": 200,
+          "mean": 33.1311612699983,
+          "std": 5.009407925186395,
+          "min": 22.43803500005015,
+          "p50": 32.588082000302165,
+          "p95": 41.8925067498776,
+          "p99": 49.064834480022895,
+          "max": 54.126042000007146
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 178.9,
+        "peak": 221.1
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_416_fp32.onnx",
+      "backend": "opencv_dnn",
+      "imgsz": 416,
+      "threads": 4,
+      "model_size_mb": 10.571,
+      "load_ms": 88.8,
+      "iterations": 200,
+      "wall_s": 8.34,
+      "fps_sustained": 23.995,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 1.9717399450132689,
+          "std": 0.30836582475435587,
+          "min": 1.4825719999862486,
+          "p50": 1.9406915000672598,
+          "p95": 2.4212321000049997,
+          "p99": 3.279797909945041,
+          "max": 3.9739389999340347
+        },
+        "inference": {
+          "n": 200,
+          "mean": 38.86941065999281,
+          "std": 5.833755589134723,
+          "min": 27.113670999824535,
+          "p50": 38.62862649998533,
+          "p95": 48.95799214978067,
+          "p99": 55.03152052971922,
+          "max": 66.39597200000935
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.8017803899997489,
+          "std": 0.21800406511184187,
+          "min": 0.5299120002746349,
+          "p50": 0.7829134999610687,
+          "p95": 1.083630299785909,
+          "p99": 1.2535404598565876,
+          "max": 2.276950000123179
+        },
+        "total": {
+          "n": 200,
+          "mean": 41.65565436498582,
+          "std": 5.968379354410126,
+          "min": 29.51717699988876,
+          "p50": 41.45928649995767,
+          "p95": 51.94461330013381,
+          "p99": 58.1198842599269,
+          "max": 69.36994899979254
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.3,
+        "after_load": 168.7,
+        "peak": 178.1
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_512_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 512,
+      "threads": 4,
+      "model_size_mb": 10.608,
+      "load_ms": 141.0,
+      "iterations": 200,
+      "wall_s": 9.85,
+      "fps_sustained": 20.299,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 3.3480734749900876,
+          "std": 0.5681296805280414,
+          "min": 2.6089010002579016,
+          "p50": 3.2370095000260335,
+          "p95": 4.464724950048547,
+          "p99": 5.712579369710511,
+          "max": 5.857753999862325
+        },
+        "inference": {
+          "n": 200,
+          "mean": 44.837478839999676,
+          "std": 8.371632354674157,
+          "min": 29.175000000122964,
+          "p50": 43.19343349993687,
+          "p95": 59.788204000028585,
+          "p99": 68.08338452009586,
+          "max": 75.9196270000757
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 1.0270733300035317,
+          "std": 0.2621097724649705,
+          "min": 0.4748820001623244,
+          "p50": 0.973843000110719,
+          "p95": 1.417052249871631,
+          "p99": 1.7767149698965978,
+          "max": 2.855756999906589
+        },
+        "total": {
+          "n": 200,
+          "mean": 49.237147979997644,
+          "std": 8.747080009931109,
+          "min": 33.05335900040518,
+          "p50": 47.17024550018323,
+          "p95": 66.07595635011874,
+          "p99": 75.67833767996942,
+          "max": 81.3969329997235
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 179.0,
+        "peak": 239.8
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_512_fp32.onnx",
+      "backend": "opencv_dnn",
+      "imgsz": 512,
+      "threads": 4,
+      "model_size_mb": 10.608,
+      "load_ms": 122.7,
+      "iterations": 200,
+      "wall_s": 13.06,
+      "fps_sustained": 15.311,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 2.9850856300413398,
+          "std": 0.5731205875066276,
+          "min": 2.359498999794596,
+          "p50": 2.8042619999268936,
+          "p95": 4.329048949989556,
+          "p99": 5.044894580155414,
+          "max": 5.598692999683408
+        },
+        "inference": {
+          "n": 200,
+          "mean": 61.39978162497982,
+          "std": 8.876670964608218,
+          "min": 45.95797300044069,
+          "p50": 59.27977250007643,
+          "p95": 78.45831425020151,
+          "p99": 81.33248468005148,
+          "max": 104.96754699988742
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.8890579749845529,
+          "std": 0.2687860309432975,
+          "min": 0.3612279997469159,
+          "p50": 0.8281875000193395,
+          "p95": 1.2535993000255976,
+          "p99": 1.499465139936544,
+          "max": 3.112238000085199
+        },
+        "total": {
+          "n": 200,
+          "mean": 65.2887811349865,
+          "std": 9.215884059052538,
+          "min": 50.105110999993485,
+          "p50": 63.147328499781,
+          "p95": 82.92980264996004,
+          "p99": 87.05622650004443,
+          "max": 110.74569399988832
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 180.3,
+        "peak": 191.7
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 10.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 12.2,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_640_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 640,
+      "threads": 4,
+      "model_size_mb": 10.668,
+      "load_ms": 101.3,
+      "iterations": 200,
+      "wall_s": 13.66,
+      "fps_sustained": 14.641,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 4.993580810000822,
+          "std": 0.6666352893293446,
+          "min": 3.9407259996551147,
+          "p50": 4.828355999961786,
+          "p95": 6.157090800115838,
+          "p99": 7.639320309781395,
+          "max": 8.886588000223128
+        },
+        "inference": {
+          "n": 200,
+          "mean": 62.17183119501669,
+          "std": 10.787046267340939,
+          "min": 40.21973800035994,
+          "p50": 61.09056750005948,
+          "p95": 79.73687254982448,
+          "p99": 88.97507698959538,
+          "max": 113.84006200023578
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 1.0864174599805665,
+          "std": 0.37392041784084906,
+          "min": 0.5432399998426263,
+          "p50": 1.0045039998658467,
+          "p95": 1.6302459500138866,
+          "p99": 2.158967260129429,
+          "max": 4.368886000065686
+        },
+        "total": {
+          "n": 200,
+          "mean": 68.27564311998003,
+          "std": 11.06832074402025,
+          "min": 45.28419000007489,
+          "p50": 67.07553999990523,
+          "p95": 87.07651724982952,
+          "p99": 95.86314301004217,
+          "max": 118.80623700017168
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 179.0,
+        "peak": 272.8
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 10.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 12.1,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_640_fp32.onnx",
+      "backend": "opencv_dnn",
+      "imgsz": 640,
+      "threads": 4,
+      "model_size_mb": 10.668,
+      "load_ms": 169.9,
+      "iterations": 200,
+      "wall_s": 18.81,
+      "fps_sustained": 10.631,
+      "latency_ms": {
+        "preprocess": {
+          "n": 200,
+          "mean": 4.620557584992184,
+          "std": 0.711707071664187,
+          "min": 3.535927000029915,
+          "p50": 4.4837250000000495,
+          "p95": 5.8509669499471775,
+          "p99": 7.286656219694122,
+          "max": 7.998912000402925
+        },
+        "inference": {
+          "n": 200,
+          "mean": 88.46927870001082,
+          "std": 11.28091059062518,
+          "min": 60.50129999994169,
+          "p50": 87.90098899976329,
+          "p95": 108.10275460012234,
+          "p99": 115.41873265997762,
+          "max": 127.03957600024296
+        },
+        "postprocess": {
+          "n": 200,
+          "mean": 0.9263680800177099,
+          "std": 0.3041325159584625,
+          "min": 0.4317880002417951,
+          "p50": 0.8623635001185903,
+          "p95": 1.3763884497393517,
+          "p99": 1.6769880802621584,
+          "max": 2.5859139996100566
+        },
+        "total": {
+          "n": 200,
+          "mean": 94.02973147999091,
+          "std": 11.699491675715116,
+          "min": 64.9488310000379,
+          "p50": 93.0968984998799,
+          "p95": 114.06498439978348,
+          "p99": 121.61199756010316,
+          "max": 133.54915599984452
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 197.1,
+        "peak": 212.0
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 10.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 12.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 14.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 16.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 18.4,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    }
+  ],
+  "accuracy": {
+    "best.pt|ultralytics|320": {
+      "map50": 0.9345434543454344,
+      "map50_95": 0.6415534874916062,
+      "defects_recall": 0.9074074074074074,
+      "small_recall_mean": 0.9267,
+      "escape_rate": 0.022727272727272728,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.22727272727272727,
+      "review_rate_good": 0.0
+    },
+    "best_320_fp32.onnx|onnxruntime|320": {
+      "map50": 0.9345434543454344,
+      "map50_95": 0.6415534874916062,
+      "defects_recall": 0.9074074074074074,
+      "small_recall_mean": 0.9267,
+      "escape_rate": 0.022727272727272728,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.22727272727272727,
+      "review_rate_good": 0.0
+    },
+    "best_320_fp32.onnx|opencv_dnn|320": {
+      "map50": 0.9345434543454344,
+      "map50_95": 0.6415534874916062,
+      "defects_recall": 0.9074074074074074,
+      "small_recall_mean": 0.9267,
+      "escape_rate": 0.022727272727272728,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.22727272727272727,
+      "review_rate_good": 0.0
+    },
+    "best_320_int8.onnx|onnxruntime|320": {
+      "map50": 0.9015401540154014,
+      "map50_95": 0.6204979019210902,
+      "defects_recall": 0.8703703703703703,
+      "small_recall_mean": 0.9017,
+      "escape_rate": 0.045454545454545456,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.18181818181818182,
+      "review_rate_good": 0.0
+    },
+    "best_416_fp32.onnx|onnxruntime|416": {
+      "map50": 0.9108910891089108,
+      "map50_95": 0.6175754589919572,
+      "defects_recall": 0.8888888888888888,
+      "small_recall_mean": 0.9017,
+      "escape_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.3409090909090909,
+      "review_rate_good": 0.0
+    },
+    "best_416_fp32.onnx|opencv_dnn|416": {
+      "map50": 0.9108910891089108,
+      "map50_95": 0.6175754589919572,
+      "defects_recall": 0.8888888888888888,
+      "small_recall_mean": 0.9017,
+      "escape_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.3409090909090909,
+      "review_rate_good": 0.0
+    },
+    "best_512_fp32.onnx|onnxruntime|512": {
+      "map50": 0.7004486925166614,
+      "map50_95": 0.3925414697650546,
+      "defects_recall": 0.7037037037037037,
+      "small_recall_mean": 0.7033,
+      "escape_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.7045454545454546,
+      "review_rate_good": 0.39285714285714285
+    },
+    "best_512_fp32.onnx|opencv_dnn|512": {
+      "map50": 0.7004486925166614,
+      "map50_95": 0.3925414697650546,
+      "defects_recall": 0.7037037037037037,
+      "small_recall_mean": 0.7033,
+      "escape_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.7045454545454546,
+      "review_rate_good": 0.39285714285714285
+    },
+    "best_640_fp32.onnx|onnxruntime|640": {
+      "map50": 0.35337589455076857,
+      "map50_95": 0.1824950819900446,
+      "defects_recall": 0.5555555555555556,
+      "small_recall_mean": 0.615,
+      "escape_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.8636363636363636,
+      "review_rate_good": 0.7142857142857143
+    },
+    "best_640_fp32.onnx|opencv_dnn|640": {
+      "map50": 0.35337589455076857,
+      "map50_95": 0.1824950819900446,
+      "defects_recall": 0.5555555555555556,
+      "small_recall_mean": 0.615,
+      "escape_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "review_rate_defective": 0.8636363636363636,
+      "review_rate_good": 0.7142857142857143
+    }
+  },
+  "failures": [
+    {
+      "model": "models/export/best_320_int8.onnx",
+      "backend": "opencv_dnn",
+      "imgsz": 320,
+      "error": "OpenCV DNN não executa este grafo: OpenCV(5.0.0) /io/opencv/modules/dnn/src/int8layers/pool2_int8_layer.cpp:334: error: (-215:Assertion failed) inptype == CV_8SC1 || inptype == CV_8UC1 in function 'forward'"
+    }
+  ]
+}

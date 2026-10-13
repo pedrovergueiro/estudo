@@ -1,0 +1,41 @@
+# Inferência embarcada.
+inference_version: "0.1.0"
+
+model:
+  # O pipeline SÓ carrega o modelo apontado por models/registry/active.json
+  # (promovido explicitamente via scripts/manage_models.py). `path_override`
+  # existe para testes/bancada e marca os resultados como "experimental".
+  registry_dir: models/registry
+  path_override: null
+  # auto: escolhe onnxruntime se houver .onnx; ultralytics para .pt/_ncnn_model
+  backend: auto            # auto | onnxruntime | ultralytics | opencv_dnn
+  imgsz: 640
+  nms_iou: 0.50
+  # Confiança mínima mantida após o NMS. Deve ser <= menor limiar de revisão das
+  # regras de decisão para que detecções fracas gerem REVIEW em vez de sumirem.
+  candidate_conf: 0.05
+  max_det: 100
+  num_threads: 4           # threads intra-op do ONNX Runtime (Pi 5: 4 núcleos)
+  warmup_runs: 3
+
+# Perfil de iluminação/produto ativo (configs/lighting_profiles.yaml)
+profile: opaque_two_tone
+
+roi:
+  # detector: usa a classe "capsule" do modelo
+  # classical: segmentação por limiar/contorno (estação com fundo controlado)
+  method: detector         # detector | classical
+  margin_px: 12
+  # Recorte em 2 estágios para defeitos pequenos: localiza a cápsula e roda o
+  # detector no recorte (resolução efetiva maior). Só habilite se a avaliação
+  # mostrar ganho em recall de defeitos pequenos.
+  crop_second_stage: false
+
+anomaly:
+  enabled: false           # Modo C
+  model_path: models/anomaly/patchcore_lite.npz
+
+annotation:
+  save_original: true
+  save_annotated: true
+  jpeg_quality: 92

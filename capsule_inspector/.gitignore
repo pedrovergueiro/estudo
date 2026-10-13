@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Estado de execução local (banco, imagens, logs, status)
+var/
+
+# Treino / artefatos (grandes, gerados, ou com licença própria)
+runs/
+*.pt
+*.onnx
+*_ncnn_model/
+*_openvino_model/
+models/export/
+models/registry*/
+models/anomaly/*.npz
+models/anomaly/*.report.json
+
+# Dados (nunca versionar dados brutos/processados; ver data/README.md)
+data/raw/*
+data/interim/*
+data/processed/*
+data/splits/*
+data/reports/*
+data/samples/*
+!data/**/.gitkeep
+
+# Relatórios gerados localmente (exemplos publicados ficam em reports/examples/)
+reports/*
+!reports/README.md
+!reports/examples/

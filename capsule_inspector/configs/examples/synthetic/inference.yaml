@@ -1,0 +1,29 @@
+# Overlay de EXEMPLO (dataset sintético, imgsz 320).
+inference_version: "0.1.0-synthetic"
+
+model:
+  registry_dir: models/registry_synthetic
+  path_override: null
+  backend: auto
+  imgsz: 320
+  nms_iou: 0.50
+  candidate_conf: 0.05
+  max_det: 100
+  num_threads: 4
+  warmup_runs: 2
+
+profile: opaque_two_tone
+
+roi:
+  method: detector
+  margin_px: 12
+  crop_second_stage: false
+
+anomaly:
+  enabled: false
+  model_path: models/anomaly/synthetic_patchcore_lite.npz
+
+annotation:
+  save_original: true
+  save_annotated: true
+  jpeg_quality: 90

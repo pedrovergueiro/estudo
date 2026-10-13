@@ -1,0 +1,157 @@
+{
+ "inspection_id": "20261013T105504312275-da576c6d",
+ "timestamp": "2026-10-13T10:55:04.312+00:00",
+ "status": "FAIL",
+ "category": "INCONCLUSIVE",
+ "lot_id": "DEMO-SINT-001",
+ "unit_ref": null,
+ "deployment_mode": "experimental",
+ "software_version": "0.1.0",
+ "git_commit": "e731d50",
+ "model": {
+  "model_id": "synth-v1-320",
+  "path": "<projeto>/models/registry_synthetic/synth-v1-320/best_320_fp32.onnx",
+  "sha256": "344fb480e48b4aa28556b8f54c10e78c73d564a043a2c1e0e69a5e8b2e70020d",
+  "backend": "onnxruntime",
+  "imgsz": 320,
+  "task": "detect",
+  "names": [
+   "capsule",
+   "crack",
+   "hole",
+   "stain",
+   "scratch",
+   "foreign_particle"
+  ],
+  "approved": true,
+  "source": "registry"
+ },
+ "config": {
+  "versions": {
+   "taxonomy": "0.1.0-synthetic",
+   "dataset": "0.1.0-synthetic",
+   "train": "0.1.0-synthetic",
+   "inference": "0.1.0-synthetic",
+   "decision_rules": "0.1.0-synthetic",
+   "camera": "0.1.0",
+   "lighting_profiles": "0.1.0",
+   "system": "0.1.0"
+  },
+  "hash": "eb82e2855ae8f195c9c7cfbdd00fb77125adb8df8b67c8679aef43582bf2981c"
+ },
+ "profile": {
+  "name": "opaque_two_tone",
+  "hash": "c59fda594f5ac6ddb433c7d5b009b20dd2fe56af9794342bd80c92d63c1ad30f",
+  "finish": "opaque",
+  "color": "two_tone",
+  "validated": false
+ },
+ "quality": [
+  {
+   "view": "diffuse",
+   "ok": true,
+   "metrics": {
+    "mean_intensity": 51.6312,
+    "saturated_fraction": 0.0,
+    "dark_fraction": 0.0,
+    "sharpness_laplacian_var": 90.4884,
+    "std_intensity": 18.7695
+   },
+   "reasons": []
+  }
+ ],
+ "detections": [
+  {
+   "class_id": 0,
+   "class_name": "capsule",
+   "confidence": 0.91977,
+   "box": [
+    60.34,
+    96.77,
+    265.15,
+    200.91
+   ],
+   "polygon": null,
+   "view": "diffuse"
+  },
+  {
+   "class_id": 3,
+   "class_name": "stain",
+   "confidence": 0.79354,
+   "box": [
+    111.05,
+    125.09,
+    133.19,
+    145.8
+   ],
+   "polygon": null,
+   "view": "diffuse"
+  }
+ ],
+ "capsules": [
+  {
+   "index": 0,
+   "box": [
+    60.34,
+    96.77,
+    265.15,
+    200.91
+   ],
+   "confidence": 0.91977,
+   "status": "FAIL",
+   "category": "INCONCLUSIVE",
+   "defects": [
+    {
+     "class_id": 3,
+     "class_name": "stain",
+     "confidence": 0.79354,
+     "box": [
+      111.05,
+      125.09,
+      133.19,
+      145.8
+     ],
+     "polygon": null,
+     "view": "diffuse"
+    }
+   ],
+   "reasons": [
+    "DEFECT: stain conf=0.79 >= 0.5 (classe não validada: rejeição conservadora)"
+   ]
+  }
+ ],
+ "anomaly": [],
+ "reasons": [
+  "DEFECT: stain conf=0.79 >= 0.5 (classe não validada: rejeição conservadora)"
+ ],
+ "timings_ms": {
+  "capture": 2.489,
+  "quality": 1.777,
+  "preprocess": 5.149,
+  "model_preprocess": 0.592,
+  "model_inference": 18.111,
+  "model_postprocess": 0.995,
+  "inference": 19.758,
+  "roi": 0.059,
+  "anomaly": 0.004,
+  "decision": 0.137,
+  "annotate": 30.759,
+  "total": 58.617
+ },
+ "images": {
+  "original_diffuse": "FAIL/2026-10-13/20261013T105504312275-da576c6d_diffuse.png",
+  "annotated": "FAIL/2026-10-13/20261013T105504312275-da576c6d_annotated.jpg"
+ },
+ "source": {
+  "frames": [
+   {
+    "view": "diffuse",
+    "frame_id": 1,
+    "source": "file",
+    "capture_ts": 1791888904.3121994,
+    "file": "<projeto>/data/samples/u0008_v0.png"
+   }
+  ]
+ },
+ "error": null
+}

@@ -1,0 +1,54 @@
+# Armazenamento, interface, integração e logs (separado da inferência para que
+# mudanças operacionais não alterem a versão das regras de inspeção).
+system_version: "0.1.0"
+
+# experimental | production. Em "experimental" todo resultado é marcado como tal.
+deployment_mode: experimental
+
+storage:
+  root: var                       # relativo à raiz do projeto
+  database: var/inspections.sqlite3
+  images_dir: var/images
+  status_file: var/status.json
+  retention:
+    pass_images_days: 7
+    review_images_days: 90
+    fail_images_days: 90
+    max_images_gb: 20.0
+    min_free_disk_gb: 2.0         # abaixo disso: SYSTEM_ERROR (não grava parcial)
+
+logging:
+  dir: var/logs
+  level: INFO
+  max_bytes: 10485760
+  backup_count: 10
+
+interface:
+  host: 127.0.0.1                 # NUNCA exponha à internet
+  port: 8080
+  # Se host != 127.0.0.1/localhost, a interface só inicia com token definido na
+  # variável de ambiente indicada abaixo.
+  auth_token_env: CAPSULE_UI_TOKEN
+  recent_limit: 50
+
+integration:
+  trigger:
+    type: interval                # interval | gpio | none
+    interval_s: 1.0
+    gpio_pin: 17
+  reject_actuator:
+    # Atuação física DESABILITADA por padrão. Habilitar exige `enabled: true` E
+    # `interlock_validated: true` após testes com o equipamento real.
+    enabled: false
+    interlock_validated: false
+    type: gpio
+    gpio_pin: 27
+    pulse_ms: 50
+    # Fail-safe: qualquer estado diferente de PASS aciona rejeição.
+    reject_on: [FAIL, REVIEW, SYSTEM_ERROR]
+  publisher:
+    enabled: false                # sincronização externa opcional
+    url: null                     # ex.: http://mes.local:9000/inspections
+    timeout_s: 3.0
+    include_images: false         # imagens NÃO saem do dispositivo por padrão
+    max_outbox: 10000

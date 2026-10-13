@@ -1,0 +1,2 @@
+created_at,experiment,model,task,imgsz,epochs,val_map50,val_map50_95,val_precision,val_recall,best_sha256,run_dir
+20261013-103022,baseline,yolo11n.pt,detect,320,30,0.950909090909091,0.6982661211532011,0.9307473149234289,0.9395694881814579,f624be2b997ff024,<projeto>/runs/train_synthetic/synthetic-20261013-103022

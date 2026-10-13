@@ -1,0 +1,144 @@
+# Taxonomia de classes — versionada.
+#
+# Regras:
+# - Apenas classes com `enabled: true` e `role: object|defect` entram no treinamento.
+#   A ordem das classes habilitadas define os IDs YOLO (0..N-1). Mudar a ordem ou
+#   habilitar/desabilitar classes EXIGE incrementar `taxonomy_version` e re-treinar.
+# - `validated: true` só pode ser marcado depois que a classe tiver recall/precisão
+#   medidos em conjunto de teste independente (ver docs/VALIDATION_PLAN.md).
+# - `severity` alimenta o motor de decisão (configs/decision_rules.yaml).
+# - "Cápsula normal" NÃO é uma classe treinada: a classe `capsule` localiza cada unidade
+#   e o estado "normal" é a ausência de defeitos acima dos limiares de revisão, sob
+#   perfil, modelo e classes validados. Isso evita treinar o detector para "procurar
+#   normalidade" e mantém a associação defeito → cápsula.
+# - `aliases` mapeia nomes de classes de datasets externos para esta taxonomia.
+# - `requires_acquisition` documenta quais condições de aquisição tornam o defeito
+#   observável; se o perfil ativo não as tiver, o pipeline registra a limitação.
+taxonomy_version: "0.1.0"
+
+classes:
+  - key: capsule
+    role: object
+    display_name: "Cápsula"
+    enabled: true
+    severity: none
+    validated: false
+    aliases: [capsule, capsules, pill, good, normal, ok, capsule_ok]
+
+  - key: crack
+    role: defect
+    display_name: "Rachadura / fissura"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: [crack, cracked, fissure, faulty_imprint_crack]
+    requires_acquisition: [side_light, backlight]
+
+  - key: broken
+    role: defect
+    display_name: "Quebra / lasca"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: [broken, chip, chipped, broken_piece]
+
+  - key: dent
+    role: defect
+    display_name: "Amassado / deformação"
+    enabled: true
+    severity: major
+    validated: false
+    aliases: [dent, dented, squeeze, deformed, deformation]
+    requires_acquisition: [side_light]
+
+  - key: hole
+    role: defect
+    display_name: "Perfuração / furo"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: [hole, poke, perforation, pinhole]
+    requires_acquisition: [backlight]
+
+  - key: scratch
+    role: defect
+    display_name: "Arranhão / abrasão"
+    enabled: true
+    severity: minor
+    validated: false
+    aliases: [scratch, abrasion, scrape]
+    requires_acquisition: [side_light]
+
+  - key: stain
+    role: defect
+    display_name: "Mancha / descoloração"
+    enabled: true
+    severity: major
+    validated: false
+    aliases: [stain, spot, discoloration, discolouration, color, faulty_imprint]
+
+  - key: foreign_particle
+    role: defect
+    display_name: "Contaminação superficial / partícula visível"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: [foreign_particle, particle, contamination, dirt, foreign]
+    notes: >-
+      Apenas partículas VISÍVEIS na superfície. Imagens RGB não sustentam
+      conclusões sobre contaminação microbiológica ou composição química.
+
+  - key: closure_defect
+    role: defect
+    display_name: "Defeito de fechamento / encaixe corpo-tampa"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: [closure_defect, open, telescoped, misaligned_cap, bad_join]
+
+  - key: incomplete
+    role: defect
+    display_name: "Cápsula incompleta / ausência de parte"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: [incomplete, missing_part, missing_cap, half]
+    requires_acquisition: [backlight]
+
+  - key: tip_deformation
+    role: defect
+    display_name: "Deformação da ponta"
+    enabled: true
+    severity: major
+    validated: false
+    aliases: [tip_deformation, tip, bad_tip]
+
+  - key: surface_texture
+    role: defect
+    display_name: "Defeito de superfície / textura"
+    enabled: true
+    severity: minor
+    validated: false
+    aliases: [surface_texture, texture, bubble, wrinkle]
+
+  # Defeitos de enchimento: só habilitar se a aquisição comprovadamente os revelar
+  # (ex.: retroiluminação em cápsula transparente/translúcida). Desabilitado por padrão.
+  - key: fill_irregular
+    role: defect
+    display_name: "Enchimento aparentemente vazio / irregular"
+    enabled: false
+    severity: major
+    validated: false
+    aliases: [empty, fill_irregular, underfilled]
+    requires_acquisition: [backlight]
+    notes: >-
+      Inferência visual apenas. Não substitui verificação de massa/dosagem.
+
+  # Produzido pelo Modo C (detecção de anomalias); não é uma classe do detector.
+  - key: unknown_anomaly
+    role: anomaly
+    display_name: "Anomalia visual desconhecida"
+    enabled: true
+    severity: major
+    validated: false
+    aliases: []

@@ -1,0 +1,1346 @@
+{
+  "split": "test",
+  "model": {
+    "model_id": "best_320_int8.onnx",
+    "path": "models/export/best_320_int8.onnx",
+    "backend": "onnxruntime",
+    "imgsz": 320,
+    "sha256": "db2c3e5e5c83adc2ca6bce1ef7b483555dd3a5c615eff5526b534ff9e3535515"
+  },
+  "model_sha256": "db2c3e5e5c83adc2ca6bce1ef7b483555dd3a5c615eff5526b534ff9e3535515",
+  "class_names": [
+    "capsule",
+    "crack",
+    "hole",
+    "stain",
+    "scratch",
+    "foreign_particle"
+  ],
+  "dataset_fingerprint": "6f66ebc2018b81171b8809dec436acbc5f4a15c1aec5b1a2675c4edd5d27974e",
+  "summary": {
+    "n_images": 72,
+    "map50": 0.9015401540154014,
+    "map50_95": 0.6204979019210902,
+    "defects_precision": 0.94,
+    "defects_recall": 0.8703703703703703,
+    "defects_f1": 0.9038461538461539,
+    "defects_fn_rate": 0.12962962962962962,
+    "classes_without_test_data": [],
+    "latency_ms_p50": 24.270663999914177,
+    "latency_ms_p95": 31.152339350001057
+  },
+  "per_class": {
+    "capsule": {
+      "ap50": 1.0,
+      "ap50_95": 0.9312830268023549,
+      "operating": {
+        "threshold": 0.2,
+        "n_gt": 72,
+        "tp": 72,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": null,
+          "medium": null,
+          "large": 1.0
+        },
+        "n_by_size": {
+          "small": 0,
+          "medium": 0,
+          "large": 72
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.5,
+        "n_gt": 72,
+        "tp": 72,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": null,
+          "medium": null,
+          "large": 1.0
+        },
+        "n_by_size": {
+          "small": 0,
+          "medium": 0,
+          "large": 72
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.935650110244751,
+          0.935650110244751,
+          0.935650110244751,
+          0.935650110244751,
+          0.935650110244751,
+          0.935650110244751,
+          0.930590033531189,
+          0.930590033531189,
+          0.930590033531189,
+          0.930590033531189,
+          0.930590033531189,
+          0.930590033531189,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9251638650894165,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9193502068519592,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9131274223327637,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.9064732789993286,
+          0.8993656635284424,
+          0.8993656635284424,
+          0.8993656635284424,
+          0.8993656635284424,
+          0.8993656635284424,
+          0.8837015628814697
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.013888888888888888,
+          0.027777777777777776,
+          0.041666666666666664,
+          0.05555555555555555,
+          0.06944444444444445,
+          0.08333333333333333,
+          0.09722222222222222,
+          0.1111111111111111,
+          0.125,
+          0.1388888888888889,
+          0.1527777777777778,
+          0.16666666666666666,
+          0.18055555555555555,
+          0.19444444444444445,
+          0.20833333333333334,
+          0.2222222222222222,
+          0.2361111111111111,
+          0.25,
+          0.2638888888888889,
+          0.2777777777777778,
+          0.2916666666666667,
+          0.3055555555555556,
+          0.3194444444444444,
+          0.3333333333333333,
+          0.3472222222222222,
+          0.3611111111111111,
+          0.375,
+          0.3888888888888889,
+          0.4027777777777778,
+          0.4166666666666667,
+          0.4305555555555556,
+          0.4444444444444444,
+          0.4583333333333333,
+          0.4722222222222222,
+          0.4861111111111111,
+          0.5,
+          0.5138888888888888,
+          0.5277777777777778,
+          0.5416666666666666,
+          0.5555555555555556,
+          0.5694444444444444,
+          0.5833333333333334,
+          0.5972222222222222,
+          0.6111111111111112,
+          0.625,
+          0.6388888888888888,
+          0.6527777777777778,
+          0.6666666666666666,
+          0.6805555555555556,
+          0.6944444444444444,
+          0.7083333333333334,
+          0.7222222222222222,
+          0.7361111111111112,
+          0.75,
+          0.7638888888888888,
+          0.7777777777777778,
+          0.7916666666666666,
+          0.8055555555555556,
+          0.8194444444444444,
+          0.8333333333333334,
+          0.8472222222222222,
+          0.8611111111111112,
+          0.875,
+          0.8888888888888888,
+          0.9027777777777778,
+          0.9166666666666666,
+          0.9305555555555556,
+          0.9444444444444444,
+          0.9583333333333334,
+          0.9722222222222222,
+          0.9861111111111112,
+          1.0
+        ]
+      }
+    },
+    "crack": {
+      "ap50": 1.0,
+      "ap50_95": 0.6218646864686468,
+      "operating": {
+        "threshold": 0.1,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.9090909090909091,
+        "recall": 1.0,
+        "f1": 0.9523809523809523,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.013888888888888888,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": 1.0,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 8,
+          "medium": 2,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.45,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": 1.0,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 8,
+          "medium": 2,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.866919994354248,
+          0.8174546957015991,
+          0.7878137826919556,
+          0.7878137826919556,
+          0.7548035979270935,
+          0.737051248550415,
+          0.7184929251670837,
+          0.7184929251670837,
+          0.679091215133667,
+          0.6583384871482849,
+          0.11290591955184937
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9090909090909091
+        ],
+        "recall": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "hole": {
+      "ap50": 0.801980198019802,
+      "ap50_95": 0.5368811881188119,
+      "operating": {
+        "threshold": 0.1,
+        "n_gt": 10,
+        "tp": 8,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.888888888888889,
+        "fn_rate": 0.2,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.8,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.45,
+        "n_gt": 10,
+        "tp": 8,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.888888888888889,
+        "fn_rate": 0.2,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.8,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.8870940804481506,
+          0.8773634433746338,
+          0.8557335138320923,
+          0.8310233354568481,
+          0.7184929251670837,
+          0.7184929251670837,
+          0.6991594433784485,
+          0.679091215133667
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8
+        ]
+      }
+    },
+    "stain": {
+      "ap50": 0.8316831683168316,
+      "ap50_95": 0.5325,
+      "operating": {
+        "threshold": 0.15,
+        "n_gt": 12,
+        "tp": 10,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.8333333333333334,
+        "f1": 0.9090909090909091,
+        "fn_rate": 0.16666666666666666,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.8333333333333334,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 12,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.5,
+        "n_gt": 12,
+        "tp": 10,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.8333333333333334,
+        "f1": 0.9090909090909091,
+        "fn_rate": 0.16666666666666666,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.8333333333333334,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 12,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.8961440324783325,
+          0.8773634433746338,
+          0.866919994354248,
+          0.866919994354248,
+          0.8437761068344116,
+          0.8030547499656677,
+          0.7878137826919556,
+          0.7717286348342896,
+          0.6583384871482849,
+          0.5926181077957153
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "recall": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.4166666666666667,
+          0.5,
+          0.5833333333333334,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333334
+        ]
+      }
+    },
+    "scratch": {
+      "ap50": 0.8316831683168316,
+      "ap50_95": 0.477521216407355,
+      "operating": {
+        "threshold": 0.2,
+        "n_gt": 12,
+        "tp": 9,
+        "fp": 0,
+        "fn": 3,
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571428571428571,
+        "fn_rate": 0.25,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.875,
+          "medium": 0.5,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 8,
+          "medium": 4,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.55,
+        "n_gt": 12,
+        "tp": 5,
+        "fp": 0,
+        "fn": 7,
+        "precision": 1.0,
+        "recall": 0.4166666666666667,
+        "f1": 0.5882352941176471,
+        "fn_rate": 0.5833333333333334,
+        "fp_per_image": 0.0,
+        "recall_by_size": {
+          "small": 0.375,
+          "medium": 0.5,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 8,
+          "medium": 4,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.7548035979270935,
+          0.679091215133667,
+          0.6369611620903015,
+          0.615028440952301,
+          0.5926181077957153,
+          0.5467132925987244,
+          0.4073818624019623,
+          0.4073818624019623,
+          0.28150707483291626,
+          0.10385596752166748,
+          0.051921963691711426
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9090909090909091
+        ],
+        "recall": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.4166666666666667,
+          0.5,
+          0.5833333333333334,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333334,
+          0.8333333333333334
+        ]
+      }
+    },
+    "foreign_particle": {
+      "ap50": 0.9438943894389439,
+      "ap50_95": 0.6229372937293729,
+      "operating": {
+        "threshold": 0.1,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 2,
+        "fn": 0,
+        "precision": 0.8333333333333334,
+        "recall": 1.0,
+        "f1": 0.9090909090909091,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.027777777777777776,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "at_fail_threshold": {
+        "threshold": 0.45,
+        "n_gt": 10,
+        "tp": 10,
+        "fp": 2,
+        "fn": 0,
+        "precision": 0.8333333333333334,
+        "recall": 1.0,
+        "f1": 0.9090909090909091,
+        "fn_rate": 0.0,
+        "fp_per_image": 0.027777777777777776,
+        "recall_by_size": {
+          "small": 1.0,
+          "medium": null,
+          "large": null
+        },
+        "n_by_size": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        }
+      },
+      "pr_curve": {
+        "confidence": [
+          0.7717286348342896,
+          0.7717286348342896,
+          0.7548035979270935,
+          0.7184929251670837,
+          0.7184929251670837,
+          0.6991594433784485,
+          0.6991594433784485,
+          0.6991594433784485,
+          0.679091215133667,
+          0.5467132925987244,
+          0.5467132925987244,
+          0.5
+        ],
+        "precision": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.8333333333333334,
+          0.8571428571428571,
+          0.875,
+          0.8888888888888888,
+          0.9,
+          0.8181818181818182,
+          0.8333333333333334
+        ],
+        "recall": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          0.9,
+          1.0
+        ]
+      }
+    }
+  },
+  "decision": {
+    "n_defective": 44,
+    "n_good": 28,
+    "escape_rate": 0.045454545454545456,
+    "false_reject_rate": 0.0,
+    "review_rate_defective": 0.18181818181818182,
+    "review_rate_good": 0.0,
+    "escapes": [
+      "images/u0183_v0.png",
+      "images/u0183_v1.png"
+    ]
+  },
+  "strata": {
+    "finish": {
+      "opaque": {
+        "n_images": 28,
+        "n_defect_instances": 26,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 0.5,
+          "scratch": 0.5,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 20,
+          "n_good": 8,
+          "escape_rate": 0.1,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.1,
+          "review_rate_good": 0.0,
+          "escapes": [
+            "images/u0183_v0.png",
+            "images/u0183_v1.png"
+          ]
+        }
+      },
+      "translucent": {
+        "n_images": 20,
+        "n_defect_instances": 10,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "stain": 1.0,
+          "scratch": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 10,
+          "n_good": 10,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.4,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "transparent": {
+        "n_images": 24,
+        "n_defect_instances": 18,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 0.0,
+          "stain": 1.0,
+          "scratch": 0.75,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 14,
+          "n_good": 10,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.14285714285714285,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      }
+    },
+    "color": {
+      "blue_yellow": {
+        "n_images": 20,
+        "n_defect_instances": 10,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "stain": 1.0,
+          "scratch": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 10,
+          "n_good": 10,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.4,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "clear": {
+        "n_images": 24,
+        "n_defect_instances": 18,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 0.0,
+          "stain": 1.0,
+          "scratch": 0.75,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 14,
+          "n_good": 10,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.14285714285714285,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "red_white": {
+        "n_images": 28,
+        "n_defect_instances": 26,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 0.5,
+          "scratch": 0.5,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 20,
+          "n_good": 8,
+          "escape_rate": 0.1,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.1,
+          "review_rate_good": 0.0,
+          "escapes": [
+            "images/u0183_v0.png",
+            "images/u0183_v1.png"
+          ]
+        }
+      }
+    },
+    "lot": {
+      "L0": {
+        "n_images": 16,
+        "n_defect_instances": 12,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "stain": 0.5,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 10,
+          "n_good": 6,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.0,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "L1": {
+        "n_images": 20,
+        "n_defect_instances": 20,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 0.6666666666666666,
+          "stain": 1.0,
+          "scratch": 0.75,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 14,
+          "n_good": 6,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.14285714285714285,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "L2": {
+        "n_images": 18,
+        "n_defect_instances": 14,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 1.0,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 12,
+          "n_good": 6,
+          "escape_rate": 0.0,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.3333333333333333,
+          "review_rate_good": 0.0,
+          "escapes": []
+        }
+      },
+      "L3": {
+        "n_images": 18,
+        "n_defect_instances": 8,
+        "status": "NOT_VALIDATED",
+        "reason": "dados insuficientes (mínimo 30 imagens e 10 defeitos)",
+        "recall_by_class": {
+          "hole": 1.0,
+          "stain": 1.0,
+          "scratch": 0.5
+        },
+        "decision": {
+          "n_defective": 8,
+          "n_good": 10,
+          "escape_rate": 0.25,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.25,
+          "review_rate_good": 0.0,
+          "escapes": [
+            "images/u0183_v0.png",
+            "images/u0183_v1.png"
+          ]
+        }
+      }
+    },
+    "lighting": {
+      "backlight": {
+        "n_images": 36,
+        "n_defect_instances": 27,
+        "status": "EVALUATED",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 0.8,
+          "stain": 0.8333333333333334,
+          "scratch": 0.6666666666666666,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 22,
+          "n_good": 14,
+          "escape_rate": 0.045454545454545456,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.18181818181818182,
+          "review_rate_good": 0.0,
+          "escapes": [
+            "images/u0183_v1.png"
+          ]
+        }
+      },
+      "diffuse": {
+        "n_images": 36,
+        "n_defect_instances": 27,
+        "status": "EVALUATED",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 0.8,
+          "stain": 0.8333333333333334,
+          "scratch": 0.8333333333333334,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 22,
+          "n_good": 14,
+          "escape_rate": 0.045454545454545456,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.18181818181818182,
+          "review_rate_good": 0.0,
+          "escapes": [
+            "images/u0183_v0.png"
+          ]
+        }
+      }
+    },
+    "profile": {
+      "synthetic": {
+        "n_images": 72,
+        "n_defect_instances": 54,
+        "status": "EVALUATED",
+        "recall_by_class": {
+          "crack": 1.0,
+          "hole": 0.8,
+          "stain": 0.8333333333333334,
+          "scratch": 0.75,
+          "foreign_particle": 1.0
+        },
+        "decision": {
+          "n_defective": 44,
+          "n_good": 28,
+          "escape_rate": 0.045454545454545456,
+          "false_reject_rate": 0.0,
+          "review_rate_defective": 0.18181818181818182,
+          "review_rate_good": 0.0,
+          "escapes": [
+            "images/u0183_v0.png",
+            "images/u0183_v1.png"
+          ]
+        }
+      }
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "capsule",
+      "crack",
+      "hole",
+      "stain",
+      "scratch",
+      "foreign_particle",
+      "background"
+    ],
+    "rows_pred_cols_true": [
+      [
+        72,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        10,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        8,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        10,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        10,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        10,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        2,
+        2,
+        0,
+        0
+      ]
+    ],
+    "conf_threshold": 0.1
+  },
+  "config": {
+    "versions": {
+      "taxonomy": "0.1.0-synthetic",
+      "dataset": "0.1.0-synthetic",
+      "train": "0.1.0-synthetic",
+      "inference": "0.1.0-synthetic",
+      "decision_rules": "0.1.0-synthetic",
+      "camera": "0.1.0",
+      "lighting_profiles": "0.1.0",
+      "system": "0.1.0"
+    },
+    "hash": "3330c5cd8050d309ae1c629a8cad1bcc6786ca28220d9bc3b530c8c47a85439f"
+  },
+  "warnings": [
+    "CONJUNTO SINTÉTICO: métricas sem valor de validação"
+  ],
+  "regression": {
+    "passed": false,
+    "checks": [
+      {
+        "name": "recall:capsule",
+        "passed": true,
+        "new": 1.0,
+        "ref": 1.0
+      },
+      {
+        "name": "recall:crack",
+        "passed": true,
+        "new": 1.0,
+        "ref": 1.0
+      },
+      {
+        "name": "recall_small:crack",
+        "passed": true,
+        "new": 1.0,
+        "ref": 1.0
+      },
+      {
+        "name": "recall:hole",
+        "passed": true,
+        "new": 0.8,
+        "ref": 0.8
+      },
+      {
+        "name": "recall_small:hole",
+        "passed": true,
+        "new": 0.8,
+        "ref": 0.8
+      },
+      {
+        "name": "recall:stain",
+        "passed": true,
+        "new": 0.8333333333333334,
+        "ref": 0.8333333333333334
+      },
+      {
+        "name": "recall_small:stain",
+        "passed": true,
+        "new": 0.8333333333333334,
+        "ref": 0.8333333333333334
+      },
+      {
+        "name": "recall:scratch",
+        "passed": false,
+        "new": 0.75,
+        "ref": 0.9166666666666666
+      },
+      {
+        "name": "recall_small:scratch",
+        "passed": false,
+        "new": 0.875,
+        "ref": 1.0
+      },
+      {
+        "name": "recall:foreign_particle",
+        "passed": true,
+        "new": 1.0,
+        "ref": 1.0
+      },
+      {
+        "name": "recall_small:foreign_particle",
+        "passed": true,
+        "new": 1.0,
+        "ref": 1.0
+      },
+      {
+        "name": "map50",
+        "passed": false,
+        "new": 0.9015401540154014,
+        "ref": 0.9345434543454344
+      },
+      {
+        "name": "escape_rate",
+        "passed": false,
+        "new": 0.045454545454545456,
+        "ref": 0.022727272727272728
+      }
+    ],
+    "tolerances": {
+      "recall": 0.02,
+      "map50": 0.02,
+      "escape": 0.0
+    },
+    "reference": "reports/eval_fp32_test/evaluation.json"
+  },
+  "false_negatives": [
+    {
+      "image": "images/u0137_v0.png",
+      "class": "hole",
+      "box": [
+        94.9,
+        112.4,
+        104.7,
+        122.3
+      ]
+    },
+    {
+      "image": "images/u0137_v1.png",
+      "class": "hole",
+      "box": [
+        94.9,
+        112.4,
+        104.7,
+        122.3
+      ]
+    },
+    {
+      "image": "images/u0180_v0.png",
+      "class": "stain",
+      "box": [
+        108.8,
+        159.5,
+        130.8,
+        181.5
+      ]
+    },
+    {
+      "image": "images/u0180_v1.png",
+      "class": "stain",
+      "box": [
+        108.8,
+        159.5,
+        130.8,
+        181.5
+      ]
+    },
+    {
+      "image": "images/u0183_v0.png",
+      "class": "scratch",
+      "box": [
+        199.7,
+        129.8,
+        256.2,
+        151.1
+      ]
+    },
+    {
+      "image": "images/u0183_v1.png",
+      "class": "scratch",
+      "box": [
+        199.7,
+        129.8,
+        256.2,
+        151.1
+      ]
+    },
+    {
+      "image": "images/u0209_v1.png",
+      "class": "scratch",
+      "box": [
+        99.4,
+        164.0,
+        131.1,
+        195.9
+      ]
+    }
+  ],
+  "false_positives": [
+    {
+      "image": "images/u0137_v0.png",
+      "class": "foreign_particle",
+      "confidence": 0.699,
+      "box": [
+        95.1,
+        112.2,
+        104.0,
+        122.1
+      ]
+    },
+    {
+      "image": "images/u0137_v1.png",
+      "class": "foreign_particle",
+      "confidence": 0.547,
+      "box": [
+        94.5,
+        112.7,
+        104.2,
+        122.8
+      ]
+    },
+    {
+      "image": "images/u0190_v0.png",
+      "class": "crack",
+      "confidence": 0.113,
+      "box": [
+        219.9,
+        187.1,
+        261.0,
+        206.7
+      ]
+    }
+  ]
+}

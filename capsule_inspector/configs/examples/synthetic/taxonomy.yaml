@@ -1,0 +1,54 @@
+# Overlay de EXEMPLO para o dataset sintético (scripts/make_synthetic_dataset.py).
+# Uso: CAPSULE_CONFIG_OVERLAY=configs/examples/synthetic python scripts/...
+# Apenas para testes de software — NÃO representa uma taxonomia validada.
+taxonomy_version: "0.1.0-synthetic"
+
+classes:
+  - key: capsule
+    role: object
+    display_name: "Cápsula"
+    enabled: true
+    severity: none
+    validated: false
+    aliases: [capsule, good]
+  - key: crack
+    role: defect
+    display_name: "Rachadura / fissura"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: []
+  - key: hole
+    role: defect
+    display_name: "Perfuração / furo"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: []
+  - key: stain
+    role: defect
+    display_name: "Mancha / descoloração"
+    enabled: true
+    severity: major
+    validated: false
+    aliases: []
+  - key: scratch
+    role: defect
+    display_name: "Arranhão / abrasão"
+    enabled: true
+    severity: minor
+    validated: false
+    aliases: []
+  - key: foreign_particle
+    role: defect
+    display_name: "Partícula visível"
+    enabled: true
+    severity: critical
+    validated: false
+    aliases: []
+  - key: unknown_anomaly
+    role: anomaly
+    display_name: "Anomalia visual desconhecida"
+    enabled: true
+    severity: major
+    validated: false

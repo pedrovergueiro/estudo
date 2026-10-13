@@ -1,0 +1,70 @@
+# Perfis por família de produto / cor / acabamento / geometria.
+# Cada resultado registra o nome do perfil e o hash do seu conteúdo, para que a
+# condição de captura usada na inspeção possa ser comparada à do treinamento.
+#
+# `acquisition.steps`: imagens adquiridas por cápsula (uma por condição de luz).
+# `kind` (diffuse | backlight | side_light) é comparado com `requires_acquisition`
+# da taxonomia: um defeito só é considerado observável se ALGUM tipo exigido estiver
+# presente; caso contrário PASS é rebaixado a REVIEW (pass_requires).
+# `light` é o nome do canal no controlador de iluminação.
+# Todas as vistas da mesma unidade física devem ter o mesmo `unit_id` no dataset.
+# `fusion.mode`:
+#   none           — usa apenas a primeira vista
+#   late_union     — roda o detector em cada vista e une as detecções
+#   early_channels — empilha canais de cinza de cada vista (o modelo DEVE ter sido
+#                    treinado com o mesmo empilhamento; experimental)
+# `preprocessing`: operações aplicadas na ordem; as MESMAS devem ser aplicadas no
+# treinamento (scripts/preprocess_dataset.py). Evite filtros agressivos.
+lighting_profiles_version: "0.1.0"
+
+profiles:
+  opaque_two_tone:
+    product_family: "hard_gelatin_size0"
+    finish: opaque
+    color: "two_tone"
+    geometry: {size_code: "0", length_mm: 21.7, diameter_mm: 7.6}
+    validated: false
+    background: "matte_black_or_mid_gray"
+    acquisition:
+      steps:
+        - {name: diffuse, kind: diffuse, light: diffuse_dome, exposure: 150}
+    fusion: {mode: none}
+    preprocessing:
+      - {op: gray_world_white_balance}
+      - {op: normalize_exposure, target_mean: 128, max_gain: 2.0}
+
+  translucent_colored:
+    product_family: "hard_gelatin_size0"
+    finish: translucent
+    color: "colored"
+    geometry: {size_code: "0", length_mm: 21.7, diameter_mm: 7.6}
+    validated: false
+    background: "white_diffuse_backlight"
+    acquisition:
+      steps:
+        - {name: diffuse, kind: diffuse, light: diffuse_dome, exposure: 120}
+        - {name: backlight, kind: backlight, light: backlight_panel, exposure: 60}
+    fusion: {mode: late_union}
+    preprocessing:
+      - {op: gray_world_white_balance}
+      - {op: clahe, clip_limit: 1.5, tile_grid: 8}
+
+  transparent_clear:
+    product_family: "hard_gelatin_size0"
+    finish: transparent
+    color: "clear"
+    geometry: {size_code: "0", length_mm: 21.7, diameter_mm: 7.6}
+    validated: false
+    # Fundo contrastante e luz de fundo evidenciam silhueta, furos e lascas;
+    # luz lateral rasante revela riscos e fissuras superficiais.
+    background: "black_with_backlight_window"
+    acquisition:
+      steps:
+        - {name: backlight, kind: backlight, light: backlight_panel, exposure: 40}
+        - {name: side_left, kind: side_light, light: low_angle_bar_left, exposure: 200}
+        - {name: diffuse, kind: diffuse, light: diffuse_dome, exposure: 120}
+    fusion: {mode: late_union}
+    preprocessing:
+      - {op: flat_field, blur_sigma: 25}
+      - {op: clahe, clip_limit: 2.0, tile_grid: 8}
+      - {op: denoise_bilateral, d: 5, sigma_color: 20, sigma_space: 5}

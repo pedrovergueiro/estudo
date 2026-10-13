@@ -1,0 +1,25 @@
+# Modelo de unidade systemd da interface do operador (processo separado da inspeção).
+# Placeholders @APP_DIR@ e @APP_USER@: ver capsule-inspector.service.in.
+# Escuta em 127.0.0.1:8080 (configs/system.yaml). Para acesso pela rede local,
+# altere interface.host E defina CAPSULE_UI_TOKEN (ex.: em um drop-in
+# `systemctl edit capsule-inspector-ui` com Environment=CAPSULE_UI_TOKEN=...).
+[Unit]
+Description=Capsule Inspector — interface do operador
+After=capsule-inspector.service
+
+[Service]
+Type=simple
+User=@APP_USER@
+WorkingDirectory=@APP_DIR@
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@APP_DIR@/.venv/bin/python @APP_DIR@/scripts/run_interface.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=@APP_DIR@/var
+
+[Install]
+WantedBy=multi-user.target

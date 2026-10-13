@@ -1,0 +1,1131 @@
+{
+  "platform": {
+    "machine": "x86_64",
+    "system": "Linux",
+    "kernel": "6.18.44-fc-v114",
+    "os": "Ubuntu 24.04.5 LTS",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "raspberry_pi_model": null,
+    "memory": {
+      "total_mb": 16093.1875,
+      "available_mb": 15320.05859375
+    },
+    "cpu_temperature_c": null,
+    "cpu_frequency_mhz": null,
+    "throttled": null,
+    "accelerators": {
+      "hailo_device": false,
+      "coral_pcie": false,
+      "nvidia_gpu": false
+    },
+    "onnxruntime_providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "libraries": {
+      "numpy": "2.5.4",
+      "opencv-python-headless": "5.0.0.93",
+      "opencv-python": "5.0.0.93",
+      "onnxruntime": "1.31.0",
+      "onnx": "1.23.2",
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "fastapi": "0.143.0",
+      "uvicorn": "0.54.0",
+      "pydantic": "2.14.1",
+      "PyYAML": "6.0.3",
+      "psutil": "7.2.2",
+      "cv2": "5.0.0"
+    }
+  },
+  "measured_at": "2026-10-13T11:06:12",
+  "results": [
+    {
+      "model": "<projeto>/models/export/best_320_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 320,
+      "threads": 1,
+      "model_size_mb": 10.542,
+      "load_ms": 120.6,
+      "iterations": 3773,
+      "wall_s": 120.03,
+      "fps_sustained": 31.435,
+      "latency_ms": {
+        "preprocess": {
+          "n": 3773,
+          "mean": 1.0871283617844787,
+          "std": 0.21272806549147158,
+          "min": 0.8216470000661502,
+          "p50": 1.045093999891833,
+          "p95": 1.3661416000104505,
+          "p99": 1.6889585999888361,
+          "max": 6.485905999852548
+        },
+        "inference": {
+          "n": 3773,
+          "mean": 29.923806219714482,
+          "std": 5.881506398270376,
+          "min": 23.009236000234523,
+          "p50": 27.461045000109152,
+          "p95": 40.38214199990762,
+          "p99": 46.29186988031491,
+          "max": 78.43539200030136
+        },
+        "postprocess": {
+          "n": 3773,
+          "mean": 0.7600075905170416,
+          "std": 0.22193194949528244,
+          "min": 0.5345660001694341,
+          "p50": 0.7034150003164541,
+          "p95": 1.0337118000279586,
+          "p99": 1.2369216400657015,
+          "max": 7.936163000067609
+        },
+        "total": {
+          "n": 3773,
+          "mean": 31.794626439440844,
+          "std": 6.066343882536307,
+          "min": 24.59480200013786,
+          "p50": 29.29623799991532,
+          "p95": 42.56563300014022,
+          "p99": 48.77616484000099,
+          "max": 81.48839100022087
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 178.7,
+        "peak": 206.0
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 10.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 12.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 14.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 16.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 18.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 20.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 22.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 24.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 26.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 28.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 30.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 32.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 34.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 36.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 38.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 40.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 42.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 44.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 46.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 48.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 50.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 52.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 54.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 56.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 58.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 60.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 62.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 64.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 66.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 68.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 70.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 72.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 74.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 76.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 78.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 80.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 82.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 84.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 86.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 88.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 90.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 92.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 94.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 96.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 98.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 100.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 102.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 104.9,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 106.9,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 108.9,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 110.9,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 112.9,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 114.9,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 117.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 119.0,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_320_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 320,
+      "threads": 2,
+      "model_size_mb": 10.542,
+      "load_ms": 211.2,
+      "iterations": 4511,
+      "wall_s": 120.01,
+      "fps_sustained": 37.589,
+      "latency_ms": {
+        "preprocess": {
+          "n": 4511,
+          "mean": 1.1120672547093433,
+          "std": 0.33585237722144606,
+          "min": 0.8115119999274611,
+          "p50": 1.0737699999481265,
+          "p95": 1.3770089999525226,
+          "p99": 1.700755799674878,
+          "max": 18.651907999810646
+        },
+        "inference": {
+          "n": 4511,
+          "mean": 24.646487393483227,
+          "std": 4.809469330498862,
+          "min": 15.399931000047218,
+          "p50": 24.64581799995358,
+          "p95": 32.248600999764676,
+          "p99": 38.06763440038593,
+          "max": 48.38940599984198
+        },
+        "postprocess": {
+          "n": 4511,
+          "mean": 0.8044778239825117,
+          "std": 0.2539150687641665,
+          "min": 0.5494719998750952,
+          "p50": 0.7697399996686727,
+          "p95": 1.0572245000730618,
+          "p99": 1.2523343001703318,
+          "max": 11.751070000173058
+        },
+        "total": {
+          "n": 4511,
+          "mean": 26.587170195744736,
+          "std": 4.987553835852128,
+          "min": 16.961567000180366,
+          "p50": 26.595459999953164,
+          "p95": 34.421449500086965,
+          "p99": 40.10103109985716,
+          "max": 51.615065000078175
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.5,
+        "after_load": 178.9,
+        "peak": 206.3
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 10.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 12.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 14.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 16.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 18.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 20.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 22.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 24.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 26.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 28.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 30.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 32.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 34.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 36.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 38.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 40.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 42.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 44.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 46.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 48.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 50.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 52.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 54.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 56.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 58.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 60.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 62.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 64.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 66.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 68.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 70.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 72.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 74.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 76.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 78.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 80.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 82.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 84.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 86.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 88.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 90.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 92.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 94.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 96.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 98.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 100.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 102.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 104.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 106.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 108.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 110.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 112.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 114.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 116.8,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 118.8,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    },
+    {
+      "model": "<projeto>/models/export/best_320_fp32.onnx",
+      "backend": "onnxruntime",
+      "imgsz": 320,
+      "threads": 4,
+      "model_size_mb": 10.542,
+      "load_ms": 138.6,
+      "iterations": 5246,
+      "wall_s": 120.03,
+      "fps_sustained": 43.707,
+      "latency_ms": {
+        "preprocess": {
+          "n": 5246,
+          "mean": 1.0748362264603708,
+          "std": 0.34386827326051667,
+          "min": 0.7932799999252893,
+          "p50": 1.0258205002173781,
+          "p95": 1.2746052500460792,
+          "p99": 2.0351704000404527,
+          "max": 9.273672999825067
+        },
+        "inference": {
+          "n": 5246,
+          "mean": 20.942277757138047,
+          "std": 4.1073826085436185,
+          "min": 11.578904999623774,
+          "p50": 20.48144950003916,
+          "p95": 28.106448749895208,
+          "p99": 34.95251029987693,
+          "max": 65.06503200034786
+        },
+        "postprocess": {
+          "n": 5246,
+          "mean": 0.824385570724038,
+          "std": 0.35274143470870944,
+          "min": 0.5315949993018876,
+          "p50": 0.807560000112062,
+          "p95": 1.0659909999048978,
+          "p99": 1.3205001002916117,
+          "max": 15.446540000084497
+        },
+        "total": {
+          "n": 5246,
+          "mean": 22.86466880003745,
+          "std": 4.249752047606475,
+          "min": 13.200264000261086,
+          "p50": 22.408861500025523,
+          "p95": 30.322072000217304,
+          "p99": 37.36385630006681,
+          "max": 67.14572700002464
+        }
+      },
+      "rss_mb": {
+        "before_load": 119.4,
+        "after_load": 178.9,
+        "peak": 206.5
+      },
+      "thermal_samples": [
+        {
+          "t_s": 2.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 4.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 6.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 8.0,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 10.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 12.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 14.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 16.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 18.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 20.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 22.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 24.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 26.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 28.1,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 30.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 32.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 34.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 36.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 38.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 40.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 42.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 44.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 46.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 48.2,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 50.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 52.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 54.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 56.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 58.3,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 60.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 62.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 64.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 66.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 68.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 70.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 72.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 74.4,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 76.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 78.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 80.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 82.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 84.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 86.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 88.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 90.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 92.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 94.5,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 96.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 98.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 100.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 102.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 104.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 106.6,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 108.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 110.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 112.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 114.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 116.7,
+          "temp_c": null,
+          "freq_mhz": null
+        },
+        {
+          "t_s": 118.7,
+          "temp_c": null,
+          "freq_mhz": null
+        }
+      ],
+      "temp_c": {
+        "start": null,
+        "end": null,
+        "max": null
+      },
+      "throttled_at_end": null
+    }
+  ],
+  "accuracy": null,
+  "failures": []
+}

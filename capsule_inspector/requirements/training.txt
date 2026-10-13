@@ -1,0 +1,11 @@
+# Estação de treinamento (x86_64 Linux/Windows/macOS ou aarch64 com GPU opcional).
+# Testado neste repositório com Python 3.13 em x86_64 (CPU), ver docs/BENCHMARKS.md.
+# PyTorch: para GPU NVIDIA instale a roda CUDA adequada seguindo pytorch.org ANTES
+# deste arquivo; para CPU apenas, `pip install torch==2.14.1 torchvision==0.29.1
+# --index-url https://download.pytorch.org/whl/cpu` evita baixar bibliotecas CUDA.
+-r raspberry_pi.txt
+torch==2.14.1
+torchvision==0.29.1
+ultralytics==8.4.176
+onnx==1.23.2
+onnxslim==0.1.98

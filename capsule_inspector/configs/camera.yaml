@@ -1,0 +1,37 @@
+# Fonte de imagem. Troque `type` sem alterar o restante do pipeline.
+camera_version: "0.1.0"
+
+type: file                 # usb | libcamera | file
+
+usb:
+  device: 0                # índice ou caminho (/dev/video0, /dev/v4l/by-id/...)
+  backend: v4l2            # v4l2 | any
+  width: 1920
+  height: 1080
+  fps: 30
+  fourcc: MJPG
+  auto_exposure: false
+  exposure: 150            # unidade depende do driver V4L2 (ver v4l2-ctl --list-ctrls)
+  autofocus: false
+  focus: null
+  auto_white_balance: false
+  white_balance_temperature: 5000
+  warmup_frames: 10
+  flush_frames: 2          # descarta quadros antigos do buffer antes de cada captura
+  read_timeout_s: 2.0
+  reconnect_attempts: 5
+  reconnect_backoff_s: 1.0
+
+libcamera:
+  width: 2028
+  height: 1520
+  exposure_us: 8000
+  analogue_gain: 1.0
+  awb_enable: false
+  colour_gains: [1.6, 1.8]
+  warmup_s: 1.0
+
+file:
+  path: data/samples        # diretório de imagens, glob ou arquivo de vídeo
+  pattern: "*.png"
+  loop: false

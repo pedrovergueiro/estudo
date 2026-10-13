@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inspeção de Cápsulas</title>
+<style>
+  :root { --bg:#f4f5f7; --panel:#fff; --ink:#1d2330; --muted:#677087; --line:#d9dde5;
+          --pass:#2e8b3c; --fail:#c62828; --review:#e08a00; --err:#7b1fa2; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--ink); }
+  header { display:flex; flex-wrap:wrap; gap:16px; align-items:center; padding:10px 16px; background:#1d2330; color:#fff; }
+  header h1 { font-size:17px; margin:0 12px 0 0; }
+  .pill { padding:2px 10px; border-radius:12px; background:#39425a; font-size:13px; }
+  .pill.ok { background:#2e6b3c; } .pill.bad { background:#a32020; } .pill.warn { background:#9a6200; }
+  main { display:grid; grid-template-columns: 2fr 1fr; gap:16px; padding:16px; }
+  @media (max-width: 1000px) { main { grid-template-columns: 1fr; } }
+  section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px 14px; }
+  h2 { font-size:15px; margin:0 0 10px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  .status { font-size:34px; font-weight:700; padding:8px 14px; border-radius:6px; color:#fff; display:inline-block; min-width:220px; text-align:center; }
+  .PASS { background:var(--pass); } .FAIL { background:var(--fail); } .REVIEW { background:var(--review); } .SYSTEM_ERROR { background:var(--err); }
+  .imgs { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .imgs figure { margin:0; } .imgs img { width:100%; border:1px solid var(--line); border-radius:4px; background:#222; min-height:120px; }
+  figcaption { font-size:12px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:4px 6px; border-bottom:1px solid var(--line); }
+  tr.sel { background:#eef3ff; } tbody tr { cursor:pointer; }
+  .tag { padding:1px 6px; border-radius:4px; color:#fff; font-size:12px; }
+  .meta { color:var(--muted); font-size:13px; }
+  ul.reasons { margin:6px 0; padding-left:18px; font-size:13px; }
+  form { display:grid; gap:6px; } input, select, textarea, button { font:inherit; padding:5px 8px; }
+  button { cursor:pointer; border:1px solid var(--line); border-radius:4px; background:#fff; }
+  .toolbar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .warnbox { background:#fff4e0; border:1px solid #f0c27a; padding:6px 10px; border-radius:6px; font-size:13px; margin-bottom:8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Inspeção de Cápsulas</h1>
+  <span id="svc" class="pill">serviço: —</span>
+  <span id="cam" class="pill">câmera: —</span>
+  <span id="mdl" class="pill">modelo: —</span>
+  <span id="prof" class="pill">perfil: —</span>
+  <span id="mode" class="pill">modo: —</span>
+  <span id="perf" class="pill">—</span>
+  <span id="temp" class="pill">—</span>
+</header>
+<main>
+  <div>
+    <section>
+      <h2>Inspeção selecionada</h2>
+      <div id="experimental" class="warnbox" hidden>Modo EXPERIMENTAL: resultados não validados para liberação de produto.</div>
+      <div><span id="st" class="status">—</span> <span id="cat" class="meta"></span></div>
+      <div class="meta" id="info"></div>
+      <ul class="reasons" id="reasons"></ul>
+      <div class="imgs">
+        <figure><img id="img-orig" alt="original"><figcaption>Original</figcaption></figure>
+        <figure><img id="img-ann" alt="anotada"><figcaption>Anotada</figcaption></figure>
+      </div>
+      <table style="margin-top:10px">
+        <thead><tr><th>Cápsula</th><th>Classe</th><th>Confiança</th><th>Caixa (x1,y1,x2,y2)</th><th>Vista</th></tr></thead>
+        <tbody id="dets"></tbody>
+      </table>
+    </section>
+    <section style="margin-top:16px">
+      <h2>Revisão manual</h2>
+      <form id="rev">
+        <input name="reviewer" placeholder="Revisor (nome/matrícula)" required maxlength="80">
+        <select name="verdict">
+          <option value="CONFIRMED_DEFECT">Defeito confirmado</option>
+          <option value="FALSE_ALARM">Falso alarme (cápsula conforme)</option>
+          <option value="UNCERTAIN">Incerto — encaminhar</option>
+        </select>
+        <select name="defect_class" id="classes"><option value="">(classe do defeito)</option></select>
+        <textarea name="note" placeholder="Observação" maxlength="1000" rows="2"></textarea>
+        <button type="submit">Registrar revisão</button>
+        <span class="meta" id="revmsg"></span>
+      </form>
+      <div class="meta" id="revlist"></div>
+    </section>
+  </div>
+  <div>
+    <section>
+      <h2>Histórico recente</h2>
+      <div class="toolbar">
+        <select id="f-status"><option value="">todos</option><option>PASS</option><option>FAIL</option><option>REVIEW</option><option>SYSTEM_ERROR</option></select>
+        <label class="meta"><input type="checkbox" id="f-unrev"> sem revisão</label>
+        <label class="meta"><input type="checkbox" id="follow" checked> acompanhar última</label>
+        <button id="csv">CSV</button><button id="json">JSON</button>
+      </div>
+      <div class="meta" id="counts"></div>
+      <table><thead><tr><th>Horário</th><th>Estado</th><th>Lote</th><th>ms</th></tr></thead><tbody id="hist"></tbody></table>
+    </section>
+  </div>
+</main>
+<script>
+"use strict";
+const qs = new URLSearchParams(location.search);
+const TOKEN = qs.get("token") || "";
+const withTok = (u) => TOKEN ? u + (u.includes("?") ? "&" : "?") + "token=" + encodeURIComponent(TOKEN) : u;
+const api = async (u, opt) => { const r = await fetch(withTok(u), opt); if (!r.ok) throw new Error(r.status + " " + u); return r.json(); };
+const $ = (id) => document.getElementById(id);
+const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
+let selected = null, lastSeen = null;
+const fmtTime = (iso) => { try { return new Date(iso).toLocaleString("pt-BR"); } catch { return iso; } };
+const pill = (id, text, cls) => { const p = $(id); p.textContent = text; p.className = "pill " + (cls || ""); };
+
+async function refreshStatus() {
+  try {
+    const s = await api("/api/status"); const v = s.service || {};
+    pill("svc", s.service_stale ? "serviço: PARADO/atrasado" : "serviço: ativo", s.service_stale ? "bad" : "ok");
+    const cam = v.camera || {}; pill("cam", "câmera: " + (cam.ok ? "ok" : "falha" + (cam.error ? " (" + cam.error + ")" : "")), cam.ok ? "ok" : "bad");
+    const m = v.model || {}; pill("mdl", "modelo: " + (v.model_ready ? (m.model_id + (m.approved ? " ✔" : " (não aprovado)")) : "INDISPONÍVEL"), v.model_ready ? (m.approved ? "ok" : "warn") : "bad");
+    const pr = v.profile || {}; pill("prof", "perfil: " + (pr.name || "—") + (pr.validated ? " ✔" : " (não validado)"), pr.validated ? "ok" : "warn");
+    pill("mode", "modo: " + (v.deployment_mode || "—"), v.deployment_mode === "production" ? "ok" : "warn");
+    $("experimental").hidden = v.deployment_mode === "production";
+    const st = v.stats || {}; pill("perf", `${(st.fps || 0).toFixed(2)} insp/s · p95 ${(st.latency_p95_ms || 0).toFixed(0)} ms · erros ${st.errors || 0}`);
+    const pf = v.platform || {}; pill("temp", "CPU " + (pf.cpu_temperature_c != null ? pf.cpu_temperature_c.toFixed(1) + " °C" : "—") + (pf.throttled && pf.throttled.throttled_now ? " THROTTLING" : ""), pf.throttled && pf.throttled.throttled_now ? "bad" : "");
+    const c = s.counts_24h || {}; $("counts").textContent = "24 h: " + ["PASS","FAIL","REVIEW","SYSTEM_ERROR"].map(k => `${k} ${c[k] || 0}`).join(" · ");
+  } catch (e) { pill("svc", "interface sem acesso à API", "bad"); }
+}
+
+async function refreshHistory() {
+  const st = $("f-status").value, un = $("f-unrev").checked;
+  const rows = await api(`/api/inspections?limit=50${st ? "&status=" + st : ""}${un ? "&unreviewed=true" : ""}`);
+  const tb = $("hist"); tb.replaceChildren();
+  for (const r of rows) {
+    const tr = el("tr"); if (r.inspection_id === selected) tr.className = "sel";
+    tr.append(el("td", fmtTime(r.timestamp)));
+    const td = el("td"); td.append(el("span", r.status, "tag " + r.status)); tr.append(td);
+    tr.append(el("td", r.lot_id || "—")); tr.append(el("td", r.timings_ms && r.timings_ms.total != null ? r.timings_ms.total.toFixed(0) : "—"));
+    tr.onclick = () => { $("follow").checked = false; show(r.inspection_id); };
+    tb.append(tr);
+  }
+  if ($("follow").checked && rows.length && rows[0].inspection_id !== lastSeen) { lastSeen = rows[0].inspection_id; show(lastSeen); }
+}
+
+async function show(id) {
+  selected = id; const r = await api("/api/inspections/" + encodeURIComponent(id));
+  $("st").textContent = r.status; $("st").className = "status " + r.status; $("cat").textContent = r.category;
+  $("info").textContent = `${fmtTime(r.timestamp)} · id ${r.inspection_id} · lote ${r.lot_id || "—"} · modelo ${r.model.model_id || "—"} (${(r.model.sha256 || "").slice(0, 12)}) · config ${(r.config.hash || "").slice(0, 12)} · ${r.timings_ms.total != null ? r.timings_ms.total.toFixed(1) : "—"} ms`;
+  const ul = $("reasons"); ul.replaceChildren(); for (const x of r.reasons || []) ul.append(el("li", x));
+  const imgs = r.images || {}; const orig = Object.keys(imgs).find(k => k.startsWith("original_"));
+  $("img-orig").src = orig ? withTok(`/api/inspections/${encodeURIComponent(id)}/image/${orig}`) : "";
+  $("img-ann").src = imgs.annotated ? withTok(`/api/inspections/${encodeURIComponent(id)}/image/annotated`) : "";
+  const tb = $("dets"); tb.replaceChildren();
+  for (const c of r.capsules || []) {
+    if (!c.defects.length) { const tr = el("tr"); tr.append(el("td", "#" + c.index), el("td", "— sem defeitos acima do limiar de revisão"), el("td", ""), el("td", (c.box || []).join(", ")), el("td", "")); tb.append(tr); }
+    for (const d of c.defects) { const tr = el("tr"); tr.append(el("td", "#" + c.index), el("td", d.class_name), el("td", d.confidence.toFixed(3)), el("td", d.box.join(", ")), el("td", d.view || "")); tb.append(tr); }
+  }
+  const rl = $("revlist"); rl.replaceChildren(); for (const v of r.reviews || []) rl.append(el("div", `${fmtTime(v.ts)} — ${v.reviewer}: ${v.verdict}${v.defect_class ? " (" + v.defect_class + ")" : ""}${v.note ? " — " + v.note : ""}`));
+  refreshHistory();
+}
+
+$("rev").onsubmit = async (ev) => {
+  ev.preventDefault(); if (!selected) return;
+  const f = new FormData(ev.target); const body = Object.fromEntries(f.entries()); if (!body.defect_class) delete body.defect_class;
+  try { await api(`/api/inspections/${encodeURIComponent(selected)}/review`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); $("revmsg").textContent = "revisão registrada"; show(selected); }
+  catch (e) { $("revmsg").textContent = "erro: " + e.message; }
+};
+$("csv").onclick = () => { location.href = withTok("/api/export.csv"); };
+$("json").onclick = () => { location.href = withTok("/api/export.json"); };
+$("f-status").onchange = refreshHistory; $("f-unrev").onchange = refreshHistory;
+api("/api/classes").then(cs => { for (const c of cs) { const o = el("option", c.display_name); o.value = c.key; $("classes").append(o); } }).catch(() => {});
+refreshStatus(); refreshHistory();
+setInterval(refreshStatus, 2000); setInterval(refreshHistory, 2000);
+</script>
+</body>
+</html>

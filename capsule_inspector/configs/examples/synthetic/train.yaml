@@ -1,0 +1,32 @@
+# Overlay de EXEMPLO: treino curto em CPU para verificar o pipeline (dataset sintético).
+train_version: "0.1.0-synthetic"
+model: yolo11n.pt
+task: detect
+seed: 20251013
+deterministic: true
+device: cpu
+workers: 2
+project: runs/train_synthetic
+name: synthetic
+
+hyperparameters:
+  epochs: 30
+  patience: 10
+  imgsz: 320
+  batch: 16
+  hsv_h: 0.005
+  hsv_s: 0.3
+  hsv_v: 0.25
+  degrees: 5.0
+  translate: 0.05
+  scale: 0.2
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.5
+  fliplr: 0.5
+  mosaic: 0.0
+  mixup: 0.0
+  erasing: 0.0
+
+experiments:
+  baseline: {}
