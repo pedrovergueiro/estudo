@@ -1,0 +1,63 @@
+{
+  "device": "x86_64",
+  "environment": {
+    "python": "3.13.16",
+    "os": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_count": 4,
+    "ram_mb": 16093,
+    "gpu": null,
+    "libraries": {
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.4",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "PyYAML": "6.0.3"
+    }
+  },
+  "model": {
+    "file": "/home/user/estudo/acg_capsule_vision/runs/detect/yolo11s_cpu_conservative/weights/best.pt",
+    "sha256": "1b9c064a5dbb06f844a34206851882b720f34192b2efcccfdd9489e9591ca076",
+    "task": "detect",
+    "names": [
+      "pill"
+    ],
+    "imgsz": 640,
+    "provenance": "trained-on-public-data-only; not-validated-for-ACG",
+    "run_manifest": "/home/user/estudo/acg_capsule_vision/runs/detect/yolo11s_cpu_conservative/run_manifest.json",
+    "software_version": "0.1.0"
+  },
+  "imgsz": 640,
+  "threads": "padrão do PyTorch",
+  "images": 23,
+  "image_size": [
+    1920,
+    1080
+  ],
+  "iterations": 100,
+  "wall_seconds": 14.01,
+  "load_seconds": 2.29,
+  "latency_ms": {
+    "p50": 138.97008250023646,
+    "p95": 169.3436684502558,
+    "p99": 178.33726276849123,
+    "max": 181.9563829994877,
+    "mean": 140.117365110018
+  },
+  "throughput_img_per_s": 7.136,
+  "latency_drift_last_vs_first_decile": 1.019,
+  "errors": 0,
+  "rss_peak_mb": 969.5,
+  "rss_before_load_mb": 205.2,
+  "cpu_temp_c": {
+    "first": null,
+    "max": null
+  },
+  "cpu_freq_mhz": {
+    "min": null
+  },
+  "accelerators_used": "nenhum (CPU, PyTorch)"
+}

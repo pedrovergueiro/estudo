@@ -1,0 +1,14 @@
+# Três vistas da mesma cápsula — geometria, sincronização e aquisição AINDA DESCONHECIDAS.
+views: [view_a, view_b, view_c]     # nomes lógicos; mapear para câmeras reais quando definidas
+# Associação: só por identificador explícito da cápsula (manifesto) ou por um
+# identificador de disparo (trigger) comum. Associação por horário fica DESABILITADA
+# até haver evidência de sincronização (tolerância medida).
+association:
+  require_explicit_id: true
+  allow_timestamp_matching: false
+  timestamp_tolerance_ms: null
+fusion:
+  # Regra conservadora: qualquer vista com defeito >= limiar => DEFECT;
+  # vista ausente ou com erro => INCONCLUSIVE (nunca OK por omissão).
+  defect_threshold: 0.5
+  required_views: 3

@@ -1,0 +1,64 @@
+{
+  "device": "x86_64",
+  "environment": {
+    "python": "3.13.16",
+    "os": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_count": 4,
+    "ram_mb": 16093,
+    "gpu": null,
+    "libraries": {
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.4",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "PyYAML": "6.0.3"
+    }
+  },
+  "model": {
+    "file": "/home/user/estudo/acg_capsule_vision/runs/classify/final_cpu_conservative/weights/best.pt",
+    "sha256": "d3db63f57f699be1d3b49f1faefc0a962a0ffe29f788e265c6a82f06603a9902",
+    "task": "classify",
+    "names": [
+      "defect",
+      "normal"
+    ],
+    "imgsz": 224,
+    "provenance": "trained-on-public-data-only; not-validated-for-ACG",
+    "run_manifest": "/home/user/estudo/acg_capsule_vision/runs/classify/final_cpu_conservative/run_manifest.json",
+    "software_version": "0.1.0"
+  },
+  "imgsz": 224,
+  "threads": "padrão do PyTorch",
+  "images": 50,
+  "image_size": [
+    512,
+    512
+  ],
+  "iterations": 200,
+  "wall_seconds": 4.52,
+  "load_seconds": 3.86,
+  "latency_ms": {
+    "p50": 21.270380998430483,
+    "p95": 29.917766300241045,
+    "p99": 35.37515088990401,
+    "max": 41.8681689989171,
+    "mean": 22.58149217497703
+  },
+  "throughput_img_per_s": 44.256,
+  "latency_drift_last_vs_first_decile": 0.954,
+  "errors": 0,
+  "rss_peak_mb": 763.0,
+  "rss_before_load_mb": 101.1,
+  "cpu_temp_c": {
+    "first": null,
+    "max": null
+  },
+  "cpu_freq_mhz": {
+    "min": null
+  },
+  "accelerators_used": "nenhum (CPU, PyTorch)"
+}

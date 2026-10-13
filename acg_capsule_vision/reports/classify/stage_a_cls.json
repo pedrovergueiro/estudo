@@ -1,0 +1,61 @@
+{
+  "stage": "A_pretrained_reference",
+  "weights": {
+    "file": "yolo11n-cls.pt",
+    "sha256": "c62d41bf9625777760018bf914d2e6cd472420ccd01706d97a61cb6c82502bd7",
+    "bytes": 5790624
+  },
+  "model": {
+    "task": "classify",
+    "n_params": 2812104,
+    "n_classes": 1000,
+    "names_sample": [
+      "tench",
+      "goldfish",
+      "great_white_shark",
+      "tiger_shark",
+      "hammerhead",
+      "electric_ray",
+      "stingray",
+      "cock",
+      "hen",
+      "ostrich"
+    ],
+    "architecture_yaml": "yolo11n-cls.yaml",
+    "scale": "n"
+  },
+  "note": "pesos ImageNet não possuem classes normal/defeito; abaixo, top-1 ImageNet por classe real",
+  "imagenet_top1_by_true_label": {
+    "defect": {
+      "frying_pan": 215
+    },
+    "normal": {
+      "frying_pan": 140
+    }
+  },
+  "majority_baseline": {
+    "predict": "defect",
+    "accuracy": 0.6056338028169014,
+    "normal_recall": 0.0,
+    "defect_recall": 1.0
+  },
+  "inference_ms_per_image": 99.27900573521057,
+  "environment": {
+    "python": "3.13.16",
+    "os": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_count": 4,
+    "ram_mb": 16093,
+    "gpu": null,
+    "libraries": {
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.4",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "PyYAML": "6.0.3"
+    }
+  }
+}

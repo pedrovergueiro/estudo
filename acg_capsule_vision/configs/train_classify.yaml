@@ -1,0 +1,37 @@
+# Classificação normal × defeito — dataset Pill-Defects (COMPRIMIDOS, não cápsulas).
+# Avaliação por validação cruzada deixando UMA UNIDADE FÍSICA de fora (LOUO):
+# o dataset tem 355 quadros mas apenas 10 comprimidos físicos.
+dataset: pill_defects
+prepared_dir: data/prepared/pill_defects
+output_dir: runs/classify
+
+grouping:
+  max_mae_same_unit: 3.0     # MAE (níveis de cinza) entre quadros consecutivos da mesma unidade
+
+profiles:
+  cpu_conservative:
+    device: cpu
+    imgsz: 224
+    epochs: 15
+    patience: 5
+    batch: 16
+    workers: 2
+    optimizer: auto
+    erasing: 0.0             # apagamento aleatório poderia remover o próprio defeito
+    fliplr: 0.5
+    flipud: 0.5              # comprimido redondo visto de topo: flips são plausíveis
+  cpu_smoke:
+    device: cpu
+    imgsz: 96
+    epochs: 1
+    patience: 1
+    batch: 8
+    workers: 0
+    optimizer: auto
+    erasing: 0.0
+
+model: yolo11n-cls.pt
+seed: 0
+deterministic: true
+# Em cada dobra: a unidade de teste fica de fora; uma unidade de cada classe (quando
+# houver ≥ 2 restantes) vira validação para seleção do best.pt; o restante treina.

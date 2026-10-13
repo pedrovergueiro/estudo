@@ -1,0 +1,50 @@
+# Recursos externos AUTORIZADOS e verificáveis. Baixados apenas por
+# `python scripts/fetch_resources.py` (explícito). Depois disso tudo roda offline.
+# Cada item tem SHA-256 registrado na primeira verificação feita neste projeto
+# (2026-10-13); um arquivo com hash diferente é rejeitado.
+cache_dir: models/cache            # pesos e fontes
+data_dir: data/raw                 # datasets brutos (fora do Git)
+
+weights:
+  yolo11n.pt:
+    url: https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo11n.pt
+    sha256: 0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1
+    task: detect
+    pretrained_on: COCO (80 classes; não contém "pill"/"capsule")
+    license: AGPL-3.0 (Ultralytics) — licença Enterprise disponível
+  yolo11s.pt:
+    url: https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo11s.pt
+    sha256: 85a76fe86dd8afe384648546b56a7a78580c7cb7b404fc595f97969322d502d5
+    task: detect
+    pretrained_on: COCO
+    license: AGPL-3.0 (Ultralytics)
+  yolo11n-cls.pt:
+    url: https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo11n-cls.pt
+    sha256: c62d41bf9625777760018bf914d2e6cd472420ccd01706d97a61cb6c82502bd7
+    task: classify
+    pretrained_on: ImageNet-1k (termos do ImageNet restringem uso a pesquisa não comercial)
+    license: AGPL-3.0 (Ultralytics)
+
+fonts:
+  # A Ultralytics baixa esta fonte na primeira plotagem; manter em cache evita
+  # tentativa silenciosa de download no modo offline.
+  Arial.ttf:
+    url: https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.ttf
+    sha256: 525979822591a3447cfc49d943d6f7683508e25543407871c0ed8fed05fd2bd9
+
+datasets:
+  medical_pills:
+    kind: archive
+    url: https://github.com/ultralytics/assets/releases/download/v0.0.0/medical-pills.zip
+    sha256: 3a15abc491af0e91a835a01bca1e437e3818bf957aab26aba19176db6495ceb5
+    task: detect
+    license: AGPL-3.0 (LICENSE.txt incluso no arquivo)
+  pill_defects:
+    kind: git
+    url: https://github.com/PerceptiLabs/Pill-Defects
+    commit: f2c0917af6798564c936e2dccf8495320cec8e61
+    # SHA-256 do manifesto "sha256  caminho" (ordenado) de normal/, defect/, data.csv, README.md
+    content_sha256: 795f5864699f514f621c045c4551a3042f2c6df0970b7d78ae5855cf9632d7e3
+    task: classify
+    license: DESCONHECIDA — repositório sem arquivo de licença; créditos a um dataset do Kaggle não verificado
+    usage: somente pesquisa interna; não redistribuir; pesos derivados não liberados para produção

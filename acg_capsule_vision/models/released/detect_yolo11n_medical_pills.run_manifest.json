@@ -1,0 +1,55 @@
+{
+  "stage": "B_finetune",
+  "model_key": "yolo11n",
+  "profile": "cpu_conservative",
+  "params": {
+    "device": "cpu",
+    "imgsz": 640,
+    "epochs": 40,
+    "patience": 15,
+    "batch": 8,
+    "workers": 2,
+    "optimizer": "auto",
+    "cos_lr": false,
+    "cache": false
+  },
+  "seed": 0,
+  "initial_weights": {
+    "file": "yolo11n.pt",
+    "sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "bytes": 5613764
+  },
+  "data_yaml": "/home/user/estudo/acg_capsule_vision/data/prepared/medical_pills/data.yaml",
+  "run_dir": "/home/user/estudo/acg_capsule_vision/runs/detect/yolo11n_cpu_conservative",
+  "train_seconds": 2252.2,
+  "best": {
+    "file": "best.pt",
+    "sha256": "d3380aa09173a24581d4511d9d09adba2281697fd74dd86ffb6bcf1d0a2fa1db",
+    "bytes": 5480730
+  },
+  "last": {
+    "file": "last.pt",
+    "sha256": "813d818f87f093e581e2b20fb989597030e36018faa9bb5d99408b78f542ae1a",
+    "bytes": 5480730
+  },
+  "selection": "best.pt = maior fitness na validação (0.1·mAP50 + 0.9·mAP50-95)",
+  "resume_command": "python scripts/train_detect.py --resume /home/user/estudo/acg_capsule_vision/runs/detect/yolo11n_cpu_conservative/weights/last.pt",
+  "environment": {
+    "python": "3.13.16",
+    "os": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_count": 4,
+    "ram_mb": 16093,
+    "gpu": null,
+    "libraries": {
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.4",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "PyYAML": "6.0.3"
+    }
+  }
+}

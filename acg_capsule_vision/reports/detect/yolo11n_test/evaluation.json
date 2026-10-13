@@ -1,0 +1,246 @@
+{
+  "weights": {
+    "file": "best.pt",
+    "sha256": "d3380aa09173a24581d4511d9d09adba2281697fd74dd86ffb6bcf1d0a2fa1db",
+    "bytes": 5480730
+  },
+  "split": "test",
+  "n_images": 23,
+  "n_gt_boxes": 405,
+  "imgsz": 640,
+  "standard": {
+    "precision": 0.9925665037766958,
+    "recall": 0.9890844550546459,
+    "f1": 0.9908224201828507,
+    "map50": 0.9946981242789513,
+    "map50_95": 0.7894511344549385,
+    "val_seconds": 12.3,
+    "note": "P/R da Ultralytics no ponto de F1 máximo da curva; mAP com conf>=0.001"
+  },
+  "operating_point": {
+    "conf": 0.25,
+    "iou": 0.5,
+    "tp": 405,
+    "fp": 14,
+    "fn": 0,
+    "precision": 0.9665871121718377,
+    "recall": 1.0,
+    "f1": 0.9830097087378641
+  },
+  "inference_ms_per_image": {
+    "mean": 233.08197478265515,
+    "p95": 420.20138520065285,
+    "note": "predict() de imagem 1920x1080, CPU, inclui pré/pós-processamento"
+  },
+  "per_image": [
+    {
+      "image": "Frame_368.jpg",
+      "gt": 15,
+      "pred": 19,
+      "tp": 15,
+      "fp": 4,
+      "fn": 0
+    },
+    {
+      "image": "Frame_372.jpg",
+      "gt": 16,
+      "pred": 18,
+      "tp": 16,
+      "fp": 2,
+      "fn": 0
+    },
+    {
+      "image": "Frame_376.jpg",
+      "gt": 17,
+      "pred": 18,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_380.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_384.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_388.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_392.jpg",
+      "gt": 17,
+      "pred": 18,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_396.jpg",
+      "gt": 17,
+      "pred": 18,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_400.jpg",
+      "gt": 17,
+      "pred": 17,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_404.jpg",
+      "gt": 17,
+      "pred": 17,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_408.jpg",
+      "gt": 19,
+      "pred": 19,
+      "tp": 19,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_412.jpg",
+      "gt": 18,
+      "pred": 19,
+      "tp": 18,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_416.jpg",
+      "gt": 18,
+      "pred": 19,
+      "tp": 18,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_420.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_424.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_428.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_432.jpg",
+      "gt": 18,
+      "pred": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_436.jpg",
+      "gt": 17,
+      "pred": 18,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_440.jpg",
+      "gt": 17,
+      "pred": 18,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_444.jpg",
+      "gt": 17,
+      "pred": 17,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_448.jpg",
+      "gt": 18,
+      "pred": 19,
+      "tp": 18,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "Frame_452.jpg",
+      "gt": 19,
+      "pred": 19,
+      "tp": 19,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "Frame_456.jpg",
+      "gt": 20,
+      "pred": 20,
+      "tp": 20,
+      "fp": 0,
+      "fn": 0
+    }
+  ],
+  "examples": [
+    "examples/best_Frame_380.jpg",
+    "examples/best_Frame_384.jpg",
+    "examples/worst_Frame_372.jpg",
+    "examples/worst_Frame_368.jpg"
+  ],
+  "legend": "verde=GT encontrada, vermelho=GT perdida (FN), azul=predição correta, laranja=FP",
+  "environment": {
+    "python": "3.13.16",
+    "os": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_count": 4,
+    "ram_mb": 16093,
+    "gpu": null,
+    "libraries": {
+      "ultralytics": "8.4.176",
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.4",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "PyYAML": "6.0.3"
+    }
+  }
+}

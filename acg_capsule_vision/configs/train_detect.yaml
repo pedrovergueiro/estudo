@@ -1,0 +1,43 @@
+# Detecção YOLO11 — dataset Medical Pills (localização de comprimidos/cápsulas em blister).
+# NÃO detecta defeitos: o dataset só tem a classe "pill".
+dataset: medical_pills
+prepared_dir: data/prepared/medical_pills
+output_dir: runs/detect
+
+# Divisão por blocos temporais do vídeo (quadros contíguos) + quadros descartados nas fronteiras.
+split:
+  test_fraction: 0.20        # últimos quadros do vídeo
+  val_fraction: 0.15         # bloco imediatamente anterior ao teste
+  gap_frames: 2              # quadros amostrados descartados em cada fronteira (anti-vazamento)
+
+# Perfil conservador para CPU (ajuste à sua máquina). Para GPU: device: "0", batch maior.
+profiles:
+  cpu_conservative:
+    device: cpu
+    imgsz: 640
+    epochs: 40
+    patience: 15             # early stopping: épocas sem melhora do fitness (val)
+    batch: 8
+    workers: 2
+    optimizer: auto
+    cos_lr: false
+    cache: false             # true acelera, mas consome RAM
+  cpu_smoke:                 # verificação rápida do encadeamento (minutos)
+    device: cpu
+    imgsz: 320
+    epochs: 2
+    patience: 2
+    batch: 4
+    workers: 0
+    optimizer: auto
+    cos_lr: false
+    cache: false
+
+models:
+  yolo11n: yolo11n.pt
+  yolo11s: yolo11s.pt
+
+seed: 0
+deterministic: true
+# Seleção do melhor modelo: best.pt = maior fitness na VALIDAÇÃO
+# (Ultralytics: 0.1·mAP50 + 0.9·mAP50-95). O teste é usado só para relatório.

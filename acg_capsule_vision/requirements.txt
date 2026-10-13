@@ -1,0 +1,14 @@
+# Versões efetivamente usadas nos treinos e testes deste projeto (2026-10-13),
+# Python 3.13.16, Linux x86_64, CPU. Outras plataformas: verificar antes.
+# Testado aqui com torch 2.14.1 do PyPI (build "+cu130", executado só em CPU; ~6 GB com
+# dependências CUDA). Para instalar a variante só-CPU, menor, use o índice do PyTorch
+# (não foi possível testá-lo neste ambiente — host bloqueado):
+#   pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements.txt
+torch==2.14.1
+torchvision==0.29.1
+ultralytics==8.4.176
+numpy==2.5.4
+opencv-python-headless==5.0.0.93
+PyYAML==6.0.3
+pytest==9.1.1

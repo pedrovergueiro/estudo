@@ -1,0 +1,109 @@
+{
+  "model": {
+    "file": "/home/user/estudo/acg_capsule_vision/runs/classify/final_cpu_conservative/weights/best.pt",
+    "sha256": "d3db63f57f699be1d3b49f1faefc0a962a0ffe29f788e265c6a82f06603a9902",
+    "task": "classify",
+    "names": [
+      "defect",
+      "normal"
+    ],
+    "imgsz": 224,
+    "provenance": "trained-on-public-data-only; not-validated-for-ACG",
+    "run_manifest": "/home/user/estudo/acg_capsule_vision/runs/classify/final_cpu_conservative/run_manifest.json",
+    "software_version": "0.1.0"
+  },
+  "association_method": "explicit_id",
+  "capsules": [
+    {
+      "capsule": "capsule:C1-normal",
+      "decision": "NO_DEFECT_OBSERVED",
+      "reasons": [],
+      "threshold": 0.5,
+      "views": [
+        {
+          "view_id": "view_a",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/normal/pic.7.576.0.png",
+          "status": "OK",
+          "p_defect": 0.012246
+        },
+        {
+          "view_id": "view_b",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/normal/pic.7.590.0.png",
+          "status": "OK",
+          "p_defect": 0.007394
+        },
+        {
+          "view_id": "view_c",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/normal/pic.7.610.0.png",
+          "status": "OK",
+          "p_defect": 0.007819
+        }
+      ]
+    },
+    {
+      "capsule": "capsule:C2-defect",
+      "decision": "DEFECT_SUSPECTED",
+      "reasons": [
+        "defeito acima do limiar nas vistas ['view_a', 'view_b', 'view_c']"
+      ],
+      "threshold": 0.5,
+      "views": [
+        {
+          "view_id": "view_a",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/defect/pic.6.1561.0.png",
+          "status": "OK",
+          "p_defect": 1.0
+        },
+        {
+          "view_id": "view_b",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/defect/pic.6.1580.0.png",
+          "status": "OK",
+          "p_defect": 1.0
+        },
+        {
+          "view_id": "view_c",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/defect/pic.6.1600.0.png",
+          "status": "OK",
+          "p_defect": 1.0
+        }
+      ]
+    },
+    {
+      "capsule": "trigger:T-0003",
+      "decision": "INCONCLUSIVE",
+      "reasons": [
+        "vistas ausentes: ['view_c']"
+      ],
+      "threshold": 0.5,
+      "views": [
+        {
+          "view_id": "view_a",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/normal/pic.7.600.0.png",
+          "status": "OK",
+          "p_defect": 0.008365
+        },
+        {
+          "view_id": "view_b",
+          "camera_id": null,
+          "source": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/normal/pic.7.605.0.png",
+          "status": "OK",
+          "p_defect": 0.005142
+        }
+      ]
+    }
+  ],
+  "unassociated": [
+    {
+      "path": "/home/user/estudo/acg_capsule_vision/data/multiview/../raw/pill_defects/defect/pic.6.2421.0.png",
+      "view_id": "view_a"
+    }
+  ],
+  "warning": "geometria e sincronização das câmeras desconhecidas; sem fusão geométrica"
+}

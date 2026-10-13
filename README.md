@@ -38,3 +38,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Subprojetos
 
 - [`capsule_inspector/`](capsule_inspector/README.md) — sistema Python de inspeção visual de cápsulas farmacêuticas com YOLO11 e Raspberry Pi (independente do app Next.js).
+- [`acg_capsule_vision/`](acg_capsule_vision/README.md) — protótipo YOLO11 treinado com datasets públicos verificados (detector de localização + classificador de defeitos), com relatório de métricas reais.

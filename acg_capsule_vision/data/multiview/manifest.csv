@@ -1,0 +1,10 @@
+path,view_id,capsule_id,trigger_id
+../raw/pill_defects/normal/pic.7.576.0.png,view_a,C1-normal,
+../raw/pill_defects/normal/pic.7.590.0.png,view_b,C1-normal,
+../raw/pill_defects/normal/pic.7.610.0.png,view_c,C1-normal,
+../raw/pill_defects/defect/pic.6.1561.0.png,view_a,C2-defect,
+../raw/pill_defects/defect/pic.6.1580.0.png,view_b,C2-defect,
+../raw/pill_defects/defect/pic.6.1600.0.png,view_c,C2-defect,
+../raw/pill_defects/normal/pic.7.600.0.png,view_a,,T-0003
+../raw/pill_defects/normal/pic.7.605.0.png,view_b,,T-0003
+../raw/pill_defects/defect/pic.6.2421.0.png,view_a,,

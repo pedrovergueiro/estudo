@@ -1,0 +1,308 @@
+{
+  "profile": "cpu_conservative",
+  "params": {
+    "device": "cpu",
+    "imgsz": 224,
+    "epochs": 15,
+    "patience": 5,
+    "batch": 16,
+    "workers": 2,
+    "optimizer": "auto",
+    "erasing": 0.0,
+    "fliplr": 0.5,
+    "flipud": 0.5
+  },
+  "n_images": 355,
+  "n_units": 10,
+  "confusion_matrix_rows_true_cols_pred": {
+    "normal": {
+      "normal": 44,
+      "defect": 96
+    },
+    "defect": {
+      "normal": 0,
+      "defect": 215
+    }
+  },
+  "accuracy": 0.7295774647887324,
+  "balanced_accuracy": 0.6571428571428571,
+  "defect": {
+    "precision": 0.6913183279742765,
+    "recall": 1.0,
+    "f1": 0.8174904942965779
+  },
+  "normal": {
+    "precision": 1.0,
+    "recall": 0.3142857142857143,
+    "f1": 0.4782608695652174
+  },
+  "roc_auc_pooled": 0.9878405315614618,
+  "per_unit": [
+    {
+      "unit_id": "defect-s6-f1561-1602",
+      "true": "defect",
+      "frames": 42,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f2421-2438",
+      "true": "defect",
+      "frames": 18,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f2931-2946",
+      "true": "defect",
+      "frames": 16,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f4115-4145",
+      "true": "defect",
+      "frames": 31,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f571-630",
+      "true": "defect",
+      "frames": 60,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f5992-6007",
+      "true": "defect",
+      "frames": 16,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f6442-6457",
+      "true": "defect",
+      "frames": 16,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "defect-s6-f6862-6877",
+      "true": "defect",
+      "frames": 16,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    },
+    {
+      "unit_id": "normal-s6-f443-538",
+      "true": "normal",
+      "frames": 96,
+      "frame_accuracy": 0.0,
+      "unit_majority_vote_correct": false
+    },
+    {
+      "unit_id": "normal-s7-f576-619",
+      "true": "normal",
+      "frames": 44,
+      "frame_accuracy": 1.0,
+      "unit_majority_vote_correct": true
+    }
+  ],
+  "units_correct_by_majority_vote": 9,
+  "note": "imagens de uma mesma unidade são quase idênticas: o tamanho efetivo da amostra é o nº de UNIDADES (10), não de imagens (355)",
+  "folds": [
+    {
+      "test_unit": "defect-s6-f571-630",
+      "counts": {
+        "train": {
+          "defect": 125,
+          "normal": 112
+        },
+        "val": {
+          "defect": 30,
+          "normal": 28
+        },
+        "test": {
+          "defect": 60,
+          "normal": 0
+        }
+      },
+      "train_seconds": 160.4,
+      "test_inference_ms_per_image": 130.08024844998545
+    },
+    {
+      "test_unit": "defect-s6-f1561-1602",
+      "counts": {
+        "train": {
+          "defect": 139,
+          "normal": 112
+        },
+        "val": {
+          "defect": 34,
+          "normal": 28
+        },
+        "test": {
+          "defect": 42,
+          "normal": 0
+        }
+      },
+      "train_seconds": 244.8,
+      "test_inference_ms_per_image": 126.45446273808417
+    },
+    {
+      "test_unit": "defect-s6-f2421-2438",
+      "counts": {
+        "train": {
+          "defect": 159,
+          "normal": 112
+        },
+        "val": {
+          "defect": 38,
+          "normal": 28
+        },
+        "test": {
+          "defect": 18,
+          "normal": 0
+        }
+      },
+      "train_seconds": 228.4,
+      "test_inference_ms_per_image": 137.4880257777578
+    },
+    {
+      "test_unit": "defect-s6-f2931-2946",
+      "counts": {
+        "train": {
+          "defect": 160,
+          "normal": 112
+        },
+        "val": {
+          "defect": 39,
+          "normal": 28
+        },
+        "test": {
+          "defect": 16,
+          "normal": 0
+        }
+      },
+      "train_seconds": 174.5,
+      "test_inference_ms_per_image": 131.19205681249468
+    },
+    {
+      "test_unit": "defect-s6-f4115-4145",
+      "counts": {
+        "train": {
+          "defect": 148,
+          "normal": 112
+        },
+        "val": {
+          "defect": 36,
+          "normal": 28
+        },
+        "test": {
+          "defect": 31,
+          "normal": 0
+        }
+      },
+      "train_seconds": 179.4,
+      "test_inference_ms_per_image": 116.80369035486599
+    },
+    {
+      "test_unit": "defect-s6-f5992-6007",
+      "counts": {
+        "train": {
+          "defect": 160,
+          "normal": 112
+        },
+        "val": {
+          "defect": 39,
+          "normal": 28
+        },
+        "test": {
+          "defect": 16,
+          "normal": 0
+        }
+      },
+      "train_seconds": 181.1,
+      "test_inference_ms_per_image": 54.549820562556306
+    },
+    {
+      "test_unit": "defect-s6-f6442-6457",
+      "counts": {
+        "train": {
+          "defect": 160,
+          "normal": 112
+        },
+        "val": {
+          "defect": 39,
+          "normal": 28
+        },
+        "test": {
+          "defect": 16,
+          "normal": 0
+        }
+      },
+      "train_seconds": 179.2,
+      "test_inference_ms_per_image": 94.96784343747322
+    },
+    {
+      "test_unit": "defect-s6-f6862-6877",
+      "counts": {
+        "train": {
+          "defect": 160,
+          "normal": 112
+        },
+        "val": {
+          "defect": 39,
+          "normal": 28
+        },
+        "test": {
+          "defect": 16,
+          "normal": 0
+        }
+      },
+      "train_seconds": 178.0,
+      "test_inference_ms_per_image": 130.48278018749215
+    },
+    {
+      "test_unit": "normal-s6-f443-538",
+      "counts": {
+        "train": {
+          "defect": 173,
+          "normal": 35
+        },
+        "val": {
+          "defect": 42,
+          "normal": 9
+        },
+        "test": {
+          "defect": 0,
+          "normal": 96
+        }
+      },
+      "train_seconds": 230.2,
+      "test_inference_ms_per_image": 103.50079479166159
+    },
+    {
+      "test_unit": "normal-s7-f576-619",
+      "counts": {
+        "train": {
+          "defect": 173,
+          "normal": 77
+        },
+        "val": {
+          "defect": 42,
+          "normal": 19
+        },
+        "test": {
+          "defect": 0,
+          "normal": 44
+        }
+      },
+      "train_seconds": 171.0,
+      "test_inference_ms_per_image": 101.07581881817913
+    }
+  ],
+  "total_train_seconds": 1927.0,
+  "examples": "examples_acertos_erros.jpg"
+}

@@ -1,0 +1,26 @@
+[project]
+name = "acg-capsule-vision"
+version = "0.1.0"
+description = "Protótipo de pesquisa: YOLO11 treinado com dados públicos para inspeção visual (não validado para a ACG)"
+requires-python = ">=3.11,<3.14"
+license = { text = "AGPL-3.0-only (ver LICENSES.md)" }
+dependencies = ["ultralytics==8.4.176", "torch==2.14.1", "numpy", "opencv-python-headless", "PyYAML"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B905", "E731"]

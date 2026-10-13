@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+# dados de terceiros e pesos: fora do Git (licenças/tamanho)
+data/raw/
+data/prepared/
+models/cache/
+models/final/
+runs/
+*.pt
+# saídas de inferência/benchmark geradas localmente
+reports/infer/
+reports/detect/*/ultralytics_val/
+# exceção documentada: detector ajustado publicado sob AGPL-3.0 (ver models/README.md)
+!models/released/
+!models/released/*.pt
+# imagens do Pill-Defects (licença desconhecida) não são redistribuídas
+reports/classify/examples_acertos_erros.jpg
