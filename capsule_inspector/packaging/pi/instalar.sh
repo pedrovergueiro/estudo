@@ -22,17 +22,20 @@ done
 
 ARCH_PACOTE="$(cat "$AQUI/ARQUITETURA")"
 erro() { echo; echo "ERRO: $*" >&2; exit 1; }
+USER="${USER:-$(id -un)}"
 
-echo "== Capsule Inspector — instalação offline"
+if [ "$ARCH_PACOTE" = online ]; then echo "== Capsule Inspector — instalação (versão leve, usa internet)"; else echo "== Capsule Inspector — instalação offline"; fi
 MAQ="$(uname -m)"
-MODELO="$(tr -d '\0' < /proc/device-tree/model 2>/dev/null || echo 'não identificado')"
+MODELO="$( { tr -d '\0' < /proc/device-tree/model; } 2>/dev/null || echo 'não identificado')"
 echo "   Aparelho: $MODELO | kernel: $MAQ"
 
 command -v python3 >/dev/null || erro "python3 não encontrado. O Raspberry Pi OS já traz o Python; reinstale o sistema ou instale python3."
 read -r PYV PYBITS PYMACH < <(python3 -c 'import sys,struct,platform;print(f"{sys.version_info[0]}.{sys.version_info[1]}", struct.calcsize("P")*8, platform.machine())')
 echo "   Python: $PYV ($PYBITS bits, $PYMACH)"
 
-if [[ "$PYBITS" != "64" || ( "$ARCH_PACOTE" == "aarch64" && "$PYMACH" != "aarch64" ) ]]; then
+ONLINE=0
+[[ "$ARCH_PACOTE" == "online" ]] && ONLINE=1
+if [[ "$PYBITS" != "64" || ( $ONLINE -eq 0 && "$PYMACH" != "$ARCH_PACOTE" ) ]]; then
   if [[ "$PYMACH" == armv* || "$PYBITS" == "32" ]]; then
     erro "este Raspberry Pi está com sistema de 32 bits. É preciso o Raspberry Pi OS (64-bit).
        Grave o cartão com o Raspberry Pi Imager escolhendo 'Raspberry Pi OS (64-bit)'.
@@ -42,11 +45,12 @@ if [[ "$PYBITS" != "64" || ( "$ARCH_PACOTE" == "aarch64" && "$PYMACH" != "aarch6
 fi
 
 case "$PYV" in
-  3.11) TAG=cp311 ;;
-  3.13) TAG=cp313 ;;
-  *) erro "Python $PYV não suportado por este pacote (suportados: 3.11 = Raspberry Pi OS Bookworm, 3.13 = Trixie)." ;;
+  3.11) TAG=cp311; REQ=3.11 ;;
+  3.12) TAG=cp312; REQ=3.13 ;;   # só na versão leve (online): mesmas versões fixadas do 3.13
+  3.13) TAG=cp313; REQ=3.13 ;;
+  *) erro "Python $PYV não suportado (suportados: 3.11 = Raspberry Pi OS Bookworm, 3.13 = Trixie)." ;;
 esac
-[[ -d "$AQUI/rodas/$TAG" ]] || erro "dependências para $TAG ausentes no pacote."
+if [[ $ONLINE -eq 0 && ! -d "$AQUI/rodas/$TAG" ]]; then erro "dependências para $TAG ausentes no pacote."; fi
 
 echo "== Verificando integridade do pacote"
 if command -v sha256sum >/dev/null; then
@@ -69,10 +73,23 @@ rm -rf "$DESTINO"
 mkdir -p "$DESTINO"
 cp -a "$AQUI/app" "$DESTINO/app"
 if [[ -d "$AQUI/.var_preservado" ]]; then mv "$AQUI/.var_preservado" "$DESTINO/app/var"; fi
-{ python3 "$AQUI/install_wheels.py" "$AQUI/rodas/comum" "$DESTINO/lib" && \
-  python3 "$AQUI/install_wheels.py" "$AQUI/rodas/$TAG" "$DESTINO/lib"; } > "$DESTINO/instalacao.log" \
-  || erro "falha ao instalar dependências (veja $DESTINO/instalacao.log)"
-echo "   dependências instaladas ($(ls "$AQUI/rodas/comum" "$AQUI/rodas/$TAG" | grep -c '\.whl$') pacotes)"
+if [[ $ONLINE -eq 0 ]]; then
+  { python3 "$AQUI/install_wheels.py" "$AQUI/rodas/comum" "$DESTINO/lib" && \
+    python3 "$AQUI/install_wheels.py" "$AQUI/rodas/$TAG" "$DESTINO/lib"; } > "$DESTINO/instalacao.log" \
+    || erro "falha ao instalar dependências (veja $DESTINO/instalacao.log)"
+  echo "   dependências instaladas do pacote ($(ls "$AQUI/rodas/comum" "$AQUI/rodas/$TAG" | grep -c '\.whl$') pacotes)"
+else
+  echo "   versão LEVE: baixando dependências da internet (PyPI, ~80 MB)…"
+  python3 -m pip --version >/dev/null 2>&1 || erro "pip ausente. Rode: sudo apt install -y python3-pip  (ou use o pacote completo offline)"
+  python3 -c 'import urllib.request; urllib.request.urlopen("https://pypi.org/simple/numpy/", timeout=15)' >/dev/null 2>&1 \
+    || erro "sem acesso à internet (pypi.org). Use o pacote completo offline (5 partes + juntar.sh)."
+  PIPARGS=(install --no-cache-dir --only-binary=:all: --target "$DESTINO/lib" -r "$AQUI/requisitos/requirements-$REQ.txt")
+  # --target instala só na pasta do aplicativo; não mexe nos pacotes do sistema
+  python3 -m pip "${PIPARGS[@]}" --break-system-packages > "$DESTINO/instalacao.log" 2>&1 \
+    || python3 -m pip "${PIPARGS[@]}" > "$DESTINO/instalacao.log" 2>&1 \
+    || erro "falha ao baixar dependências (veja $DESTINO/instalacao.log)"
+  echo "   dependências baixadas e instaladas"
+fi
 
 mkdir -p "$DESTINO/bin"
 cat > "$DESTINO/bin/capsule-inspector" <<EOF

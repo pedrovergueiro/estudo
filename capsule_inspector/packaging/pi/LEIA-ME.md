@@ -8,6 +8,11 @@ resultados numa **interface web**. Funciona **sem internet**: tudo o que precisa
 > defeitos** e não está validado para uso industrial. Por isso os resultados aparecem como
 > REVIEW (nunca "aprovado"). Para inspeção real é preciso treinar com imagens da sua linha.
 
+> **Duas versões do pacote.** `capsule-inspector-pi-*-aarch64.tar.gz` (completo, ~130 MB) instala
+> **sem internet**. `capsule-inspector-pi-*-online.tar.gz` (leve, ~10 MB) traz o programa, o modelo e
+> os exemplos, mas **baixa as bibliotecas do PyPI durante a instalação** (~80 MB): o Pi precisa de
+> internet só nessa hora e de `pip` (`sudo apt install -y python3-pip`). Depois roda offline.
+
 ## Requisitos
 
 - Raspberry Pi com **sistema de 64 bits**: Pi 3B/3B+, Pi 4, Pi 400, Pi 5, Zero 2 W, CM4/CM5.

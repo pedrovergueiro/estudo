@@ -78,11 +78,15 @@ def main() -> int:
     ap.add_argument("--model-info", type=Path, help="JSON com proveniência/métricas do modelo")
     ap.add_argument("--examples", nargs="+", required=True, type=Path)
     ap.add_argument("--examples-license", type=Path, help="arquivo de licença das imagens de exemplo")
-    ap.add_argument("--arch", default="aarch64", choices=sorted(PLATFORMS))
+    ap.add_argument("--arch", default="aarch64", choices=sorted(PLATFORMS) + ["online"])
     # Raspberry Pi OS: Bookworm = 3.11, Trixie = 3.13
     ap.add_argument("--pythons", nargs="+", default=["3.11", "3.13"])
     ap.add_argument("--out", type=Path, default=ROOT / "dist")
+    ap.add_argument("--leve", action="store_true",
+                    help="sem dependências embutidas (<30 MB): o instalador as baixa do PyPI (exige internet no Pi)")
     a = ap.parse_args()
+    if a.leve:
+        a.arch = "online"
 
     name = f"capsule-inspector-pi-{__version__}-{a.arch}"
     stage = a.out / name
@@ -114,6 +118,12 @@ def main() -> int:
             (stage / f).chmod(0o755)
     (stage / "ARQUITETURA").write_text(a.arch + "\n")
     manifest = {"version": __version__, "arch": a.arch, "pythons": a.pythons, "wheels": {}}
+    if a.leve:
+        (stage / "requisitos").mkdir()
+        for py in a.pythons:
+            requirements_for(py, stage / "requisitos" / f"requirements-{py}.txt")
+        manifest["online"] = True
+        return finish(stage, a.out, name, manifest)
     for py in a.pythons:
         tag = "cp" + py.replace(".", "")
         manifest["wheels"][tag] = download_wheels(stage / "rodas" / tag, a.arch, py)
@@ -127,10 +137,14 @@ def main() -> int:
         for t in tags[1:]:
             (stage / "rodas" / t / w).unlink()
     manifest["wheels"] = {"comum": sorted(common), **{t: sorted(set(manifest["wheels"][t]) - common) for t in tags}}
+    return finish(stage, a.out, name, manifest)
+
+
+def finish(stage: Path, out: Path, name: str, manifest: dict) -> int:
     (stage / "MANIFESTO.json").write_text(json.dumps(manifest, indent=2))
     files = sorted(p for p in stage.rglob("*") if p.is_file())
     (stage / "SHA256SUMS").write_text("".join(f"{sha256(p)}  {p.relative_to(stage).as_posix()}\n" for p in files))
-    tgz = a.out / f"{name}.tar.gz"
+    tgz = out / f"{name}.tar.gz"
     with tarfile.open(tgz, "w:gz", compresslevel=6) as t:
         t.add(stage, arcname=name)
     print(f"{tgz}  {tgz.stat().st_size / 1e6:.1f} MB  sha256 {sha256(tgz)}")
