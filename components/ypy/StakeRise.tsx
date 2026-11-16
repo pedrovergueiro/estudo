@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { buildStake, createStage, damp, disposeTree, fbm, fitModel, lerp, loadModel, loadPlant, ramp, soilGround, trackProgress, type Three } from './kit';
+import { buildStake, createStage, damp, disposeTree, fbm, lerp, loadGLB, loadPlant, ramp, soilGround, partName, texturize, trackProgress, type Three } from './kit';
 import { PARTS } from './StakeViewer';
 
 const PHASES = [
@@ -112,7 +112,7 @@ export default function StakeRise() {
             <li key={p.id} className={i === part ? 'on' : undefined} />
           ))}
         </ol>
-        <small className="y-rise__note">Concept visualisation · stand-in models · plant: Poly Haven / DGG, CC BY 4.0</small>
+        <small className="y-rise__note">Stake M1 · design model, in validation · plant: Poly Haven / DGG, CC BY 4.0</small>
       </div>
     </div>
   );
@@ -143,16 +143,42 @@ async function start(
   const ground = await soilGround(THREE, { w: 44, d: 44, seg: small ? 120 : 200, repeat: 16, height });
   scene.add(ground.mesh);
 
-  // a real stake model listed in public/ypy/models/manifest.json replaces the stand-in
-  const built = await buildStake(THREE);
-  const real = await loadModel(THREE, 'stake');
+  // the real Stake M1 design model (metres → scene units of 10 cm); stand-in if it fails to load
   const stakeGroup = new THREE.Group();
+  const real = await loadGLB(THREE, 'estaca-m1.glb');
+  let anchors: [number, number, number][];
+  const shell: import('three').Material[] = [];
   if (real) {
-    const fitted = fitModel(THREE, real, 6.7);
-    fitted.position.y = -4.8;
-    stakeGroup.add(fitted);
-    disposeTree(built.group);
-  } else stakeGroup.add(built.group);
+    await texturize(THREE, real);
+    real.scale.setScalar(10);
+    real.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    const c = new THREE.Vector3();
+    anchors = PARTS.map((part) => {
+      box.makeEmpty();
+      real.traverse((o) => {
+        const m = o as import('three').Mesh;
+        if (!m.isMesh) return;
+        if (/^(Solo não mexido|Lama do próprio solo)/.test(partName(o))) o.visible = false; // the scene has its own ground
+        if (!part.match.some((k) => partName(o).includes(k))) return;
+        box.expandByObject(o);
+        if (part.id === 'head') {
+          const mat = (m.material as import('three').Material).clone();
+          mat.transparent = true;
+          m.material = mat;
+          shell.push(mat);
+        }
+      });
+      box.getCenter(c);
+      return [c.x, c.y, c.z];
+    });
+    stakeGroup.add(real);
+  } else {
+    const built = await buildStake(THREE);
+    anchors = PARTS.map((_, i) => built.anchors[Math.min(i, built.anchors.length - 1)]);
+    shell.push(built.housing);
+    stakeGroup.add(built.group);
+  }
   scene.add(stakeGroup);
 
   const plant = await loadPlant(THREE, 2.1);
@@ -225,7 +251,7 @@ async function start(
   let curPhase = -1;
   let curPart = -2;
   let prev = performance.now();
-  const cam = { ang: -0.6, dist: 9, ty: 1, tx: 0, h: 2 };
+  const cam = { ang: -0.6, dist: 9, ty: 1, tx: 0, h: 2, shift: 0 };
   const anchor = new THREE.Vector3();
 
   const frame = (now: number) => {
@@ -242,14 +268,16 @@ async function start(
     const raining = ramp(RAIN[0], RAIN[0] + 0.03, p) * (1 - ramp(RAIN[1] - 0.03, RAIN[1], p));
     const wet = ramp(RAIN[0] + 0.01, RAIN[0] + 0.09, p);
     const growth = ramp(GROW[0], GROW[1], p);
-    const y = lerp(lerp(-6.6, 5.0, rise), 0, sink);
+    const y = lerp(lerp(-4.4, 5.5, rise), 0, sink);
     stakeGroup.position.y = y;
-    stakeGroup.rotation.y = lerp(0, 0.5, rise);
+
 
     const idx = p >= PART_FROM && p < PART_TO ? Math.min(PARTS.length - 1, Math.floor(((p - PART_FROM) / (PART_TO - PART_FROM)) * PARTS.length)) : -1;
-    const inside = idx >= 1 && idx <= 3;
-    built.housing.opacity = lerp(built.housing.opacity, inside ? 0.16 : 1, damp(8, dt));
-    built.housing.depthWrite = built.housing.opacity > 0.9;
+    const inside = idx >= 1 && idx <= 4;
+    for (const m of shell) {
+      m.opacity = lerp(m.opacity, inside ? 0.12 : 1, damp(8, dt));
+      m.depthWrite = m.opacity > 0.9;
+    }
 
     const ph = p < PART_FROM ? 0 : p < PART_TO ? 1 : p < RAIN[0] ? 2 : p < GROW[0] ? 3 : 4;
     if (ph !== curPhase) setPhase((curPhase = ph));
@@ -300,17 +328,19 @@ async function start(
     plant.update(growth, time, !reduced);
 
     // camera goals per phase
-    const gAng = -0.75 + p * 1.25;
+    let gAng = -0.75 + p * 1.25;
     let gDist = lerp(8, portrait ? 19 : 13.5, rise);
     let gTy = lerp(0.6, 2.6, rise);
     let gTx = 0;
     let gH = lerp(1.6, 3.4, rise);
     if (idx >= 0) {
-      const a = built.anchors[idx];
+      const a = anchors[idx];
+      const tiny = idx >= 1 && idx <= 4; // board-level parts inside the box
       gTy = y + a[1];
-      gDist = portrait ? 8.5 : 5.6;
-      gH = gTy + 0.7;
-      gTx = portrait ? 0 : 0.85; // leave room for the card on the right
+      gAng = PARTS[idx].view;
+      gDist = tiny ? (portrait ? 3.6 : 2.4) : portrait ? 8.5 : 5.4;
+      gH = gTy + (tiny ? 0.25 : 0.7);
+      gTx = 0;
     }
     if (p >= PART_TO) {
       const k = ramp(PART_TO, RAIN[0], p);
@@ -325,12 +355,17 @@ async function start(
     cam.ty = lerp(cam.ty, gTy, ease);
     cam.tx = lerp(cam.tx, gTx, ease);
     cam.h = lerp(cam.h, gH, ease);
-    camera.position.set(cam.tx + Math.sin(cam.ang) * cam.dist, cam.h, Math.cos(cam.ang) * cam.dist);
-    camera.lookAt(cam.tx, cam.ty, 0);
+    // on wide screens the subject sits left of centre, leaving room for the card
+    const side = idx >= 0 && !portrait ? cam.dist * 0.16 : 0;
+    cam.shift = lerp(cam.shift, side, ease);
+    const ox = cam.tx + Math.cos(cam.ang) * cam.shift;
+    const oz = -Math.sin(cam.ang) * cam.shift;
+    camera.position.set(ox + Math.sin(cam.ang) * cam.dist, cam.h, oz + Math.cos(cam.ang) * cam.dist);
+    camera.lookAt(ox, cam.ty, oz);
     camera.updateMatrixWorld();
 
     if (idx >= 0) {
-      const a = built.anchors[idx];
+      const a = anchors[idx];
       stakeGroup.updateMatrixWorld();
       anchor.set(a[0], a[1], a[2]).applyMatrix4(stakeGroup.matrixWorld).project(camera);
       pin.style.transform = `translate3d(${((anchor.x + 1) / 2) * stage.clientWidth}px, ${((1 - anchor.y) / 2) * stage.clientHeight}px, 0)`;

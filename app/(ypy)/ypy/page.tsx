@@ -7,6 +7,7 @@ import IntelligenceDemo from '@/components/ypy/IntelligenceDemo';
 import ContactForm from '@/components/ypy/ContactForm';
 import RoverPass from '@/components/ypy/RoverPass';
 import StakeRise from '@/components/ypy/StakeRise';
+import BaseFilm from '@/components/ypy/BaseFilm';
 
 const NAV = [
   ['problem', 'Problem'],
@@ -232,6 +233,8 @@ export default function YpyPage() {
           </p>
         </section>
 
+        <BaseFilm />
+
         {/* 04 — THE TECHNOLOGY */}
         <section className="y-sec y-techsec" id="technology">
           <Head n="04" label="The technology" depth="Six layers, read top-down" />
@@ -266,9 +269,9 @@ export default function YpyPage() {
               ['Measurement depths', '20 cm · 40 cm'],
               ['Soil moisture', '2 × capacitive sensors'],
               ['Soil temperature', 'DS18B20 at 20 cm'],
-              ['Controller', 'ESP32-C3'],
+              ['Controller', 'ESP32-C3 · ADS1115'],
               ['Communication', 'LoRa SX1276 (planned)'],
-              ['Structure', '25 mm PVC · sealed head'],
+              ['Structure', '25 mm PVC · sealed box'],
             ].map(([k, v]) => (
               <div key={k}>
                 <dt>{k}</dt>

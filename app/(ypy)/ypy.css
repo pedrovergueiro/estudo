@@ -889,6 +889,30 @@ body.ypy {
   }
 }
 
+.y-base {
+  height: 620vh;
+}
+.y-base .y-rise__stage {
+  background: radial-gradient(70% 60% at 55% 55%, #2a221d 0%, var(--ink) 75%);
+}
+.y-base .y-rise__title {
+  max-width: 15ch;
+}
+.y-base__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 22px;
+  font: 10.5px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-2);
+}
+.y-base__facts li {
+  padding-left: 14px;
+  border-left: 1px solid var(--aqua);
+}
+
 /* ── 02 problem ── */
 .y-problem__figure {
   margin-top: clamp(40px, 6vw, 90px) !important;

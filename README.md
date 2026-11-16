@@ -53,4 +53,10 @@ The scroll-driven scenes (`RoverPass`, `StakeRise`) are lit by a real HDRI and u
 - `public/ypy/rocky_trail_diff.jpg` — Poly Haven "Rocky Trail", CC0.
 - `public/ypy/models/plant.glb` — "DiffuseTransmissionPlant", © 2024 Darmstadt Graphics Group GmbH, CC BY 4.0 (based on Poly Haven "Potted Plant 02"); only its leaves are shown.
 
-The rover and stake are stand-in models built in code. To use real ones, put `.glb` files in `public/ypy/models/` and name them in `manifest.json`, e.g. `{ "rover": "rover.glb", "stake": "stake.glb", "plant": "plant.glb" }`. They are scaled and grounded automatically.
+The product models are the real design files, in `public/ypy/models/`:
+
+- `estaca-m1.glb` — Stake M1 (used by `StakeRise` and the interactive `StakeViewer`).
+- `base-turbo.glb` — the rover is taken out of this model for the `RoverPass` transition.
+- `base-campo.glb` — field charging base, used by `BaseFilm`.
+
+They carry flat colours only, so `texturize()` in `components/ypy/kit.ts` adds box-projected UVs and detail maps per material name. Parts are matched by their names inside the files; renaming parts in the CAD export means updating the `match` lists in `StakeViewer.tsx` and the patterns in `BaseFilm.tsx` / `kit.ts`. `manifest.json` only selects the plant model.

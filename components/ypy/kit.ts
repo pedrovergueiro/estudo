@@ -572,9 +572,39 @@ export async function loadPlant(THREE: Three, height = 1.5) {
     if (!m.isMesh) return;
     meshes.push(m);
     const mat = m.material as T.MeshStandardMaterial;
-    mat.roughness = 0.34; // wet leaves
-    mat.envMapIntensity = 1.5;
+    mat.roughness = 0.36; // wet leaves
+    mat.envMapIntensity = 1.2;
     mat.side = THREE.DoubleSide;
+    // the source texture has red veins painted in; turn them back to leaf green
+    const img = mat.map?.image as CanvasImageSource | undefined;
+    if (mat.map && img) {
+      const c = document.createElement('canvas');
+      c.width = c.height = 1024;
+      const x = c.getContext('2d')!;
+      x.drawImage(img, 0, 0, 1024, 1024);
+      const d = x.getImageData(0, 0, 1024, 1024);
+      for (let i = 0; i < d.data.length; i += 4) {
+        const r = d.data[i];
+        const gr = d.data[i + 1];
+        const b = d.data[i + 2];
+        if (r > gr * 1.05) {
+          d.data[i] = r * 0.55;
+          d.data[i + 1] = Math.min(255, Math.max(gr, r * 0.95) * 1.05);
+          d.data[i + 2] = b * 0.6;
+        } else {
+          d.data[i] = Math.min(255, r * 1.1);
+          d.data[i + 1] = Math.min(255, gr * 1.25 + 8);
+          d.data[i + 2] = b;
+        }
+      }
+      x.putImageData(d, 0, 0);
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.flipY = mat.map.flipY;
+      tex.wrapS = mat.map.wrapS;
+      tex.wrapT = mat.map.wrapT;
+      mat.map = tex;
+    }
   });
 
   const water = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, transmission: 1, thickness: 0.35, ior: 1.33, envMapIntensity: 2 });
@@ -641,4 +671,180 @@ export async function loadPlant(THREE: Three, height = 1.5) {
     ringMat.opacity = grown * (cyc > 0.7 ? (1 - splash) * 0.8 : 0);
   };
   return { group: g, update };
+}
+
+/** Original part name from the model file (the loader rewrites `name` to be animation-safe). */
+export const partName = (o: T.Object3D) => {
+  // parts with several materials load as a group of unnamed meshes: use the nearest named ancestor
+  let n: T.Object3D | null = o;
+  while (n && n.userData?.name === undefined) n = n.parent;
+  return (n?.userData?.name as string | undefined) ?? o.name;
+};
+
+/** Load a .glb from public/ypy/models. Returns null if it cannot be loaded. */
+export async function loadGLB(THREE: Three, file: string) {
+  try {
+    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+    const gltf = await new GLTFLoader().loadAsync(`/ypy/models/${file}`);
+    gltf.scene.updateMatrixWorld(true);
+    gltf.scene.traverse((o) => {
+      if ((o as T.Mesh).isMesh) o.castShadow = o.receiveShadow = true;
+    });
+    return gltf.scene;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The CAD exports carry flat colours only. This gives every material a surface:
+ * box-projected UVs plus detail maps chosen from the material's name
+ * (photographed soil, brushed metal, solar cells, fine grain for plastics).
+ */
+export async function texturize(THREE: Three, root: T.Object3D) {
+  const canvasTex = (size: number, paint: (d: Uint8ClampedArray, n: number) => void, repeat: number) => {
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const x = c.getContext('2d')!;
+    const img = x.createImageData(size, size);
+    paint(img.data, size);
+    x.putImageData(img, 0, 0);
+    const t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.setScalar(repeat);
+    t.anisotropy = 4;
+    return t;
+  };
+  let s = 17;
+  const rnd = () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
+  const grain = canvasTex(
+    256,
+    (d) => {
+      for (let i = 0; i < d.length; i += 4) {
+        d[i] = d[i + 1] = d[i + 2] = 150 + rnd() * 105;
+        d[i + 3] = 255;
+      }
+    },
+    3,
+  );
+  const brushed = canvasTex(
+    256,
+    (d, n) => {
+      for (let y = 0; y < n; y++) {
+        let v = 170 + rnd() * 60;
+        for (let x = 0; x < n; x++) {
+          v = clamp(v + (rnd() - 0.5) * 14, 120, 255);
+          const i = (y * n + x) * 4;
+          d[i] = d[i + 1] = d[i + 2] = v;
+          d[i + 3] = 255;
+        }
+      }
+    },
+    2,
+  );
+  const cells = canvasTex(
+    256,
+    (d, n) => {
+      for (let y = 0; y < n; y++)
+        for (let x = 0; x < n; x++) {
+          const line = x % 64 < 2 || y % 128 < 3 || x % 64 === 32;
+          const i = (y * n + x) * 4;
+          const k = 0.85 + rnd() * 0.15;
+          d[i] = line ? 190 : 14 * k;
+          d[i + 1] = line ? 195 : 26 * k;
+          d[i + 2] = line ? 205 : 74 * k;
+          d[i + 3] = 255;
+        }
+    },
+    0.55,
+  );
+  cells.colorSpace = THREE.SRGBColorSpace;
+  let soil: T.Texture | null = null;
+  try {
+    soil = await new THREE.TextureLoader().loadAsync('/ypy/rocky_trail_diff.jpg');
+    soil.colorSpace = THREE.SRGBColorSpace;
+    soil.wrapS = soil.wrapT = THREE.RepeatWrapping;
+    soil.repeat.setScalar(0.22);
+    soil.anisotropy = 8;
+  } catch {}
+
+  const done = new Set<T.Material>();
+  const p = new THREE.Vector3();
+  const n = new THREE.Vector3();
+  root.traverse((o) => {
+    const mesh = o as T.Mesh;
+    if (!mesh.isMesh) return;
+    // box-projected UVs in units of 100 mm of real size
+    const geo = mesh.geometry;
+    const pos = geo.attributes.position;
+    const nor = geo.attributes.normal;
+    const sc = mesh.getWorldScale(new THREE.Vector3()).x * 10;
+    const uv = new Float32Array(pos.count * 2);
+    for (let i = 0; i < pos.count; i++) {
+      p.fromBufferAttribute(pos, i).multiplyScalar(sc);
+      if (nor) n.fromBufferAttribute(nor, i);
+      else n.set(0, 1, 0);
+      const ax = Math.abs(n.x);
+      const ay = Math.abs(n.y);
+      const az = Math.abs(n.z);
+      if (ax >= ay && ax >= az) uv.set([p.z, p.y], i * 2);
+      else if (ay >= az) uv.set([p.x, p.z], i * 2);
+      else uv.set([p.x, p.y], i * 2);
+    }
+    geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    for (const m of mats as T.MeshStandardMaterial[]) {
+      if (done.has(m) || !('roughness' in m)) continue;
+      done.add(m);
+      const name = m.name.toLowerCase();
+      if (/solo|latossolo|lama|brita|pó de pedra|concreto|manta/.test(name) && soil) {
+        m.map = soil;
+        m.bumpMap = soil;
+        m.bumpScale = 3;
+        m.color.multiplyScalar(2.6);
+        m.roughness = 0.95;
+        m.envMapIntensity = 0.3;
+      } else if (/células/.test(name)) {
+        m.map = cells;
+        m.color.set(0xffffff);
+        m.roughness = 0.22;
+        m.metalness = 0.35;
+      } else if (/alumínio|aço|cobre|latão|haste|mola|moldura|telha|eucalipto/.test(name)) {
+        m.roughnessMap = brushed;
+        m.bumpMap = brushed;
+        m.bumpScale = /eucalipto/.test(name) ? 1.0 : 0.05;
+        m.roughness = Math.min(1, (m.roughness || 0.4) * 1.5 + 0.1);
+      } else {
+        m.bumpMap = grain;
+        m.bumpScale = 0.05;
+      }
+      m.needsUpdate = true;
+    }
+  });
+}
+
+/**
+ * The rover ships inside the charging-base model. Pull out the parts that
+ * belong to the rover (everything behind the charging head, minus the guides
+ * and floor) and give each wheel a pivot so it can turn.
+ */
+export function splitRover(THREE: Three, scene: T.Object3D) {
+  const rover = new THREE.Group();
+  const wheels: T.Group[] = [];
+  const box = new THREE.Box3();
+  const c = new THREE.Vector3();
+  const base = /^(Guia do funil|Guia reta|Batente de roda|Piso nivelado|Barra de contato|Longarina da grade)/;
+  for (const child of [...scene.children]) {
+    box.setFromObject(child);
+    if (box.isEmpty() || box.max.x > 0.496 || base.test(partName(child))) continue;
+    if (partName(child).startsWith('Roda com motor')) {
+      const pivot = new THREE.Group();
+      pivot.position.copy(box.getCenter(c));
+      rover.add(pivot);
+      pivot.attach(child);
+      wheels.push(pivot);
+    } else rover.add(child);
+  }
+  return { group: rover, wheels };
 }

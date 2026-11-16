@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { bell, buildRover, clamp, damp, createStage, disposeTree, fbm, fitModel, lerp, loadModel, ramp, soilGround, trackProgress, type Three } from './kit';
+import { bell, buildRover, clamp, damp, createStage, disposeTree, fbm, lerp, loadGLB, ramp, soilGround, splitRover, texturize, trackProgress, type Three } from './kit';
 
 /**
  * Scroll-driven transition between the hero and "The problem": the rover
@@ -52,7 +52,7 @@ export default function RoverPass() {
           Below it, <em>the land keeps its own record.</em>
         </p>
         <div className="y-pass__ink" />
-        <small className="y-pass__note">Concept visualisation · illustrative rover design</small>
+        <small className="y-pass__note">YPY Rover · design model · real sky and soil textures</small>
       </div>
     </div>
   );
@@ -107,9 +107,20 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
   clods.castShadow = clods.receiveShadow = true;
   scene.add(clods);
 
-  // a real rover model listed in public/ypy/models/manifest.json replaces the stand-in
-  const real = await loadModel(THREE, 'rover');
-  const rover = real ? { group: fitModel(THREE, real, 2.5, 'x'), wheels: [], lidar: new THREE.Group() } : await buildRover(THREE);
+  // the real rover, taken out of the charging-base model; falls back to the stand-in
+  const baseModel = await loadGLB(THREE, 'base-turbo.glb');
+  let rover: { group: import('three').Group; wheels: import('three').Group[]; lidar: import('three').Object3D; radius: number };
+  if (baseModel) {
+    await texturize(THREE, baseModel);
+    const part = splitRover(THREE, baseModel);
+    part.group.scale.setScalar(2.9);
+    const holder = new THREE.Group();
+    holder.add(part.group);
+    rover = { group: holder, wheels: part.wheels, lidar: new THREE.Group(), radius: 0.0865 * 2.9 };
+  } else {
+    const b = await buildRover(THREE);
+    rover = { ...b, radius: 0.38 };
+  }
   scene.add(rover.group);
 
   // low sun behind the rover, cool fill from the camera side
@@ -191,7 +202,7 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
       rover.group.position.set(x, y - 0.03, 0);
       rover.group.rotation.z = Math.atan2(laneY(x + 0.9) - laneY(x - 0.9), 1.8);
       rover.group.rotation.x = Math.sin(x * 2.1) * 0.012;
-      rover.wheels.forEach((w) => (w.rotation.z = -x / 0.38));
+      rover.wheels.forEach((w) => (w.rotation.z = -x / rover.radius));
       rover.lidar.rotation.y = x * 3 + (reduced ? 0 : time * 6);
       sun.target.position.set(x, 0, 0);
       sun.position.set(x - 9, 5.5, -7);

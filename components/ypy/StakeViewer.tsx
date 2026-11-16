@@ -1,59 +1,35 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { partName } from './kit';
 
 type Three = typeof import('three');
 type Group = import('three').Group;
 
+/**
+ * Components of the Stake M1 design model. `match` lists fragments of the part
+ * names inside estaca-m1.glb; `off` is the exploded-view offset in cm and
+ * `view` the camera angle (radians) that shows the part best.
+ */
 export const PARTS = [
-  {
-    id: 'head',
-    name: 'Sealed electronics head',
-    spec: 'Enclosure above ground',
-    d: 'A sealed housing that keeps the electronics out of the soil and the weather.',
-  },
-  {
-    id: 'mcu',
-    name: 'ESP32-C3',
-    spec: 'Microcontroller',
-    d: 'Reads the probes, manages sleep cycles and prepares each reading for transmission.',
-  },
-  {
-    id: 'radio',
-    name: 'LoRa SX1276',
-    spec: 'Planned radio link',
-    d: 'Long-range, low-power communication foreseen in the architecture to reach the platform.',
-  },
-  {
-    id: 'battery',
-    name: 'Battery',
-    spec: 'Power supply',
-    d: 'The stake is battery powered, so it can sit where the terrain asks, not where a cable reaches.',
-  },
-  {
-    id: 'tube',
-    name: 'PVC body',
-    spec: '25 mm tube',
-    d: 'A simple 25 mm PVC tube carries the probes down to their measurement depths.',
-  },
-  {
-    id: 'm20',
-    name: 'Moisture probe',
-    spec: 'Capacitive · 20 cm',
-    d: 'First capacitive soil-moisture sensor, at 20 cm depth.',
-  },
-  {
-    id: 't20',
-    name: 'DS18B20',
-    spec: 'Temperature · 20 cm',
-    d: 'Digital temperature sensor placed at 20 cm depth.',
-  },
-  {
-    id: 'm40',
-    name: 'Moisture probe',
-    spec: 'Capacitive · 40 cm',
-    d: 'Second capacitive soil-moisture sensor, at 40 cm depth.',
-  },
+  { id: 'head', name: 'Sealed junction box', spec: 'Enclosure above ground', tone: 'ink', off: [0, 10, 0], view: 0.9, match: ['Caixa de passagem', 'Tampa da caixa'],
+    d: 'A gasketed box with a screwed lid keeps the electronics above the soil and out of the weather.' },
+  { id: 'mcu', name: 'ESP32-C3 Super Mini', spec: 'Microcontroller', tone: 'teal', off: [-9, 12, 9], view: 1.45, match: ['ESP32'],
+    d: 'Wakes up, reads the probes, prepares each reading for transmission and goes back to sleep.' },
+  { id: 'adc', name: 'ADS1115', spec: 'Analog converter', tone: 'teal', off: [-9, 6, 9], view: 1.45, match: ['ADS1115'],
+    d: 'A dedicated converter turns the probes\' analog signal into a finer-grained reading.' },
+  { id: 'radio', name: 'LoRa SX1276', spec: '915 MHz · planned link', tone: 'terra', off: [-9, 12, -3], view: 1.45, match: ['LoRa'],
+    d: 'Long-range, low-power radio foreseen in the architecture to reach the platform.' },
+  { id: 'power', name: '18650 cell + TP4056', spec: 'Battery and charger', tone: 'ink', off: [-9, 17, -9], view: 1.45, match: ['Bateria 18650', 'TP4056 com'],
+    d: 'One lithium cell with a protected charger board: the stake sits where the terrain asks, not where a cable reaches.' },
+  { id: 'tube', name: 'PVC body', spec: '25 mm solvent-weld tube', tone: 'ink', off: [0, 0, 0], view: 0.5, match: ['Tubo de PVC', 'Cap de PVC', 'Adaptador'],
+    d: 'A 25 mm PVC tube with a bottom cap carries the cables and holds the probes at their depths.' },
+  { id: 'm20', name: 'Moisture probe S1', spec: 'Capacitive · 20 cm', tone: 'teal', off: [9, 0, 0], view: 0.9, match: ['S1 (20 cm)'],
+    d: 'First capacitive soil-moisture sensor, sealed in epoxy at 20 cm depth.' },
+  { id: 't20', name: 'DS18B20', spec: 'Temperature · 20 cm', tone: 'terra', off: [-9, 0, 0], view: -0.9, match: ['Sonda de temperatura'],
+    d: 'Digital temperature probe at 20 cm, on the side opposite the moisture sensor.' },
+  { id: 'm40', name: 'Moisture probe S2', spec: 'Capacitive · 40 cm', tone: 'teal', off: [9, 0, 0], view: 0.9, match: ['S2 (40 cm)'],
+    d: 'Second capacitive soil-moisture sensor, at 40 cm depth.' },
 ] as const;
 
 type PartId = (typeof PARTS)[number]['id'];
@@ -85,9 +61,9 @@ export default function StakeViewer() {
         if (!e.isIntersecting) return;
         io.disconnect();
         import('three')
-          .then((THREE) => {
+          .then(async (THREE) => {
             if (disposed || !wrap.current || !canvas.current) return;
-            const r = build(THREE, wrap.current, canvas.current, marks.current);
+            const r = await build(THREE, wrap.current, canvas.current, marks.current);
             if (!r) return setReady('fail');
             cleanup = r.dispose;
             api.current = r;
@@ -117,7 +93,7 @@ export default function StakeViewer() {
         <canvas
           ref={canvas}
           role="img"
-          aria-label="Interactive 3D concept model of the YPY Stake M1: a sealed electronics head on a 25 mm PVC tube with moisture probes at 20 and 40 cm and a temperature sensor at 20 cm."
+          aria-label="Interactive 3D concept model of the YPY Stake M1: a sealed junction box on a 25 mm PVC tube with moisture probes at 20 and 40 cm and a temperature sensor at 20 cm."
         />
         {['Surface', '−20 cm', '−40 cm'].map((t, i) => (
           <span
@@ -177,7 +153,7 @@ export default function StakeViewer() {
 }
 
 /* Model units are centimetres. */
-function build(THREE: Three, wrap: HTMLDivElement, canvas: HTMLCanvasElement, marks: (HTMLSpanElement | null)[]) {
+async function build(THREE: Three, wrap: HTMLDivElement, canvas: HTMLCanvasElement, marks: (HTMLSpanElement | null)[]) {
   let renderer: import('three').WebGLRenderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -228,49 +204,27 @@ function build(THREE: Three, wrap: HTMLDivElement, canvas: HTMLCanvasElement, ma
     return g;
   };
 
-  // PVC tube, 25 mm, with a driven tip
-  const tube = solid(new THREE.CylinderGeometry(1.25, 1.25, 46, 20));
-  tube.position.y = -21;
-  const tip = solid(new THREE.ConeGeometry(1.25, 3.2, 20));
-  tip.rotation.x = Math.PI;
-  tip.position.y = -45.6;
-  register('tube', INK, [0, 0, 0], tube, tip);
-
-  // Sealed head (translucent so the electronics read through it)
-  const head = solid(new THREE.BoxGeometry(8, 10, 5.4), INK, PAPER, 0.35);
-  head.position.y = 7.5;
-  const gland = solid(new THREE.CylinderGeometry(1.7, 1.7, 1.6, 16));
-  gland.position.y = 2.2;
-  const antenna = solid(new THREE.CylinderGeometry(0.28, 0.28, 9, 8));
-  antenna.position.set(2.6, 17, 0);
-  register('head', INK, [0, 9, 0], head, gland, antenna);
-
-  const board = solid(new THREE.BoxGeometry(2.4, 4.2, 0.35), TEAL);
-  board.position.set(-1.9, 8.4, 1.2);
-  const chip = solid(new THREE.BoxGeometry(1.3, 1.3, 0.3), TEAL);
-  chip.position.set(-1.9, 8.9, 1.55);
-  register('mcu', TEAL, [-11, 9, 4], board, chip);
-
-  const radio = solid(new THREE.BoxGeometry(1.7, 1.7, 0.35), TERRA);
-  radio.position.set(2.2, 10.3, 1.2);
-  register('radio', TERRA, [11, 9, 4], radio);
-
-  const battery = solid(new THREE.CylinderGeometry(0.95, 0.95, 6.6, 16));
-  battery.rotation.z = Math.PI / 2;
-  battery.position.set(0, 4.6, -0.9);
-  register('battery', INK, [0, 9, -10], battery);
-
-  const blade = (y: number) => {
-    const b = solid(new THREE.BoxGeometry(0.35, 9.5, 2.3), TEAL);
-    b.position.set(1.5, y, 0);
-    return b;
-  };
-  register('m20', TEAL, [9, 0, 0], blade(-20));
-  register('m40', TEAL, [9, 0, 0], blade(-40));
-
-  const temp = solid(new THREE.CylinderGeometry(0.32, 0.32, 3.2, 10), TERRA);
-  temp.position.set(-1.62, -20, 0);
-  register('t20', TERRA, [-9, 0, 0], temp);
+  // the real Stake M1 design model, redrawn in the technical-drawing style
+  let model: import('three').Group;
+  try {
+    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+    model = (await new GLTFLoader().loadAsync('/ypy/models/estaca-m1.glb')).scene;
+  } catch {
+    renderer.dispose();
+    return null;
+  }
+  model.updateMatrixWorld(true);
+  const tones = { ink: INK, teal: TEAL, terra: TERRA };
+  for (const part of PARTS) {
+    const groups: Group[] = [];
+    model.traverse((o) => {
+      const m = o as import('three').Mesh;
+      if (!m.isMesh || !part.match.some((k) => partName(o).includes(k))) return;
+      const geo = m.geometry.clone().applyMatrix4(m.matrixWorld).scale(100, 100, 100); // metres → cm
+      groups.push(solid(geo, tones[part.tone], PAPER, part.id === 'head' ? 0.3 : 1));
+    });
+    register(part.id, tones[part.tone], [...part.off] as [number, number, number], ...groups);
+  }
 
   // Soil section: a cut block behind the stake with depth planes
   const soil = new THREE.Group();
@@ -301,7 +255,7 @@ function build(THREE: Three, wrap: HTMLDivElement, canvas: HTMLCanvasElement, ma
   }
   disposables.push(blockGeo, blockMat, blockEdges, blockLine, dash);
   root.add(soil);
-  root.position.y = 14;
+  root.position.y = 8;
 
   /* ── interaction ── */
   const state = { yaw: -0.55, pitch: 0.12, tyaw: -0.55, tpitch: 0.12, explode: 0, texplode: 0, touched: false };
@@ -393,7 +347,7 @@ function build(THREE: Three, wrap: HTMLDivElement, canvas: HTMLCanvasElement, ma
       p.g.position.copy(p.off).multiplyScalar(state.explode);
     });
     // Frame the whole stake: the taller the canvas, the closer the camera.
-    const span = 78 + state.explode * 14;
+    const span = 100 + state.explode * 18;
     const dist = (span / 2 / Math.tan((camera.fov * Math.PI) / 360)) * Math.max(1, 0.62 / camera.aspect);
     camera.position.set(0, Math.sin(state.pitch) * dist, Math.cos(state.pitch) * dist);
     camera.lookAt(0, 0, 0);
