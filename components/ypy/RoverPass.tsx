@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { bell, buildRover, clamp, damp, createStage, disposeTree, fbm, lerp, ramp, soilGround, trackProgress, type Three } from './kit';
+import { bell, buildRover, clamp, damp, createStage, disposeTree, fbm, fitModel, lerp, loadModel, ramp, soilGround, trackProgress, type Three } from './kit';
 
 /**
  * Scroll-driven transition between the hero and "The problem": the rover
@@ -75,10 +75,11 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
   const small = window.innerWidth < 760;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const { renderer, scene, camera, disposeEnv } = await createStage(THREE, canvas, small);
-  scene.fog = new THREE.Fog(0x0c0b09, 9, 30);
+  const stageGL = await createStage(THREE, canvas, small, { bg: 0.4, blur: 0.04, rot: 2.2, env: 0.85, exposure: 0.8, aperture: 0.0004 });
+  const { scene, camera } = stageGL;
+  scene.fog = new THREE.Fog(0x4b3a31, 12, 42);
 
-  const ground = soilGround(THREE, { w: 70, d: 34, seg: small ? 150 : 240, repeat: 14, height: (x, z) => height(x, z - 6) });
+  const ground = await soilGround(THREE, { w: 70, d: 34, seg: small ? 150 : 240, repeat: 14, height: (x, z) => height(x, z - 6) });
   ground.mesh.position.z = -6;
   // the mesh is pushed back so most of it lies behind the lane (world z = 0)
   const laneY = (x: number) => height(x, 0);
@@ -86,7 +87,7 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
 
   // clods scattered along the lane edges
   const clodGeo = new THREE.IcosahedronGeometry(1, 0);
-  const clodMat = new THREE.MeshStandardMaterial({ color: 0x3a1a11, roughness: 1 });
+  const clodMat = new THREE.MeshStandardMaterial({ color: 0x6a4838, roughness: 1, flatShading: true });
   const clods = new THREE.InstancedMesh(clodGeo, clodMat, 260);
   const m4 = new THREE.Matrix4();
   const q = new THREE.Quaternion();
@@ -106,7 +107,9 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
   clods.castShadow = clods.receiveShadow = true;
   scene.add(clods);
 
-  const rover = await buildRover(THREE);
+  // a real rover model listed in public/ypy/models/manifest.json replaces the stand-in
+  const real = await loadModel(THREE, 'rover');
+  const rover = real ? { group: fitModel(THREE, real, 2.5, 'x'), wheels: [], lidar: new THREE.Group() } : await buildRover(THREE);
   scene.add(rover.group);
 
   // low sun behind the rover, cool fill from the camera side
@@ -158,8 +161,7 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
   const resize = () => {
     const w = stage.clientWidth;
     const h = stage.clientHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
+    stageGL.setSize(w, h);
     camera.fov = w / h < 0.9 ? 52 : 32;
     camera.updateProjectionMatrix();
   };
@@ -226,7 +228,7 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
       capA.style.transform = `translateY(${(1 - ramp(0.14, 0.22, p)) * 24}px)`;
       capB.style.opacity = String(bell(0.5, 0.86, p));
       capB.style.transform = `translateY(${(1 - ramp(0.5, 0.58, p)) * 24}px)`;
-      renderer.render(scene, camera);
+      stageGL.render(camera.position.distanceTo(rover.group.position));
       last = p;
     }
     if (visible) raf = requestAnimationFrame(frame);
@@ -246,7 +248,6 @@ async function start(THREE: Three, track: HTMLDivElement, canvas: HTMLCanvasElem
     disposeTree(rover.group);
     ground.dispose();
     [clodGeo, clodMat, dGeo, dMat, dTex].forEach((d) => d.dispose());
-    disposeEnv();
-    renderer.dispose();
+    stageGL.dispose();
   };
 }

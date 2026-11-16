@@ -58,75 +58,90 @@ export function trackProgress(el: HTMLElement) {
   return total > 0 ? clamp(-r.top / total) : 0;
 }
 
-export async function createStage(THREE: Three, canvas: HTMLCanvasElement, small: boolean) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+export type Look = { bg: number; blur: number; rot: number; env: number; exposure: number; aperture: number };
+
+/**
+ * Renderer + scene lit by a real HDRI sky (Poly Haven "Spruit Sunrise", CC0),
+ * with depth of field on larger screens.
+ */
+export async function createStage(THREE: Three, canvas: HTMLCanvasElement, small: boolean, look: Look) {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.5 : 1.75));
-  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(0x0c0b09, 1);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = look.exposure;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
-  const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js');
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const env = pmrem.fromScene(new RoomEnvironment(), 0.04);
-  scene.environment = env.texture;
-  scene.environmentIntensity = 0.45;
-  pmrem.dispose();
-
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 200);
-  return { renderer, scene, camera, disposeEnv: () => env.dispose() };
-}
-
-/** Terra-roxa soil: tiling colour + bump textures painted from noise. */
-export function soilTextures(THREE: Three, size = 512) {
-  const make = () => {
-    const c = document.createElement('canvas');
-    c.width = c.height = size;
-    return c;
-  };
-  const colorC = make();
-  const bumpC = make();
-  const cc = colorC.getContext('2d')!;
-  const bc = bumpC.getContext('2d')!;
-  const ci = cc.createImageData(size, size);
-  const bi = bc.createImageData(size, size);
-  const P = 8;
-  for (let y = 0; y < size; y++)
-    for (let x = 0; x < size; x++) {
-      const u = (x / size) * P;
-      const v = (y / size) * P;
-      const big = fbm(u, v, 5, P);
-      const grain = vnoise(u * 24, v * 24, P * 24);
-      const clod = Math.pow(vnoise(u * 5 + 9, v * 5 + 3, P * 5), 3);
-      const t = clamp(big * 0.75 + grain * 0.25);
-      // dark humus → red laterite → dry highlights
-      const r = lerp(20, 84, t) + clod * 34;
-      const g = lerp(11, 44, t) + clod * 20;
-      const b = lerp(8, 31, t) + clod * 14;
-      const i = (y * size + x) * 4;
-      ci.data[i] = r;
-      ci.data[i + 1] = g;
-      ci.data[i + 2] = b;
-      ci.data[i + 3] = 255;
-      const h = clamp(big * 0.55 + grain * 0.3 + clod * 0.6) * 255;
-      bi.data[i] = bi.data[i + 1] = bi.data[i + 2] = h;
-      bi.data[i + 3] = 255;
-    }
-  cc.putImageData(ci, 0, 0);
-  bc.putImageData(bi, 0, 0);
-  const map = new THREE.CanvasTexture(colorC);
-  const bump = new THREE.CanvasTexture(bumpC);
-  map.colorSpace = THREE.SRGBColorSpace;
-  for (const t of [map, bump]) {
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.anisotropy = 8;
+  const owned: { dispose: () => void }[] = [];
+  try {
+    const { HDRLoader } = await import('three/examples/jsm/loaders/HDRLoader.js');
+    const hdr = await new HDRLoader().loadAsync('/ypy/spruit_sunrise_1k.hdr');
+    hdr.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = hdr;
+    scene.background = hdr;
+    owned.push(hdr);
+  } catch {
+    const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js');
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const env = pmrem.fromScene(new RoomEnvironment(), 0.04);
+    scene.environment = env.texture;
+    scene.background = new THREE.Color(0x0c0b09);
+    pmrem.dispose();
+    owned.push(env);
   }
-  return { map, bump };
+  scene.backgroundBlurriness = look.blur;
+  scene.backgroundIntensity = look.bg;
+  scene.environmentIntensity = look.env;
+  scene.backgroundRotation.y = scene.environmentRotation.y = look.rot;
+
+  // depth of field: skipped on small screens to protect frame rate
+  let composer: import('three/examples/jsm/postprocessing/EffectComposer.js').EffectComposer | null = null;
+  let bokeh: import('three/examples/jsm/postprocessing/BokehPass.js').BokehPass | null = null;
+  if (!small) {
+    const [{ EffectComposer }, { RenderPass }, { BokehPass }, { OutputPass }] = await Promise.all([
+      import('three/examples/jsm/postprocessing/EffectComposer.js'),
+      import('three/examples/jsm/postprocessing/RenderPass.js'),
+      import('three/examples/jsm/postprocessing/BokehPass.js'),
+      import('three/examples/jsm/postprocessing/OutputPass.js'),
+    ]);
+    const rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: 4 });
+    composer = new EffectComposer(renderer, rt);
+    composer.setPixelRatio(renderer.getPixelRatio());
+    composer.addPass(new RenderPass(scene, camera));
+    bokeh = new BokehPass(scene, camera, { focus: 6, aperture: look.aperture, maxblur: 0.007 });
+    composer.addPass(bokeh);
+    composer.addPass(new OutputPass());
+    owned.push(rt);
+  }
+
+  return {
+    renderer,
+    scene,
+    camera,
+    setSize(w: number, h: number) {
+      renderer.setSize(w, h, false);
+      composer?.setSize(w, h);
+      camera.aspect = w / h;
+    },
+    render(focus: number) {
+      if (composer && bokeh) {
+        (bokeh.uniforms as Record<string, { value: number }>).focus.value = focus;
+        composer.render();
+      } else renderer.render(scene, camera);
+    },
+    dispose() {
+      owned.forEach((o) => o.dispose());
+      composer?.dispose();
+      renderer.dispose();
+    },
+  };
 }
 
-export function soilGround(
+/** Ground from a real photographed dirt texture (Poly Haven "Rocky Trail", CC0), tinted toward red soil. */
+export async function soilGround(
   THREE: Three,
   opts: { w: number; d: number; seg: number; repeat: number; height: (x: number, z: number) => number },
 ) {
@@ -135,13 +150,62 @@ export function soilGround(
   const pos = geo.attributes.position;
   for (let i = 0; i < pos.count; i++) pos.setY(i, opts.height(pos.getX(i), pos.getZ(i)));
   geo.computeVertexNormals();
-  const { map, bump } = soilTextures(THREE);
+  const map = await new THREE.TextureLoader().loadAsync('/ypy/rocky_trail_diff.jpg');
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.wrapS = map.wrapT = THREE.RepeatWrapping;
+  map.anisotropy = 8;
   map.repeat.set(opts.repeat, (opts.repeat * opts.d) / opts.w);
-  bump.repeat.copy(map.repeat);
-  const mat = new THREE.MeshStandardMaterial({ map, bumpMap: bump, bumpScale: 3.2, roughness: 0.9, metalness: 0 });
+  const dry = new THREE.Color(0xc08a6c);
+  const wet = new THREE.Color(0x3a241b);
+  const mat = new THREE.MeshStandardMaterial({ map, bumpMap: map, bumpScale: 4, roughness: 0.95, metalness: 0, color: dry.clone(), envMapIntensity: 0.35 });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
-  return { mesh, dispose: () => [geo, mat, map, bump].forEach((d) => d.dispose()) };
+  return {
+    mesh,
+    /** 0 = dry, 1 = soaked: darker and glossier. */
+    setWet(k: number) {
+      mat.color.copy(dry).lerp(wet, k);
+      mat.roughness = lerp(0.95, 0.86, k);
+    },
+    dispose: () => [geo, mat, map].forEach((d) => d.dispose()),
+  };
+}
+
+/**
+ * Optional real models. Drop a .glb in public/ypy/models and name it in
+ * manifest.json ({ "rover": "rover.glb", "stake": "stake.glb", "plant": "plant.glb" })
+ * to replace the built-in stand-ins. Returns null when a key is not set.
+ */
+let manifest: Promise<Record<string, string | null>> | null = null;
+export async function loadModel(THREE: Three, key: 'rover' | 'stake' | 'plant') {
+  manifest ??= fetch('/ypy/models/manifest.json')
+    .then((r) => (r.ok ? r.json() : {}))
+    .catch(() => ({}));
+  const file = (await manifest)[key];
+  if (!file) return null;
+  try {
+    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+    const gltf = await new GLTFLoader().loadAsync(`/ypy/models/${file}`);
+    gltf.scene.traverse((o) => {
+      if ((o as T.Mesh).isMesh) o.castShadow = o.receiveShadow = true;
+    });
+    return gltf.scene;
+  } catch {
+    return null;
+  }
+}
+
+/** Scale a model to `size` along `axis` and rest its base on y = 0, centred in x/z. */
+export function fitModel(THREE: Three, model: T.Object3D, size: number, axis: 'x' | 'y' = 'y') {
+  const box = new THREE.Box3().setFromObject(model);
+  const dim = box.getSize(new THREE.Vector3());
+  const k = size / (dim[axis] || 1);
+  const c = box.getCenter(new THREE.Vector3());
+  model.scale.multiplyScalar(k);
+  model.position.set(-c.x * k, -box.min.y * k, -c.z * k);
+  const holder = new THREE.Group();
+  holder.add(model);
+  return holder;
 }
 
 /** Free every geometry/material/texture under a root. */
@@ -485,5 +549,96 @@ export function buildPlant(THREE: Three) {
     ringMat.opacity = grown * (cyc > 0.72 ? (1 - splash) * 0.7 : 0);
   };
 
+  return { group: g, update };
+}
+
+/**
+ * Real plant model (public/ypy/models, see manifest.json) with water beads and a
+ * falling drop. Falls back to the procedural seedling if the model is missing.
+ */
+export async function loadPlant(THREE: Three, height = 1.5) {
+  const model = await loadModel(THREE, 'plant');
+  if (!model) return buildPlant(THREE);
+  const src = model.getObjectByName('leaves') ?? model;
+  src.removeFromParent();
+  const holder = fitModel(THREE, src, height);
+  const g = new THREE.Group();
+  g.add(holder);
+  g.updateMatrixWorld(true);
+
+  const meshes: T.Mesh[] = [];
+  src.traverse((o) => {
+    const m = o as T.Mesh;
+    if (!m.isMesh) return;
+    meshes.push(m);
+    const mat = m.material as T.MeshStandardMaterial;
+    mat.roughness = 0.34; // wet leaves
+    mat.envMapIntensity = 1.5;
+    mat.side = THREE.DoubleSide;
+  });
+
+  const water = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, transmission: 1, thickness: 0.35, ior: 1.33, envMapIntensity: 2 });
+  const beadGeo = new THREE.SphereGeometry(1, 14, 10);
+  const COUNT = 90;
+  const beads = new THREE.InstancedMesh(beadGeo, water, COUNT);
+  let seed = 9;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const v = new THREE.Vector3();
+  const n = new THREE.Vector3();
+  const m4 = new THREE.Matrix4();
+  const q = new THREE.Quaternion();
+  const up = new THREE.Vector3(0, 1, 0);
+  const s3 = new THREE.Vector3();
+  const tip = new THREE.Vector3(0, height * 0.6, 0);
+  let best = -1;
+  for (let i = 0; i < COUNT * 6; i++) {
+    const mesh = meshes[Math.floor(rnd() * meshes.length)];
+    if (!mesh) break;
+    const pos = mesh.geometry.attributes.position;
+    const nor = mesh.geometry.attributes.normal;
+    const idx = Math.floor(rnd() * pos.count);
+    v.fromBufferAttribute(pos, idx).applyMatrix4(mesh.matrixWorld);
+    n.fromBufferAttribute(nor, idx).transformDirection(mesh.matrixWorld);
+    // the drop falls from the outermost leaf edge
+    const reach = Math.hypot(v.x, v.z) + (v.y > height * 0.3 ? 0.2 : 0);
+    if (reach > best) {
+      best = reach;
+      tip.copy(v);
+    }
+    if (i < COUNT) {
+      if (n.y < 0) n.negate();
+      const s = 0.008 + rnd() * rnd() * 0.022;
+      q.setFromUnitVectors(up, n);
+      m4.compose(v.addScaledVector(n, s * 0.35), q, s3.set(s, s * 0.55, s));
+      beads.setMatrixAt(i, m4);
+    }
+  }
+  holder.add(beads);
+
+  const drop = new THREE.Mesh(beadGeo, water);
+  const ringGeo = new THREE.RingGeometry(0.8, 1, 40);
+  ringGeo.rotateX(-Math.PI / 2);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xdff3f0, transparent: true, opacity: 0, depthWrite: false });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  g.add(drop, ring);
+
+  const update = (growth: number, time: number, animate: boolean) => {
+    g.visible = growth > 0.001;
+    const k = 1 - Math.pow(1 - growth, 3);
+    holder.scale.setScalar(Math.max(0.0001, k));
+    holder.rotation.y = (1 - k) * 1.4;
+    holder.rotation.z = animate ? Math.sin(time * 0.9) * 0.012 * k : 0;
+    const grown = ramp(0.92, 1, growth);
+    const cyc = animate ? (time % 3.4) / 3.4 : 0.3;
+    const form = ramp(0, 0.45, cyc);
+    const fall = clamp((cyc - 0.5) / 0.2);
+    const s = 0.034 * grown * (fall < 1 ? 0.3 + 0.7 * form : 0);
+    drop.position.set(tip.x, lerp(tip.y - 0.03, 0.03, fall * fall), tip.z);
+    drop.scale.set(s, s * (1.25 + fall * 0.6), s);
+    const splash = clamp((cyc - 0.7) / 0.3);
+    ring.position.set(tip.x, 0.03, tip.z);
+    ring.scale.setScalar(0.03 + splash * 0.34);
+    ringMat.opacity = grown * (cyc > 0.7 ? (1 - splash) * 0.8 : 0);
+  };
   return { group: g, update };
 }

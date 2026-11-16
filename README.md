@@ -44,3 +44,13 @@ The YPY institutional site lives in its own route group with a separate root lay
 - `app/api/ypy/contact/route.ts` — stores contact messages in the local SQLite database (table `ypy_contact`) and, if `YPY_CONTACT_WEBHOOK_URL` is set, forwards them there as JSON.
 
 All data shown in the demos is fictional and labelled as such.
+
+### YPY 3D scenes: assets and swapping in real models
+
+The scroll-driven scenes (`RoverPass`, `StakeRise`) are lit by a real HDRI and use a photographed soil texture:
+
+- `public/ypy/spruit_sunrise_1k.hdr` — Poly Haven "Spruit Sunrise", CC0.
+- `public/ypy/rocky_trail_diff.jpg` — Poly Haven "Rocky Trail", CC0.
+- `public/ypy/models/plant.glb` — "DiffuseTransmissionPlant", © 2024 Darmstadt Graphics Group GmbH, CC BY 4.0 (based on Poly Haven "Potted Plant 02"); only its leaves are shown.
+
+The rover and stake are stand-in models built in code. To use real ones, put `.glb` files in `public/ypy/models/` and name them in `manifest.json`, e.g. `{ "rover": "rover.glb", "stake": "stake.glb", "plant": "plant.glb" }`. They are scaled and grounded automatically.

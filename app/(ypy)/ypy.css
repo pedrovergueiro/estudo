@@ -608,7 +608,7 @@ body.ypy {
 /* ── stake rise (scroll film) ── */
 .y-rise {
   position: relative;
-  height: 620vh;
+  height: 800vh;
   background: var(--ink);
 }
 .y-rise.is-off {
@@ -780,6 +780,112 @@ body.ypy {
   }
   .y-pass__note {
     display: none;
+  }
+}
+
+
+/* film grain + vignette over the 3D stages */
+.y-pass__stage::after,
+.y-rise__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(12, 11, 9, 0.55) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+}
+.y-pass__ink {
+  z-index: 2;
+}
+.y-rise__hud {
+  position: absolute;
+  right: calc(var(--gut) + 30px);
+  top: 50%;
+  width: min(340px, 30vw);
+  transform: translateY(-50%);
+  padding: 16px 18px 18px;
+  border: 1px solid var(--line-2);
+  border-left: 2px solid var(--aqua);
+  background: color-mix(in srgb, var(--ink) 74%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  z-index: 1;
+}
+.y-rise__hud small {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font: 10px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-2);
+}
+.y-rise__hud small i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--aqua);
+  animation: y-blink 1.6s steps(2) infinite;
+}
+.y-rise__hud > div {
+  display: grid;
+  grid-template-columns: 52px 1fr 64px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font: 11px var(--mono);
+  letter-spacing: 0.04em;
+}
+.y-rise__hud u {
+  height: 4px;
+  background: var(--line-2);
+  text-decoration: none;
+}
+.y-rise__hud u b {
+  display: block;
+  height: 100%;
+  background: var(--aqua);
+  transform-origin: left;
+  transform: scaleX(0.2);
+}
+.y-rise__hud em {
+  font: 560 1.25rem var(--display);
+  font-stretch: 84%;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.y-rise__hud p {
+  margin-top: 12px;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+.y-rise__title,
+.y-rise__card,
+.y-rise__ticks,
+.y-rise__note,
+.y-rise__pin,
+.y-pass__cap,
+.y-pass__note {
+  z-index: 1;
+}
+@media (max-width: 860px) {
+  .y-rise__hud {
+    left: var(--gut);
+    right: var(--gut);
+    top: auto;
+    bottom: 64px;
+    width: auto;
+    transform: none;
+  }
+  .y-rise__hud p {
+    font-size: 1rem;
   }
 }
 
