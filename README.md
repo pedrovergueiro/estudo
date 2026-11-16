@@ -34,3 +34,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## YPY website (`/ypy`)
+
+The YPY institutional site lives in its own route group with a separate root layout, so it shares nothing with the study platform's UI:
+
+- `app/(ypy)/layout.tsx`, `app/(ypy)/ypy.css`, `app/(ypy)/ypy/page.tsx` — layout, art direction and page.
+- `components/ypy/*` — hero terrain/rover scene and Stake M1 viewer (three.js, loaded on demand), subsurface lens, technology sequence, YPY Intelligence concept demo, contact form.
+- `app/api/ypy/contact/route.ts` — stores contact messages in the local SQLite database (table `ypy_contact`) and, if `YPY_CONTACT_WEBHOOK_URL` is set, forwards them there as JSON.
+
+All data shown in the demos is fictional and labelled as such.
