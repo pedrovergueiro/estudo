@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 type Three = typeof import('three');
 type Group = import('three').Group;
 
-const PARTS = [
+export const PARTS = [
   {
     id: 'head',
     name: 'Sealed electronics head',

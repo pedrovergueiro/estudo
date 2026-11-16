@@ -5,6 +5,8 @@ import TechSequence from '@/components/ypy/TechSequence';
 import StakeViewer from '@/components/ypy/StakeViewer';
 import IntelligenceDemo from '@/components/ypy/IntelligenceDemo';
 import ContactForm from '@/components/ypy/ContactForm';
+import RoverPass from '@/components/ypy/RoverPass';
+import StakeRise from '@/components/ypy/StakeRise';
 
 const NAV = [
   ['problem', 'Problem'],
@@ -114,6 +116,8 @@ export default function YpyPage() {
             </div>
           </div>
         </section>
+
+        <RoverPass />
 
         {/* 02 — THE PROBLEM */}
         <section className="y-sec y-problem" id="problem">
@@ -236,6 +240,8 @@ export default function YpyPage() {
           </h2>
           <TechSequence />
         </section>
+
+        <StakeRise />
 
         {/* 05 — YPY STAKE */}
         <section className="y-sec y-stakesec" id="stake" data-tone="paper">

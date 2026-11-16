@@ -530,6 +530,259 @@ body.ypy {
   }
 }
 
+/* ── rover pass (hero → problem) ── */
+.y-pass {
+  position: relative;
+  height: 280vh;
+  margin-top: -50vh;
+  z-index: 5;
+  pointer-events: none;
+}
+.y-pass.is-off {
+  display: none;
+}
+.y-pass__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.y-pass__sky,
+.y-pass__ink,
+.y-pass canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.y-pass__sky {
+  background:
+    radial-gradient(70% 46% at 22% 56%, #7a3a1c 0%, #2a170f 46%, transparent 78%),
+    linear-gradient(to bottom, #0c0b09 0%, #15100c 50%, #0c0b09 100%);
+}
+.y-pass__ink {
+  background: var(--ink);
+}
+.y-pass__cap {
+  position: absolute;
+  left: var(--gut);
+  top: clamp(90px, 15vh, 170px);
+  max-width: 13ch;
+  font-size: clamp(2.2rem, 5.6vw, 5.6rem);
+  font-weight: 560;
+  font-stretch: 82%;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  opacity: 0;
+  will-change: transform, opacity;
+  text-shadow: 0 2px 30px rgba(12, 11, 9, 0.7);
+}
+.y-pass__cap span {
+  display: block;
+  margin-bottom: 14px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.1em;
+  color: var(--terra);
+}
+.y-pass__cap em {
+  color: var(--bone);
+}
+.y-pass__cap--b em {
+  color: var(--aqua);
+}
+.y-pass__note,
+.y-rise__note {
+  position: absolute;
+  right: var(--gut);
+  bottom: 16px;
+  font: 9.5px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-3);
+  opacity: 0;
+}
+
+/* ── stake rise (scroll film) ── */
+.y-rise {
+  position: relative;
+  height: 620vh;
+  background: var(--ink);
+}
+.y-rise.is-off {
+  display: none;
+}
+.y-rise__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 50% 62%, #3b2015 0%, #1a110c 48%, transparent 80%),
+    var(--ink);
+}
+.y-rise canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.y-rise__note {
+  opacity: 1;
+  left: var(--gut);
+  right: auto;
+}
+.y-rise__title {
+  position: absolute;
+  left: var(--gut);
+  top: clamp(84px, 13vh, 150px);
+  max-width: 12ch;
+  animation: y-fade 0.8s var(--ease) both;
+}
+.y-rise__title span {
+  display: block;
+  margin-bottom: 14px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--terra);
+  white-space: nowrap;
+}
+.y-rise__title h3 {
+  font-size: clamp(2rem, 5vw, 5rem);
+  font-weight: 560;
+  font-stretch: 82%;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 30px rgba(12, 11, 9, 0.8);
+}
+.y-rise__pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1.5px solid var(--aqua);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.y-rise__pin::before {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  background: var(--aqua);
+}
+.y-rise__pin::after {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border: 1.5px solid var(--aqua);
+  border-radius: 50%;
+  animation: y-pulse 1.6s ease-out infinite;
+}
+.y-rise__card {
+  position: absolute;
+  right: calc(var(--gut) + 30px);
+  top: 50%;
+  width: min(340px, 30vw);
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.y-rise__card.on {
+  opacity: 1;
+}
+.y-rise__card > div {
+  padding: 18px 18px 20px;
+  border: 1px solid var(--line-2);
+  border-left: 2px solid var(--aqua);
+  background: color-mix(in srgb, var(--ink) 72%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: y-fade 0.5s var(--ease) both;
+}
+.y-rise__card i,
+.y-rise__card span {
+  display: block;
+  font: normal 10.5px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.y-rise__card i {
+  color: var(--aqua);
+}
+.y-rise__card b {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 1.9rem;
+  font-weight: 560;
+  font-stretch: 84%;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.y-rise__card span {
+  color: var(--bone-2);
+}
+.y-rise__card p {
+  margin-top: 14px;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+.y-rise__ticks {
+  position: absolute;
+  left: var(--gut);
+  bottom: 44px;
+  display: flex;
+  gap: 5px;
+}
+.y-rise__ticks li {
+  width: 22px;
+  height: 2px;
+  background: var(--line-2);
+  transition: background 0.3s;
+}
+.y-rise__ticks li.on {
+  background: var(--aqua);
+}
+@media (max-width: 860px) {
+  .y-rise__card {
+    left: var(--gut);
+    right: var(--gut);
+    top: auto;
+    bottom: 64px;
+    width: auto;
+    transform: none;
+  }
+  .y-rise__card p {
+    font-size: 1.1rem;
+    margin-top: 8px;
+  }
+  .y-rise__card b {
+    font-size: 1.5rem;
+    margin-top: 8px;
+  }
+  .y-rise__ticks {
+    bottom: 50px;
+  }
+  .y-rise__note {
+    right: var(--gut);
+    bottom: 12px;
+  }
+  .y-pass__note {
+    display: none;
+  }
+}
+
 /* ── 02 problem ── */
 .y-problem__figure {
   margin-top: clamp(40px, 6vw, 90px) !important;
